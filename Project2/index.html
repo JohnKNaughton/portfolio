@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Project 2 Report</title>
+    <style>
+      :root {
+        --color-neutral-95: hsl(220 10% 95%);
+        --color-neutral-90: hsl(220 10% 90%);
+        --color-neutral-80: hsl(220 10% 80%);
+        --color-neutral-70: hsl(220 10% 70%);
+        --color-neutral-60: hsl(220 10% 60%);
+        --color-neutral-50: hsl(220 10% 50%);
+        --color-neutral-40: hsl(220 10% 40%);
+        --color-neutral-30: hsl(220 10% 30%);
+        --color-neutral-20: hsl(220 10% 20%);
+        --color-neutral-10: hsl(220 10% 10%);
+      }
+
+      html {
+        font: 100%/1.5 system-ui;
+        counter-reset: figure;
+        background: var(--color-neutral-95);
+        max-width: min(75vw, 80em);
+        margin: 0 auto;
+      }
+
+      /* Headings */
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        line-height: 1.1;
+        font-weight: 600;
+        text-wrap: balance;
+      }
+
+      h1,
+      h2 {
+        border-bottom: 1px solid var(--color-neutral-80);
+        padding-bottom: 0.2em;
+      }
+
+      h1 {
+        margin-block: 1em 0.5rem;
+        font-size: clamp(2.5em, 150% + 2vh + 2vw, 10vmin);
+        font-weight: 800;
+
+        small {
+          display: block;
+          width: fit-content;
+          padding: 0.2em 0.5em;
+          margin-inline: auto;
+          color: white;
+          background: var(--color-neutral-40);
+          font-size: 40%;
+          text-transform: uppercase;
+          white-space: nowrap;
+        }
+      }
+
+      h2 {
+        font-size: 180%;
+        color: var(--color-neutral-30);
+      }
+
+      h3 {
+        font-size: 130%;
+      }
+
+      /* Lists */
+
+      ul,
+      ol {
+        padding-inline-start: 2em;
+      }
+
+      li {
+        &::marker {
+          color: var(--color-neutral-40);
+        }
+
+        + li {
+          margin-top: 0.2em;
+        }
+      }
+
+      /* Sectioning elements */
+
+      header {
+        padding-block: 1em;
+        text-align: center;
+      }
+
+      main {
+        background: white;
+        color: var(--color-neutral-20);
+        border-radius: 1rem;
+        padding: 0.1rem 2rem;
+      }
+
+      /* Figures */
+
+      figure {
+        margin: 1em 0;
+        padding: 0.5rem;
+        margin-inline: -0.5em;
+        border: 1px solid var(--color-neutral-80);
+        box-shadow: 0 0.1em 0.2em var(--color-neutral-95);
+        text-align: center;
+        background: white;
+
+        > figcaption {
+          font: 500 75% var(--font-sans);
+          background: var(--color-neutral-95);
+          padding: 0.5rem;
+          margin: -0.5rem;
+          margin-top: 0.5rem;
+          counter-increment: figure;
+          text-align: left;
+
+          &::before {
+            content: 'Figure ' counter(figure) ': ';
+            font-weight: bold;
+            color: var(--color-neutral-40);
+          }
+
+          a:not(:hover, :focus, :active) {
+            color: inherit;
+            text-decoration: underline;
+            text-decoration-color: color-mix(
+              in lab,
+              currentColor,
+              transparent 70%
+            );
+          }
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header>
+      <h1>
+        <small>Data Visualization Project 2</small>
+        Persuasive or Deceptive Visualization?
+      </h1>
+
+      <p><strong>John K Naughton</strong> — <em>jnaughton@ucsd.edu</em></p>
+    </header>
+
+    <main>
+      <h2>Proposition: The NYPD communicates effectively and holds their officers accountable</h2>
+
+      <section>
+        <h3>FOR the Proposition</h3>
+
+        <figure>
+  <img src="/images/complaintTime1.png" alt="Shows dropping complaing times" style="width: 85%;" />
+  <figcaption>Complaint Processing Times have dropped rapidly in recent years.</figcaption>
+</figure>
+
+        <p>Design Decisions and Rationale:</p>
+
+        <ul>
+          <li>Data Transformation: To measure how quickly the NYPD complaints are processed, we created a new feature "timetoprocess" that looked at submitted complaints by year and month and their corresponding close dates and calculates the difference in total months. Then we can plot these process times to establish a trend in behavior as each year of complaints is their own column.   </li>
+          <li>Deception Scale: -1   
+            Questionable Techniques: Before the 1999 cutoff processing times were MUCH faster, and cutting off these dates creates a false impression that things were always this bad. In addition, including 2020 data artificially deflates the process times because longer processed complaints would not have been returned by the time of data collection. Overall, slightly dishonest in the selective framing of times. 
+             </li>
+          <li>Thoughts: The new feature we calculated, timetoprocess, I believe is a useful one that can represent accountability. This value being cut nearly in half in the last decade shows that the NYPD is making a concrete effort to process complaints efficiently and make their organization transparent. The clean blue bars, high data-ink ratio, and obvious trend downwards lead the reader to make their own conclusions about how process time decreasing is a clear sign of good leadership.</li>
+        </ul>
+      </section>
+
+      <section>
+        <h3>AGAINST the Proposition</h3>
+
+        <figure>
+          <img src="/images/DispositionResults.png" alt="NYPD case result outcomes" style="width: 90%;" />
+          <figcaption>The Vast Majority of Accused NYPD Officers are Not Held Accountable</figcaption>
+        </figure>
+
+        <p>Design Decisions and Rationale:</p>
+
+        <ul>
+          <li>Data Transformation:The board disposition feature is already categorical data with 11 options to choose from, all of which are plotted. The only data transformation conducted was to aggregate all  of the "substantiated" verdicts into one single category, but this value was left OFF the final visualization (see draft) .   </li>
+          <li>Deception Scale: .5   
+            Questionable Techniques: While the "combined-substantiated" value was calculated and extremely relevant to making conclusions in the draft (it was on par in size with the first two categories), I decided NOT to include it because it was too effective at arguing the NYPD-accountable point. Instead I emphasize the differences between the extremely common "Unsubstantiated" and "Exonerated" bars by making them bright red so they dominate the other peaceful and dispersed vedicts in blue, instead of aggregating them under a single value. 
+             </li>
+          <li>Thoughts: The actual data shows that about 1/3 of cases against NYPD officers are found substantiated while the rest are unsubstantiated or exonerated. This could be interpreted in many ways, both as a refusal by the department to admit any error in the majority of cases, but also as a win for transparency and the fact that indeed some officers are rightfully punished. My approach tries to entince a sympathetic viewpoint by using colors, high data-ink ratio, and contrast to emphasize how the unnaccountable officer cases vastly outnumber the accountable cases.   </li>
+        </ul>
+      </section>
+
+      <section>
+        <h2>Final Reflection</h2>
+
+        <p>  For Project 2 I made 2 visualizations from the Civilian Complaints Against New York City Police Officers dataset, one that argues the NYPD are increasingly transparent, and one that argues the opposite. The dataset covered cases from 1985 to 2020, although the number of cases in the first two decades was much smaller. The first readings of the dataset were fairly neutral, and it was hard to establish any strong opinions without establishing a general stance first. <br>
+             Once I decided to look at the NYPD from an angle of accountability, I wanted to analyze the processing time of the cases themselves. My first chart for the “NYPD is fair” argument shows that the average time to process a complaint is going down. This required a fair amount of data transformation to calculate “time to process complaint”, by subtracting the months/years of the closed columns by received columns, then plotting the average processing time by year submitted. This one was slightly misleading because before 1999 the processing time was MUCH quicker (although possibly bad data?), but it does show a trend of recently becoming more transparent. 
+            <br>To argue the other side of the transparency arguement, I wanted to champion the arguement that although complaints are being processed faster, in the majority of cases NYPD officers are compeltely admonished from guilt in the majority of complaints. The second chart shows the results of the complaints as they were handled by the NYPD internal board. Even when all the different types of substantiated complaints are aggregated, they are still outnumbered by both the Unsubstantiated and Exonerated results, meaning that most complaints led to absolutely no punishments for the officers. When you leave OFF the aggregate substantiated column, the other options look much more miniscule in comparison. 
+            <br> In retrospect I find NEITHER of these charts to be convicing arguements by themselves, because they could both be symptoms of underlying effects that are either good or bad. However I can see that a shallow glace at just one of either of these graphs could permanently affect someones opinions of the NYPD because of the good (process times are improving rapidly!) or bad (officers held unnacountable!) trend they quickly make apparent to the reader. The large and generally ambiguous dataset can be completely weaponized along a single argumentative vector, going either the positive or negative direction. 
+            <br> I would categorize both of my visualizations as "selectively ethical", in that they both highlight very real trends that are occuring at the NYPD, and I'm not leading the reader to draw any implicit conclusions beyond those two simple trends.  
+            </section>•	
+    </main>
+  </body>
+</html>
