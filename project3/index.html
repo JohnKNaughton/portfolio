@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Stable Global Population Blobs (1950-2100)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        /* Apply Inter font, ensuring smooth corners and shadows are used by Tailwind */
+        body { font-family: 'Inter', sans-serif; background-color: #f3f4f6; }
+        
+        .chart-container {
+            max-width: 1100px; /* Increased max width */
+            margin: 40px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .slider-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 15px;
+            padding: 10px 0;
+            user-select: none;
+        }
+
+        input[type=range] {
+            width: 100%;
+            height: 8px;
+            
+            background: #d1d5db;
+            border-radius: 5px;
+            outline: none;
+            opacity: 0.9;
+            transition: opacity .15s;
+        }
+
+        input[type=range]:hover {
+            opacity: 1;
+        }
+
+        input[type=range]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #4f46e5;
+            cursor: pointer;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Updated text color to black/dark gray */
+        .blob-label {
+            pointer-events: none;
+            font-size: 0.7rem;
+            text-anchor: middle;
+            fill: #1f2937; /* Black text */
+            font-weight: 500;
+        }
+        
+        .blob-label-large {
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .tooltip {
+            position: absolute;
+            background-color: #1f2937;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            pointer-events: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.2s;
+            line-height: 1.4; 
+            z-index: 100; 
+        }
+
+    </style>
+</head>
+<body>
+    <nav>
+    <ul>
+        <li><a href="../index.html">Back to Home</a></li>
+        
+    </ul>
+</nav>
+    <div class="chart-container">
+        <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">
+            Top 50 Countries by Population, Ranked from 1950-2100 (UN Projections)
+        </h1>
+        <p class="text-center text-sm text-gray-600 mb-4">
+            Hover over Country for Pop Growth Rate. Project 3 for John N and David S. Area of Circle is proportional to population. Positions now reflect the current year's population rank.
+            Scaling is **consistent** throughout the years.
+            Population recordings and projections based on UN World Population Project 2024 https://population.un.org/wpp/downloads?folder=Standard%20Projections&group=Most%20used
+        </p>
+
+        <div class="text-center mb-4">
+            <span class="text-lg font-semibold text-gray-700">Total Global Population in </span>
+            <span id="globalYear" class="text-xl font-extrabold text-indigo-600">1950</span>
+            <span class="text-lg font-semibold text-gray-700">:</span>
+            <span id="globalPopulationDisplay" class="text-2xl font-extrabold text-indigo-800 ml-2">...</span>
+            <br>
+            <span class="text-md font-semibold text-gray-700">Annual Growth Rate: </span>
+            <span id="globalGrowthDisplay" class="text-lg font-extrabold text-green-700 ml-1">...</span>
+        </div>
+        <div class="slider-control">
+            <span id="yearDisplay" class="text-2xl font-extrabold text-indigo-600 w-16 text-center">1950</span>
+            <input type="range" id="yearSlider" min="1950" max="2100" step="5" value="1950" />
+            <span class="text-lg font-semibold text-gray-500">2100</span>
+        </div>
+
+        <div id="visualization" class="flex justify-center">
+            <svg id="packed-circles" width="1000" height="700">
+                <g id="circle-layer"></g> 
+                <g id="label-layer"></g> 
+            </svg>
+        </div>
+    </div>
+    
+    <div id="tooltip" class="tooltip"></div>
+
+    <script>
+        // --- D3 SETUP AND CONFIGURATION ---
+        const svg = d3.select("#packed-circles");
+        const circleLayer = d3.select("#circle-layer"); 
+        const labelLayer = d3.select("#label-layer");   
+        const tooltip = d3.select("#tooltip");
+        const width = +svg.attr("width");
+        const height = +svg.attr("height");
+        
+        const PADDING = 100; 
+        const COLS = 8; 
+        const VERTICAL_STAGGER_OFFSET = 25; 
+        
+        let allData = {}; 
+        let globalPopulationByYear = {}; 
+        // New: Store global growth rate by year
+        let globalGrowthRateByYear = {}; 
+        let countryColorMap = {}; 
+        let simulation = null; 
+        let staticRadiusScale = null; 
+
+        // CSV Column Keys
+        const POPULATION_KEY = "Total Population, as of 1 January (thousands)";
+        const REGION_KEY = "Region, subregion, country or area *";
+        const GROWTH_RATE_KEY = "Population Growth Rate (percentage)"; 
+
+        // Function to generate a persistent LIGHT random hex color
+        function getLightRandomColor() {
+            const getLightHexComponent = () => {
+                const val = Math.floor(Math.random() * (255 - 160) + 160); 
+                return val.toString(16).padStart(2, '0');
+            };
+            return `#${getLightHexComponent()}${getLightHexComponent()}${getLightHexComponent()}`;
+        }
+
+        // Function to format population to a readable string (in Billions or Millions)
+        const formatGlobalPopulation = (popThousands) => {
+            const popMillions = popThousands / 1000;
+            if (popMillions >= 1000) { 
+                return (popMillions / 1000).toFixed(2) + " Billion";
+            }
+            return popMillions.toFixed(2) + " Million";
+        };
+
+        // --- TOOLTIP FUNCTIONS ---
+        function handleMouseOver(event, d) {
+            // Highlight the hovered circle
+            d3.select(this).select("circle")
+                .attr("stroke", "#4f46e5") // Indigo border
+                .attr("stroke-width", 4);
+
+            // Show and position the tooltip
+            const popMillions = (d.population_thousands / 1000).toFixed(2);
+            
+            // Format growth rate with one decimal place
+            const growthRate = d.growth_rate ? d.growth_rate.toFixed(2) + "%" : "N/A"; // Changed to 2 decimal places
+
+            tooltip.html(`
+                <div style="font-size:1.1rem; font-weight:bold;">#${d.rank} ${d.country.split(',')[0]}</div>
+                Population: <strong>${popMillions} M</strong><br/>
+                Growth Rate: <strong>${growthRate}</strong>
+            `)
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px")
+            .style("opacity", 1);
+        }
+
+        function handleMouseOut(event, d) {
+            // Remove highlight
+            d3.select(this).select("circle")
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 2);
+
+            // Hide tooltip
+            tooltip.style("opacity", 0);
+        }
+        // --- END TOOLTIP FUNCTIONS ---
+
+        d3.csv("UN POP ESTand MEDIUMV.csv").then(data => {
+            
+            const countryData = data.filter(d => d.Type === "Country/Area");
+            
+            // Extract Global Population and Growth Rate Data
+            data.filter(d => d[REGION_KEY] === "World")
+                .forEach(d => {
+                    const year = +d.Year;
+                    globalPopulationByYear[year] = +d[POPULATION_KEY].replace(/\s/g, '');
+                    // Store the global growth rate
+                    globalGrowthRateByYear[year] = parseFloat(d[GROWTH_RATE_KEY]) || 0;
+                });
+
+            // Step 1: Find the 2025 population for identifying the top 50 (fixed list)
+            const pop2025 = countryData
+                .filter(d => +d.Year === 2025)
+                .map(d => ({
+                    name: d[REGION_KEY],
+                    population: +d[POPULATION_KEY].replace(/\s/g, '')
+                }));
+            
+            pop2025.sort((a, b) => b.population - a.population);
+            const top50Countries = pop2025.slice(0, 50).map(d => d.name);
+            
+            // Step 2: Assign a persistent LIGHT random color
+            top50Countries.forEach(countryName => {
+                countryColorMap[countryName] = getLightRandomColor();
+            });
+            
+            // Step 3: Map all relevant country data and include Growth Rate
+            const allRelevantData = countryData
+                .filter(d => top50Countries.includes(d[REGION_KEY]))
+                .map(d => ({
+                    year: +d.Year,
+                    country: d[REGION_KEY],
+                    population_thousands: +d[POPULATION_KEY].replace(/\s/g, ''),
+                    growth_rate: parseFloat(d[GROWTH_RATE_KEY]) || 0 
+                }));
+
+            // Calculate the Maximum Population across ALL years for the top 50
+            const globalMaxPop = d3.max(allRelevantData, d => d.population_thousands) || 1;
+            
+            // Define the radius scale ONCE, based on the global max
+            staticRadiusScale = d3.scaleSqrt()
+                .domain([0, globalMaxPop]) 
+                .range([8, 100]); 
+
+            // Group the relevant data by year
+            allData = allRelevantData.reduce((acc, d) => {
+                if (!acc[d.year]) { acc[d.year] = []; }
+                acc[d.year].push(d);
+                return acc;
+            }, {});
+
+            // Initialize visualization
+            updateVisualization(1950);
+
+            // --- SLIDER INTERACTION ---
+            const yearSlider = d3.select("#yearSlider");
+            const yearDisplay = d3.select("#yearDisplay");
+
+            yearSlider.on("input", function() {
+                const year = +this.value;
+                yearDisplay.text(year);
+                updateVisualization(year);
+            });
+
+        }).catch(error => {
+            console.error("Error loading or processing CSV data:", error);
+            svg.append("text")
+                .attr("x", width / 2)
+                .attr("y", height / 2)
+                .attr("text-anchor", "middle")
+                .attr("fill", "red")
+                .text("Error loading data. Check console for details. (Did you include the CSV?)");
+        });
+
+        // Ticked function for the force simulation
+        function ticked() {
+            // Update Circle positions
+            circleLayer.selectAll(".node")
+                .attr("transform", d => {
+                    // Clamp X position
+                    d.x = Math.max(PADDING, Math.min(width - PADDING, d.x));
+                    // Clamp Y position
+                    d.y = Math.max(PADDING, Math.min(height - PADDING, d.y));
+                    return `translate(${d.x}, ${d.y})`;
+                });
+            
+            // Update Label positions (labels are now separate elements)
+            labelLayer.selectAll(".label")
+                .attr("transform", d => `translate(${d.x}, ${d.y})`);
+        }
+
+        // --- UPDATE FUNCTION ---
+        function updateVisualization(year) {
+            if (!staticRadiusScale) return;
+            
+            const yearData = allData[year];
+            
+            // Update Global Population Display 
+            const globalPop = globalPopulationByYear[year];
+            const globalGrowth = globalGrowthRateByYear[year];
+
+            d3.select("#globalYear").text(year);
+            if (globalPop) {
+                d3.select("#globalPopulationDisplay").text(formatGlobalPopulation(globalPop));
+            } else {
+                d3.select("#globalPopulationDisplay").text("N/A");
+            }
+            
+            // Update Global Growth Rate Display
+            const globalGrowthDisplay = d3.select("#globalGrowthDisplay");
+            if (globalGrowth !== undefined) {
+                const growthRateText = globalGrowth.toFixed(2) + "%";
+                globalGrowthDisplay.text(growthRateText);
+                
+                // Color code the growth rate: Green for positive, Red for negative
+                if (globalGrowth > 0) {
+                    globalGrowthDisplay.classed("text-green-700", true).classed("text-red-700", false);
+                } else if (globalGrowth < 0) {
+                    globalGrowthDisplay.classed("text-green-700", false).classed("text-red-700", true);
+                } else {
+                    globalGrowthDisplay.classed("text-green-700", false).classed("text-red-700", false).classed("text-gray-700", true);
+                }
+            } else {
+                globalGrowthDisplay.text("N/A").classed("text-green-700", false).classed("text-red-700", false).classed("text-gray-700", true);
+            }
+
+            if (!yearData) {
+                console.warn(`No data for year ${year}.`);
+                return;
+            }
+
+            // 1. Calculate Ranks and Radius (using the static scale)
+            yearData.sort((a, b) => b.population_thousands - a.population_thousands);
+
+            // Prepare nodes for the simulation
+            const nodes = yearData.map((d, i) => {
+                const rankIndex = i;
+                const row = Math.floor(rankIndex / COLS);
+                const col = rankIndex % COLS;
+                const rows = Math.ceil(yearData.length / COLS); 
+
+                const innerWidth = width - 2 * PADDING;
+                const innerHeight = height - 2 * PADDING;
+
+                const fxTarget = PADDING + (col * innerWidth / COLS) + (innerWidth / (2 * COLS));
+                let fyTarget = PADDING + (row * innerHeight / rows) + (innerHeight / (2 * rows));
+                
+                // Apply vertical stagger offset
+                if (col % 2 !== 0) {
+                    fyTarget += VERTICAL_STAGGER_OFFSET;
+                } else {
+                    fyTarget -= VERTICAL_STAGGER_OFFSET;
+                }
+
+                return {
+                    ...d,
+                    id: d.country, 
+                    rank: i + 1, 
+                    radius: staticRadiusScale(d.population_thousands),
+                    fxTarget: fxTarget, 
+                    fyTarget: fyTarget, 
+                    x: d.x || fxTarget, 
+                    y: d.y || fyTarget,
+                    vx: d.vx || 0,
+                    vy: d.vy || 0,
+                };
+            });
+
+            // 2. Initialize or Update Force Simulation
+            if (simulation === null) {
+                simulation = d3.forceSimulation(nodes)
+                    .force("charge", d3.forceManyBody().strength(-15)) 
+                    .force("x", d3.forceX(d => d.fxTarget).strength(0.5)) 
+                    .force("y", d3.forceY(d => d.fyTarget).strength(0.5)) 
+                    .force("collide", d3.forceCollide().radius(d => d.radius + 1.5).iterations(10)) 
+                    .on("tick", ticked);
+            } else {
+                simulation.nodes(nodes);
+                // Update the forces on the existing simulation
+                simulation.force("charge").strength(-15);
+                simulation.force("x").strength(0.5);
+                simulation.force("y").strength(0.5);
+                simulation.force("collide").radius(d => d.radius + 1.5).iterations(10); 
+                
+                simulation.alpha(1).restart(); 
+            }
+
+            // --- CIRCLE DATA JOIN (Appended to circleLayer) ---
+            const circleGroup = circleLayer.selectAll(".node")
+                .data(nodes, d => d.id); 
+
+            // EXIT selection
+            circleGroup.exit().transition().duration(500)
+                .attr("transform", d => `translate(${d.x},${d.y}) scale(0)`)
+                .remove();
+
+            // ENTER selection
+            const enterGroup = circleGroup.enter().append("g")
+                .attr("class", "node")
+                .attr("transform", d => `translate(${d.x},${d.y})`) 
+                .style("cursor", "pointer") 
+                .on("mouseover", handleMouseOver) 
+                .on("mouseout", handleMouseOut); 
+
+            // Add circle (Only circle is here)
+            enterGroup.append("circle")
+                .attr("r", 0) 
+                .attr("fill", d => countryColorMap[d.country]) 
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 2);
+
+            // UPDATE and ENTER Merged selection for circles
+            const updateGroup = enterGroup.merge(circleGroup)
+                .on("mouseover", handleMouseOver) 
+                .on("mouseout", handleMouseOut); 
+
+            // Circle transition (radius and color)
+            updateGroup.select("circle").transition().duration(750).ease(d3.easeCubicOut)
+                .attr("r", d => d.radius)
+                .attr("fill", d => countryColorMap[d.country]); 
+                
+            // --- LABEL DATA JOIN (Appended to labelLayer) ---
+            const label = labelLayer.selectAll(".label")
+                .data(nodes, d => d.id);
+
+            // EXIT labels
+            label.exit().transition().duration(500)
+                .attr("opacity", 0)
+                .remove();
+
+            // ENTER labels
+            const enterLabel = label.enter().append("text")
+                .attr("class", "label")
+                .attr("transform", d => `translate(${d.x},${d.y})`)
+                .attr("opacity", 0);
+
+            // UPDATE and ENTER Merged selection for labels
+            const updateLabel = enterLabel.merge(label);
+
+            updateLabel.transition().duration(750)
+                .attr("opacity", 1); 
+
+            // Text content and styling update
+            updateLabel
+                // Apply 'large' class if rank is <= 10 OR radius > 45
+                .attr("class", d => (d.rank <= 10 || d.radius > 45) ? "label blob-label blob-label-large" : "label blob-label")
+                .attr("fill", "#1f2937") 
+                .html(d => {
+                    const popMillions = (d.population_thousands / 1000).toFixed(2);
+                    const countryName = d.country.split(',')[0];
+                    
+                    const showRank = d.rank <= 10;
+                    
+                    // Logic for large circles (radius > 45) OR top 10 countries
+                    if (d.radius > 45 || showRank) {
+                        let text = '';
+                        if (showRank) {
+                            // Show Rank, Country Name, and Population (3 lines)
+                            text += `
+                                <tspan dy="-1.2em" x="0" class="font-bold text-lg">#${d.rank}</tspan>
+                                <tspan dy="1.2em" x="0">${countryName}</tspan>
+                                <tspan dy="1.2em" x="0" class="font-semibold">${popMillions}M</tspan>
+                            `;
+                        } else { 
+                            // Large circle but rank > 10 (Show Country Name and Population - 2 lines)
+                            text += `
+                                <tspan dy="-0.6em" x="0">${countryName}</tspan>
+                                <tspan dy="1.2em" x="0" class="font-semibold">${popMillions}M</tspan>
+                            `;
+                        }
+                        return text;
+                    }
+                    
+                    // Logic for medium circles (radius > 20)
+                    if (d.radius > 20) {
+                        return `
+                            <tspan dy="-0.6em" x="0">${countryName}</tspan>
+                            <tspan dy="1.2em" x="0">${popMillions}M</tspan>
+                        `;
+                    }
+                    // Logic for smallest circles (radius <= 20)
+                    return `
+                        <tspan dy="-0.2em" x="0" style="font-size:0.5rem;">${countryName}</tspan>
+                        <tspan dy="0.8em" x="0" style="font-size:0.5rem; font-weight:700;">${popMillions}M</tspan>
+                    `;
+                }); 
+        } 
+        
+    </script>
+    <p class="text-center text-sm text-gray-600 mb-4">
+            Placeholder for Adding addendum text by David S 11/7/25
+                
+        </p>
+</body>
+</html>
