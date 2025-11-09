@@ -95,10 +95,10 @@
 </nav>
     <div class="chart-container">
         <h1 class="text-2xl font-bold text-gray-800 text-center mb-6">
-            Top 50 Countries by Population, Ranked from 1950-2100 (UN Projections)
+            Historical and Predicted Growth Rates of Top 50 Countries by Population, ordered from 1950-2100 (UN Projections)
         </h1>
         <p class="text-center text-sm text-gray-600 mb-4">
-            Hover over Country for Pop Growth Rate. Project 3 for John N and David S. Area of Circle is proportional to population. Positions now reflect the current year's population rank.
+            Hover over Country for Pop Growth Rate, color corresponds to current growth rate. Color  Project 3 for John N and David S. Area of Circle is proportional to population. Positions now reflect the current year's population rank.
             Scaling is **consistent** throughout the years.
             Population recordings and projections based on UN World Population Project 2024 https://population.un.org/wpp/downloads?folder=Standard%20Projections&group=Most%20used
         </p>
@@ -109,7 +109,7 @@
             <span class="text-lg font-semibold text-gray-700">:</span>
             <span id="globalPopulationDisplay" class="text-2xl font-extrabold text-indigo-800 ml-2">...</span>
             <br>
-            <span class="text-md font-semibold text-gray-700">Annual Growth Rate: </span>
+            <span class="text-md font-semibold text-gray-700">Global Growth Rate: </span>
             <span id="globalGrowthDisplay" class="text-lg font-extrabold text-green-700 ml-1">...</span>
         </div>
         <div class="slider-control">
@@ -132,7 +132,7 @@
         // --- D3 SETUP AND CONFIGURATION ---
         const svg = d3.select("#packed-circles");
         const circleLayer = d3.select("#circle-layer"); 
-        const labelLayer = d3.select("#label-layer");   
+        const labelLayer = d3.select("#label-layer");   
         const tooltip = d3.select("#tooltip");
         const width = +svg.attr("width");
         const height = +svg.attr("height");
@@ -143,25 +143,15 @@
         
         let allData = {}; 
         let globalPopulationByYear = {}; 
-        // New: Store global growth rate by year
         let globalGrowthRateByYear = {}; 
-        let countryColorMap = {}; 
         let simulation = null; 
         let staticRadiusScale = null; 
+        let growthColorScale = null;
 
         // CSV Column Keys
         const POPULATION_KEY = "Total Population, as of 1 January (thousands)";
         const REGION_KEY = "Region, subregion, country or area *";
         const GROWTH_RATE_KEY = "Population Growth Rate (percentage)"; 
-
-        // Function to generate a persistent LIGHT random hex color
-        function getLightRandomColor() {
-            const getLightHexComponent = () => {
-                const val = Math.floor(Math.random() * (255 - 160) + 160); 
-                return val.toString(16).padStart(2, '0');
-            };
-            return `#${getLightHexComponent()}${getLightHexComponent()}${getLightHexComponent()}`;
-        }
 
         // Function to format population to a readable string (in Billions or Millions)
         const formatGlobalPopulation = (popThousands) => {
@@ -183,7 +173,7 @@
             const popMillions = (d.population_thousands / 1000).toFixed(2);
             
             // Format growth rate with one decimal place
-            const growthRate = d.growth_rate ? d.growth_rate.toFixed(2) + "%" : "N/A"; // Changed to 2 decimal places
+            const growthRate = d.growth_rate ? d.growth_rate.toFixed(2) + "%" : "N/A";
 
             tooltip.html(`
                 <div style="font-size:1.1rem; font-weight:bold;">#${d.rank} ${d.country.split(',')[0]}</div>
@@ -211,11 +201,10 @@
             const countryData = data.filter(d => d.Type === "Country/Area");
             
             // Extract Global Population and Growth Rate Data
-            data.filter(d => d[REGION_KEY] === "World")
+            data.filter(d => d.Type === "World") // Changed to "World" for global data
                 .forEach(d => {
                     const year = +d.Year;
                     globalPopulationByYear[year] = +d[POPULATION_KEY].replace(/\s/g, '');
-                    // Store the global growth rate
                     globalGrowthRateByYear[year] = parseFloat(d[GROWTH_RATE_KEY]) || 0;
                 });
 
@@ -230,12 +219,7 @@
             pop2025.sort((a, b) => b.population - a.population);
             const top50Countries = pop2025.slice(0, 50).map(d => d.name);
             
-            // Step 2: Assign a persistent LIGHT random color
-            top50Countries.forEach(countryName => {
-                countryColorMap[countryName] = getLightRandomColor();
-            });
-            
-            // Step 3: Map all relevant country data and include Growth Rate
+            // Step 2: Map all relevant country data and include Growth Rate
             const allRelevantData = countryData
                 .filter(d => top50Countries.includes(d[REGION_KEY]))
                 .map(d => ({
@@ -252,6 +236,41 @@
             staticRadiusScale = d3.scaleSqrt()
                 .domain([0, globalMaxPop]) 
                 .range([8, 100]); 
+
+            // --- MODIFIED: Calculate Max/Min Growth Rate for Color Scale and make it even MORE DRAMATIC ---
+            const minGrowthRate = d3.min(allRelevantData, d => d.growth_rate) || 0;
+            const maxGrowthRate = d3.max(allRelevantData, d => d.growth_rate) || 0;
+
+            // Determine the absolute maximum extent to make the scale symmetrical around 0
+            const maxAbsoluteGrowth = Math.max(Math.abs(minGrowthRate), Math.abs(maxGrowthRate));
+            
+            // Custom vibrant colors for a stronger effect
+            const RED = "#D32F2F"; // Deep Red (Negative Extreme)
+            const LIGHT_RED = "#FFCDD2"; // Pastel Red (Slightly Negative)
+            const YELLOW = "#FFEB3B"; // Vibrant Yellow (Near Zero)
+            const LIGHT_GREEN = "#DCEDC8"; // Pastel Green (Slightly Positive)
+            const GREEN = "#4CAF50"; // Deep Green (Positive Extreme)
+
+            // Use d3.scaleLinear with custom colors and a stepped domain for rapid color change
+            growthColorScale = d3.scaleLinear()
+                // Domain: This accelerates the color change near zero (0%)
+                .domain([
+                    -maxAbsoluteGrowth,  // Max negative value
+                    -0.5,                // Transition to Yellow/Light Red starts here
+                    0,                   // Zero point (Yellow)
+                    0.5,                 // Transition to Green/Light Green starts here
+                    maxAbsoluteGrowth    // Max positive value
+                ]) 
+                // Range: Mapped to the custom, vibrant color stops
+                .range([
+                    RED, 
+                    LIGHT_RED, 
+                    YELLOW, 
+                    LIGHT_GREEN, 
+                    GREEN
+                ]) 
+                .clamp(true); // Clamp values outside the domain to the nearest range value
+            // ---------------------------------------------------------------------------------
 
             // Group the relevant data by year
             allData = allRelevantData.reduce((acc, d) => {
@@ -302,7 +321,7 @@
 
         // --- UPDATE FUNCTION ---
         function updateVisualization(year) {
-            if (!staticRadiusScale) return;
+            if (!staticRadiusScale || !growthColorScale) return;
             
             const yearData = allData[year];
             
@@ -325,9 +344,9 @@
                 
                 // Color code the growth rate: Green for positive, Red for negative
                 if (globalGrowth > 0) {
-                    globalGrowthDisplay.classed("text-green-700", true).classed("text-red-700", false);
+                    globalGrowthDisplay.classed("text-green-700", true).classed("text-red-700", false).classed("text-gray-700", false);
                 } else if (globalGrowth < 0) {
-                    globalGrowthDisplay.classed("text-green-700", false).classed("text-red-700", true);
+                    globalGrowthDisplay.classed("text-green-700", false).classed("text-red-700", true).classed("text-gray-700", false);
                 } else {
                     globalGrowthDisplay.classed("text-green-700", false).classed("text-red-700", false).classed("text-gray-700", true);
                 }
@@ -416,7 +435,7 @@
             // Add circle (Only circle is here)
             enterGroup.append("circle")
                 .attr("r", 0) 
-                .attr("fill", d => countryColorMap[d.country]) 
+                .attr("fill", d => growthColorScale(d.growth_rate)) 
                 .attr("stroke", "#fff")
                 .attr("stroke-width", 2);
 
@@ -428,7 +447,7 @@
             // Circle transition (radius and color)
             updateGroup.select("circle").transition().duration(750).ease(d3.easeCubicOut)
                 .attr("r", d => d.radius)
-                .attr("fill", d => countryColorMap[d.country]); 
+                .attr("fill", d => growthColorScale(d.growth_rate)); 
                 
             // --- LABEL DATA JOIN (Appended to labelLayer) ---
             const label = labelLayer.selectAll(".label")
@@ -499,8 +518,8 @@
         
     </script>
     <p class="text-center text-sm text-gray-600 mb-4">
-            Placeholder for Adding addendum text by David S 11/7/25
-                
-        </p>
+        Placeholder for Adding addendum text by David S 11/7/25
+            
+    </p>
 </body>
 </html>
