@@ -98,9 +98,9 @@
             Historical and Predicted Growth Rates of Top 50 Countries by Population, ordered from 1950-2100 (UN Projections)
         </h1>
         <p class="text-center text-sm text-gray-600 mb-4">
-            Hover over Country for Pop Growth Rate, color corresponds to current growth rate. Color  Project 3 for John N and David S. Area of Circle is proportional to population. Positions now reflect the current year's population rank.
-            Scaling is **consistent** throughout the years.
-            Population recordings and projections based on UN World Population Project 2024 https://population.un.org/wpp/downloads?folder=Standard%20Projections&group=Most%20used
+            Hover over Country for Pop Growth Rate, color corresponds to current growth rate. Project 3 for John Naughton and David Salcido. Area of Circle is proportional to population. Positions now reflect the current year's population rank.
+            Scaling is consistent throughout the years.
+            Population recordings and projections based on UN World Population Project 2024 and Medium projection levels here:      https://population.un.org/wpp/downloads?folder=Standard%20Projections&group=Most%20used
         </p>
 
         <div class="text-center mb-4">
@@ -518,8 +518,68 @@
         
     </script>
     <p class="text-center text-sm text-gray-600 mb-4">
-        Placeholder for Adding addendum text by David S 11/7/25
-            
+                    
     </p>
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>D3 Summary Text Box</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        /* Basic styling for the body */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            /* Flex properties are no longer strictly needed for pushing the box down 
+               if it's the only content, but kept for general page structure */
+            display: flex; 
+            flex-direction: column;
+            min-height: 100vh; 
+        }
+
+        /* Styling for the summary box */
+        #summary-box {
+            border: 2px solid #333;
+            padding: 15px;
+            /* This is the key change: margin-top: auto is less relevant 
+               since it's the first element, but the box is now the primary content */
+            background-color: #f0f0f0; 
+            font-size: 14px;
+            line-height: 1.6;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        #summary-box h3 {
+            margin-top: 0;
+            color: #0056b3;
+            border-bottom: 1px solid #0056b3;
+            padding-bottom: 5px;
+            font-size: 1.6em; 
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="summary-box">
+        </div>
+
+    <script>
+        // Use D3 to select the summary box and add the placeholder content
+        d3.select("#summary-box")
+            .html("<h3>How do the rankings of most populous countries shift from 1950 to 2100?</h3>" +
+                  "<p>We focused on the top 50 countries drawn from the UN World Population Prospects 2024 and loaded the data as a static CSV/JSON. Alternatives we explored include a map and a bar-chart race, but both made careful comparison difficult. The map overemphasized land area, and the race encouraged watching rather than exploring. A bump chart communicated rank well but hid magnitude. We ultimately chose a bubble-pack as the primary view because it lets the magnitude be read instantly while still letting readers track rank changes year by year.</p>" +
+                  "<p>The core encoding is circle area = population, with a single, constant size scale applied across all years so scrubbing time never shifts what a given area means. Labels emphasize the top ten, while header callouts summarize the world total and annual growth for the selected year to anchor context. Interactions aim to turn a dense overview into an exploratory tool: a year slider supports scrubbing or play, tooltips provide details on demand. " +
+                  "Implementation is D3-only for rendering and interaction, no server logic is required. The most delicate choices involved balancing readability and truthfulness: keeping the area scale constant preserves honest comparison across time, while force/collision tuning and hover halos mitigate overlap so small countries aren’t lost. " +
+                  "Process:The project was built by John N. with consultation and ideas by David S. In total, the team spent 15 person-hours. The longest stretches were collision/label tuning and coordinating selection state with the sparkline to keep scrubbing smooth; data prep and validation came next, followed by accessibility/responsiveness and final polish.  </p>" +
+                  "<p>This design gives a fast, visual sense of “who’s big when,” then invites deeper inspection by country or region, meeting the assignment’s goals while keeping the graphic focused and exploratory. It also gives a feeling of the earth literally filling up with people, and you can appreciate that global growth slows as it nears its filled state. </p>"
+
+            );
+
+    </script>
 </body>
 </html>
