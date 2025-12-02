@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earth's Population at an Inflection Point</title>
+    <title>Earth's Population at an Unprecedented Inflection Point</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -66,7 +66,8 @@
             font-size: 0.9rem;
             font-weight: 700;
         }
-        .tooltip {
+        /* Tooltip for Bubble Chart (Section 2) */
+        .tooltip { 
             position: absolute;
             background-color: #1f2937;
             color: #fff;
@@ -80,13 +81,77 @@
             line-height: 1.4; 
             z-index: 100; 
         }
+
+        /* Tooltip for Bar Chart (Section 3) */
+        #bar-tooltip {
+            position: absolute;
+            background: rgba(45, 55, 72, 0.95); /* Darker background for visibility */
+            color: #fff;
+            padding: 10px 14px;
+            border-radius: 4px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 13px;
+            line-height: 1.6;
+            z-index: 100; 
+        }
+
+        /* Line Chart specific styles */
+        .line-chart .axis path,
+        .line-chart .axis line {
+            fill: none;
+            stroke: #d1d5db;
+            shape-rendering: crispEdges;
+        }
+        .line-chart .axis text {
+            font-size: 10px;
+            fill: #6b7280;
+        }
+        .line-chart .domain {
+            stroke: #d1d5db !important;
+        }
+        .line-chart .grid line {
+            stroke: #f3f4f6;
+        }
+        /* Focus line for Section 4 hover */
+        .focus-line {
+            stroke: #4f46e5;
+            stroke-width: 1.5px;
+            stroke-dasharray: 4, 4;
+            pointer-events: none;
+        }
+        /* Tooltip for Section 4 */
+        #le-tooltip {
+            position: absolute;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            padding: 10px;
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 100;
+            font-size: 0.85rem;
+        }
+
+        /* Stacked Bar Chart specific styles */
+        .bar-chart .bar-label {
+            font-size: 10px;
+            font-weight: 600;
+            fill: #4b5563;
+        }
+        .bar-chart .axis-label {
+            font-size: 11px;
+            fill: #4b5563;
+        }
     </style>
 </head>
 <body class="text-gray-800">
 
     <nav class="bg-white shadow mb-4">
         <div class="max-w-7xl mx-auto px-4 py-3">
-            <a href="../index.html" class="text-blue-600 hover:text-blue-800 font-semibold">← Back to Home</a>
+            <a href="../index.html" class="text-blue-600 hover:text-blue-800 font-semibold">← Back to Home</a>      | John Naughton December 2025 UCSD
         </div>
     </nav>
 
@@ -94,57 +159,46 @@
 
         <header class="text-center py-10 bg-white rounded-xl shadow-lg mb-8">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-blue-800 tracking-tight">
-                Earth's Population at an Inflection Point
+                Earth's Population at an Unprecedented Inflection Point
             </h1>
             <p class="mt-3 text-xl text-gray-600">
-                WIP see updates here:
-                11/21/25 Submitting The web page writeup contains at least 4 sentences for each of the following questions (≥8 sentences total): 1. What have you done so far?
-                I did some addittional data cleaning, mostly fixing unicode discrepancies although there are a few more to do. I also fixed geographic coordinates to the blobs on the blob chart, 
-                they have locations respective to each other (roughly). Then I created the template for this page, and have begun work on a few more interactive visualizations. Since I'm working
-                alone I want to be realistic about what I can accomplish, but at the top of the page I want a global population slider that shows the age demographics shift with time.              
                 
-                
-                2. What will be the most challenging of your project to design and why? Well, the most challenging part overall will be setting realistic expectations for just myself. Then, I have about 3 solid visualizations 
-                in mind but I still want to add until 6 total. Adding the "Fluff" afterwards will probably be the hardest part however, adding visual flairs that hook the reader. I think I needed
-                to do more research and explore other visualizations, so I can composite the best ideas and add them to my population page. 
             </p>
         </header>
 
         <section class="mb-12 p-6 bg-white rounded-xl shadow-lg">
             <h2 class="text-3xl font-semibold text-blue-700 mb-4">
-                1. The Demographic Turnaround
+                1. The Big Picture - UN Projections
             </h2>
             <p class="mb-4 text-lg leading-relaxed">
-                For centuries, the story of global population has been one of relentless growth. However humanity is rapidly approaching a historic peak. Most models suggest the world population will reach its maximum—somewhere between 9.7 and 10.4 billion people—by the mid-2060s. After that, for the first time in modern history, the global headcount is expected to stagnate and perhaps enter a slow, sustained decline. This shift marks a profound inflection point, moving global discourse from concerns of "overpopulation" to the challenges of smaller labor pools and aging societies.
+                For centuries, the story of global population has been one of relentless, Malthusian growth. However, most models, and this set of official UN predictions, suggest the world population will reach its maximum—somewhere between 9.7 and 10.4 billion people—by the mid-2070s. For the first time in modern history, the global headcount is expected to stagnate and perhaps enter a slow, sustained decline. This shift marks a profound inflection point, moving global discourse from concerns of "overpopulation" to the challenges of smaller labor pools and aging societies.
             </p>
-            
-        </section>
 
-        
+            <div id="world-population-chart" class="chart-container mt-8 p-4">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">World Population and Annual Growth Rate (1950 - 2100)</h3>
+                
+                <div class="text-center mb-4">
+                    <span class="text-lg font-semibold text-gray-700">Year: </span>
+                    <span id="worldCurrentYear" class="text-xl font-extrabold text-indigo-600">2025</span>
+                    <span class="text-lg font-semibold text-gray-700">| Population:</span>
+                    <span id="worldCurrentPopulation" class="text-2xl font-extrabold text-indigo-800 ml-2">...</span>
+                    <span class="text-lg font-semibold text-gray-700">| Growth: </span>
+                    <span id="worldCurrentGrowth" class="text-lg font-extrabold text-green-700 ml-1">...</span>
+                </div>
+                <div class="slider-control px-10">
+                    <span class="text-lg font-semibold text-gray-500">1950</span>
+                    <input type="range" id="worldYearSlider" min="1950" max="2100" step="5" value="2025" />
+                    <span class="text-lg font-semibold text-gray-500">2100</span>
+                </div>
+                </div>
+            </section>
 
         <section class="mb-12 p-6 bg-white rounded-xl shadow-lg">
             <h2 class="text-3xl font-semibold text-blue-700 mb-4">
-                2. Why the Decline? The Total Fertility Rate (TFR)
+                2. The Great Global Divide (Top 200 Countries)
             </h2>
             <p class="mb-4 text-lg leading-relaxed">
-                The key to this demographic shift is the Total Fertility Rate (TFR)—the average number of children a woman is expected to have over her lifetime. The replacement rate, the TFR needed to maintain a stable population, is approximately 2.1. Crucially, the global TFR has been in steady decline for decades, fueled by increased access to education for women, better healthcare, urbanization, and contraception. Currently, more than half of the world's population lives in countries with a TFR below this replacement level.
-            </p>
-
-            <div id="chart-tfr-comparison" class="viz-container mt-6 p-4 rounded-lg">
-                <p class="text-center font-bold text-gray-500 pt-32">Visualization 2: Global TFR vs. Replacement Rate (Historical Trend)</p>
-            </div>
-
-            <p class="mt-4 text-lg leading-relaxed">
-                Countries like South Korea (TFR under 0.8) and Japan are leading the world into this low-fertility future, facing immediate challenges of shrinking workforces and strain on pension systems.
-            </p>
-        </section>
-
-        <section class="mb-12 p-6 bg-white rounded-xl shadow-lg">
-            <h2 class="text-3xl font-semibold text-blue-700 mb-4">
-                3. The Great Global Divide (Top 200 Countries)
-            </h2>
-            <p class="mb-4 text-lg leading-relaxed">
-                The global average masks massive regional differences. Population growth remains robust in several regions, most notably Sub-Saharan Africa. Nations here still have relatively high fertility rates and young populations, driving the continued overall growth toward the peak. Meanwhile, developed nations and many parts of Asia are shrinking and rapidly aging. This divergence creates geopolitical and economic complexities: a young, growing, workforce-rich region on one side, and an aging, consumption-heavy, technologically advanced region on the other.
+                The global average masks massive regional differences. Population growth remains robust in several regions, most notably Sub-Saharan Africa. Nations here still have relatively high fertility rates and young populations, driving the continued overall growth toward the peak. Meanwhile, developed nations are rapidly aging and begininng to plateau or even shrink. This divergence creates geopolitical and economic complexities: a young, growing, workforce-rich region on one side, and an aging, consumption-heavy, technologically advanced region on the other. Use the slider to see how the Earth fills up from 1950 to 2100. 
             </p>
 
             <div class="chart-container mt-8">
@@ -176,16 +230,43 @@
 
         <section class="mb-12 p-6 bg-white rounded-xl shadow-lg">
             <h2 class="text-3xl font-semibold text-blue-700 mb-4">
-                4. The Inversion of the Pyramid
+                3. Fertility or Migration?
             </h2>
             <p class="mb-4 text-lg leading-relaxed">
-                Demographers often use a 'population pyramid' to visualize age structure. Traditionally, this shape is wide at the bottom (many young people) and narrow at the top (few old people). In declining nations, this pyramid is inverting, becoming a 'column' or even a 'beehive,' wide in the middle and upper segments. This means fewer workers supporting more retirees, demanding radical reforms in healthcare, retirement age, and immigration policies.
+                The total change in a country's population is driven by only two factors, Natural Change and Net Migration. For many developed countries, population decline due to low fertility (negative natural change) is often offset by positive net migration. Conversely, some countries with high fertility rates (high natural change) still see their populations shrink due to large-scale emigration. This highlights the critical policy choice facing aging nations: addressing fertility, managing migration, or accepting demographic decline. However, the chart below shows the contribution of each factor for the largest countries, and we see that migration is only a small portion of this momentous growth.
             </p>
 
-            <div id="chart-age-pyramid" class="viz-container mt-6 p-4 rounded-lg">
-                <p class="text-center font-bold text-gray-500 pt-32">Visualization 4: Global Age Pyramid (Current vs. 2070)</p>
+            <div id="migration-vs-fertility-chart" class="chart-container mt-8 p-4">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">Population Change Drivers for Top 10 Countries (2025)</h3>
+                <div id="stacked-bar-chart-svg" class="flex justify-center"></div>
+                <div class="text-center mt-4">
+                    <span class="text-xs text-gray-500">Rates are per 1,000 population.</span>
+                </div>
             </div>
-        </section>
+            <div id="bar-tooltip"></div>
+            </section>
+
+        <section class="mb-12 p-6 bg-white rounded-xl shadow-lg">
+            <h2 class="text-3xl font-semibold text-blue-700 mb-4">
+                4. The March of Longevity
+            </h2>
+            <p class="mb-4 text-lg leading-relaxed">
+                Life expectancy at birth is a powerful indicator of human development. Historically low life expectancies were defined by high infant mortality. As nations develop, these rates climb dramatically, demonstrating improvements in sanitation, nutrition, and healthcare. The chart below shows the projected trend for the world's 20 most populous countries from 1950 to 2100, and we can see Life Excepcancy is expected to continue to rise across the board. Hover over the chart to see the life expectancy values for a specific year.
+            </p>
+
+            <div id="life-expectancy-chart" class="chart-container mt-8 p-4">
+                <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">Life Expectancy at Birth (Years) for Top 20 Countries</h3>
+                
+                <div class="text-center mb-4">
+                    <span class="text-lg font-semibold text-gray-700">Hover Year: </span>
+                    <span id="leCurrentYear" class="text-2xl font-extrabold text-indigo-600"></span>
+                </div>
+
+                <div id="le-chart-svg" class="flex justify-center overflow-hidden">
+                    </div>
+            </div>
+            <div id="le-tooltip"></div>
+            </section>
 
         <section class="mb-12 p-6 bg-white rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-8">
             <div>
@@ -196,8 +277,12 @@
                     The nations driving the population push toward the peak are characterized by high birth rates, reduced child mortality, and increased life expectancy. These countries face challenges related to infrastructure, education, and job creation for their rapidly expanding youth demographic.
                 </p>
                 <div id="chart-top-growers" class="viz-container p-4 rounded-lg">
-                    <p class="text-center font-bold text-gray-500 pt-16">Visualization 5: Top 10 Fastest Growing Countries</p>
-                </div>
+    <img 
+        src="FASTEST GROWING.png" 
+        alt="Top 10 Fastest Growing Countries Visualization" 
+        style="width: auto; height: auto; display: block;"
+    >
+</div>
             </div>
             <div>
                 <h3 class="text-2xl font-semibold text-blue-600 mb-4">
@@ -206,19 +291,23 @@
                 <p class="mb-4 leading-relaxed">
                     Conversely, countries experiencing the steepest decline often struggle with low birth rates coupled with outward migration. Their primary issues revolve around economic productivity, supporting an aging consumer base, and managing vacant housing and infrastructure.
                 </p>
-                <div id="chart-top-decliners" class="viz-container p-4 rounded-lg">
-                    <p class="text-center font-bold text-gray-500 pt-16">Visualization 6: Top 10 Fastest Declining Countries</p>
-                </div>
+                <div id="chart-top-shrinkers" class="viz-container p-4 rounded-lg">
+    <img 
+        src="FASTEST SHRINKING.png" 
+        alt="Top 10 Fastest Shrinking Countries Visualization" 
+        style="width: auto; height: auto; display: block;"
+    >
+</div>
             </div>
         </section>
 
         <footer class="text-center mt-10 py-6 text-gray-500 border-t border-gray-200">
-            <p>An Explorable Explanation on Global Demographics.</p>
+            <p>An Explorable Explanation on Global Demographics. John Naughton December 2025 for UCSD Data Visualization. Data sourced from United Nations World Population Prospects (WPP). https://population.un.org/wpp/downloads?folder=Standard%20Projections&group=Most%20used</p>
         </footer>
     </div>
 
-    <script>
-        // --- MAP COORDINATE DATA (UPDATED FOR TAIWAN, HONG KONG, MACAO) ---
+  <script>
+        // --- MAP COORDINATE DATA ---
         const latLonMap = {
             "India": [78.9629, 20.5937], "China": [104.1954, 35.8617], "United States of America": [-95.7129, 37.0902],
             "Indonesia": [113.9213, -0.7893], "Pakistan": [69.3451, 30.3753], "Nigeria": [8.6753, 9.0820], 
@@ -256,11 +345,16 @@
             "Belarus": [27.9534, 53.7098], "United Arab Emirates": [53.8478, 23.4241], "Israel": [34.8516, 31.0461], 
             "Austria": [14.5501, 47.5162], "Togo": [0.8248, 8.6195], "Switzerland": [8.2275, 46.8182], 
             "Sierra Leone": [-11.7799, 8.4606], "Lao People's Democratic Republic": [102.4955, 19.8563], 
-            // UPDATED: Renaming keys to simplified names and adding Taiwan coordinates
-            "Hong Kong": [114.1694, 22.3193], // Previously Hong Kong SAR, China
-            "Macao": [113.5439, 22.1987],     // Previously Macao SAR, China
-            "Taiwan": [121.5654, 23.6975],    // Added Taiwan coordinates
-            // End of China Region Updates
+
+            // --- RECENTLY ADDED/UPDATED ---
+            "Kosovo": [20.9030, 42.6026], // Added Kosovo
+            "Jersey": [-2.1312, 49.2144], // Added Jersey
+            
+            // China Regions
+            "Hong Kong": [114.1694, 22.3193], 
+            "Macao": [113.5439, 22.1987],     
+            "Taiwan": [121.5654, 23.6975],   
+            
             "Serbia": [21.0059, 44.0165], "Nicaragua": [-85.2072, 12.8654], 
             "Libya": [17.2283, 26.3351], "Paraguay": [-58.4438, -23.4425], "Kyrgyzstan": [74.7661, 41.2044], 
             "Bulgaria": [25.4858, 42.7339], "Turkmenistan": [59.5563, 38.9697], "El Salvador": [-88.8965, 13.7942], 
@@ -280,7 +374,12 @@
             "Bahrain": [50.5577, 26.0667], "Equatorial Guinea": [10.2679, 1.6508], "Trinidad and Tobago": [-61.2225, 10.6918], 
             "Estonia": [25.0136, 58.5953], "Timor-Leste": [125.7275, -8.8742], "Mauritius": [57.5522, -20.3484], 
             "Cyprus": [33.4299, 35.1264], "Eswatini": [31.4659, -26.5225], "Djibouti": [42.5903, 11.8251], 
-            "Réunion": [55.5364, -21.1151], "Fiji": [178.0650, -17.7134], "Comoros": [43.3333, -11.6455], 
+            
+            // Updated spellings for CSV matching
+            "Réunion": [55.5364, -21.1151], 
+            "Reunion": [55.5364, -21.1151], // Alternative spelling for matching
+            
+            "Fiji": [178.0650, -17.7134], "Comoros": [43.3333, -11.6455], 
             "Guyana": [-58.9302, 4.8604], "Bhutan": [90.4336, 27.5142], "Solomon Islands": [160.1562, -9.6457], 
             "Montenegro": [19.3744, 42.7087], "Luxembourg": [6.1296, 49.8153], 
             "Western Sahara": [-12.8858, 24.2155], "Suriname": [-56.0278, 3.9193], "Cabo Verde": [-24.0132, 16.0021], 
@@ -290,9 +389,20 @@
             "French Guiana": [-53.1258, 3.9339], "Barbados": [-59.5432, 13.1939], "New Caledonia": [165.6180, -20.9043], 
             "French Polynesia": [-149.4068, -17.6797], "Mayotte": [45.1662, -12.8275], "Sao Tome and Principe": [6.6131, 0.1864], 
             "Samoa": [-172.1046, -13.7590], "Saint Lucia": [-60.9789, 13.9094], "Channel Islands": [-2.5392, 49.3723], 
-            "Guam": [144.7937, 13.4443], "Curaçao": [-68.9900, 12.1696], "Kiribati": [-168.7340, -3.3704], 
+            "Guam": [144.7937, 13.4443], 
+            
+            // Updated Curacao
+            "Curaçao": [-68.9900, 12.1696], 
+            "Curacao": [-68.9900, 12.1696], // Alternative spelling for matching
+            
+            "Kiribati": [-168.7340, -3.3704], 
             "Micronesia (Fed. States of)": [158.1508, 6.8874], "Grenada": [-61.6790, 12.1165], 
-            "St. Vincent & Grenadines": [-61.2872, 13.2528], "Aruba": [-69.9683, 12.5211], "Tonga": [-175.1982, -21.1790], 
+            
+            // Updated St Vincent
+            "Saint Vincent": [-61.2872, 13.2528], 
+            "Saint Vincent and the Grenadines": [-61.2872, 13.2528], // Full spelling for matching
+            
+            "Aruba": [-69.9683, 12.5211], "Tonga": [-175.1982, -21.1790], 
             "U.S. Virgin Islands": [-64.8963, 18.3358], "Seychelles": [55.4920, -4.6796], "Antigua and Barbuda": [-61.7964, 17.0608], 
             "Isle of Man": [-4.5481, 54.2361], "Andorra": [1.5218, 42.5063], "Dominica": [-61.3710, 15.4150], 
             "Cayman Islands": [-81.2546, 19.3133], "Bermuda": [-64.7574, 32.3078], "Marshall Islands": [171.1845, 7.1315], 
@@ -311,8 +421,13 @@
         // --- D3 SETUP ---
         const svg = d3.select("#packed-circles");
         const circleLayer = d3.select("#circle-layer"); 
-        const labelLayer = d3.select("#label-layer");   
-        const tooltip = d3.select("#tooltip");
+        const labelLayer = d3.select("#label-layer");  
+        const tooltip = d3.select("#tooltip"); // Bubble Chart Tooltip (S2)
+        const barTooltip = d3.select("#bar-tooltip"); // Bar Chart Tooltip (S3)
+        const leTooltip = d3.select("#le-tooltip"); // Line Chart Tooltip (S4)
+        // Ensure you have a placeholder for the new growth list tooltip if needed in the future
+        // const growthListTooltip = d3.select("#growth-list-tooltip"); 
+
         const width = +svg.attr("width");
         const height = +svg.attr("height");
         
@@ -324,13 +439,24 @@
         let allData = {}; 
         let globalPopulationByYear = {}; 
         let globalGrowthRateByYear = {}; 
+        let worldChartConfig = {}; 
         let simulation = null; 
         let staticRadiusScale = null; 
         let growthColorScale = null;
-
+        
+        // Section 4 specific variables
+        let lifeExpectancyDataNested = []; 
+        let lifeExpectancyDataByYear = {}; 
+        let top20CountriesLE = []; 
+        
+        // --- DATA KEYS ---
         const POPULATION_KEY = "Total Population, as of 1 January (thousands)";
         const REGION_KEY = "Region, subregion, country or area *";
         const GROWTH_RATE_KEY = "Population Growth Rate (percentage)"; 
+        const NATURAL_CHANGE_KEY = "Rate of Natural Change (per 1,000 population)";
+        const NET_MIGRATION_KEY = "Net Migration Rate (per 1,000 population)";
+        const LIFE_EXPECTANCY_KEY = "Life Expectancy at Birth, both sexes (years)"; 
+
 
         const formatGlobalPopulation = (popThousands) => {
             const popMillions = popThousands / 1000;
@@ -340,7 +466,7 @@
             return popMillions.toFixed(2) + " Million";
         };
 
-        // --- TOOLTIP FUNCTIONS ---
+        // --- TOOLTIP FUNCTIONS (Section 2: Bubble Chart) ---
         function handleMouseOver(event, d) {
             d3.select(this).select("circle")
                 .attr("stroke", "#4f46e5")
@@ -367,57 +493,680 @@
             tooltip.style("opacity", 0);
         }
 
+        // --- SECTION 1: World Population Line Chart ---
+        function renderWorldPopulationChart(data) {
+            const container = d3.select("#world-population-chart");
+            const margin = { top: 30, right: 80, bottom: 50, left: 60 };
+            const fullWidth = container.node().getBoundingClientRect().width;
+            const fullHeight = 400; 
+            const chartWidth = fullWidth - margin.left - margin.right;
+            const chartHeight = fullHeight - margin.top - margin.bottom;
+
+            container.select("svg").remove(); 
+
+            const svg = container.append("svg")
+                .attr("width", fullWidth)
+                .attr("height", fullHeight)
+                .attr("class", "line-chart");
+
+            const g = svg.append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+
+            const years = data.map(d => d.year);
+            const populations = data.map(d => d.population_thousands / 1000000); 
+            const growthRates = data.map(d => d.growth_rate);
+
+            // Scales
+            const xScale = d3.scaleLinear()
+                .domain(d3.extent(years))
+                .range([0, chartWidth]);
+
+            const popMax = d3.max(populations);
+            const popScale = d3.scaleLinear()
+                .domain([0, popMax]) 
+                .range([chartHeight, 0]);
+            
+            const growthMaxAbs = d3.max(growthRates.map(Math.abs));
+            const growthScale = d3.scaleLinear()
+                .domain([d3.min(growthRates), growthMaxAbs])
+                .range([chartHeight, 0]);
+            
+            worldChartConfig = {
+                g: g, xScale: xScale, popScale: popScale, growthScale: growthScale, chartHeight: chartHeight, data: data
+            };
+
+            // Axes
+            const xAxis = d3.axisBottom(xScale).tickFormat(d3.format("d")).tickValues(d3.range(1950, 2101, 10)); 
+            const popYAxis = d3.axisLeft(popScale).tickFormat(d => d + "B");
+            const growthYAxis = d3.axisRight(growthScale).tickFormat(d => d.toFixed(1) + "%");
+
+            g.append("g").attr("class", "axis x-axis").attr("transform", `translate(0,${chartHeight})`).call(xAxis);
+
+            // Population Y Axis (Left)
+            g.append("g").attr("class", "axis pop-y-axis").call(popYAxis)
+                .append("text").attr("transform", "rotate(-90)").attr("y", -margin.left + 15).attr("x", -chartHeight / 2)
+                .attr("dy", "0.71em").attr("text-anchor", "middle").attr("fill", "#1e40af").style("font-weight", "bold")
+                .text("Population (Billions)");
+
+            // Growth Rate Y Axis (Right)
+            g.append("g").attr("class", "axis growth-y-axis").attr("transform", `translate(${chartWidth},0)`).call(growthYAxis)
+                .append("text").attr("transform", "rotate(-90)").attr("y", margin.right - 15).attr("x", chartHeight / 2)
+                .attr("dy", "0.71em").attr("text-anchor", "middle")
+                .attr("fill", "#059669").style("font-weight", "bold")
+                .text("Growth Rate (%)");
+            
+            // Population Line
+            const popLine = d3.line().x(d => xScale(d.year)).y(d => popScale(d.population_thousands / 1000000));
+            g.append("path").datum(data).attr("fill", "none").attr("stroke", "#1e40af").attr("stroke-width", 3).attr("d", popLine);
+
+            // Growth Rate Line
+            const growthLine = d3.line().x(d => xScale(d.year)).y(d => growthScale(d.growth_rate));
+            g.append("path").datum(data).attr("fill", "none").attr("stroke", "#059669").attr("stroke-width", 2).attr("stroke-dasharray", "5,5").attr("d", growthLine);
+
+            // Zero Line for Growth Rate
+            g.append("line").attr("x1", 0).attr("y1", growthScale(0)).attr("x2", chartWidth).attr("y2", growthScale(0)).attr("stroke", "#ef4444").attr("stroke-dasharray", "2,2");
+                
+            // Line Labels at Year 2050
+            const labelYear = 2050;
+            const labelData = data.find(d => d.year === labelYear); 
+
+            if (labelData) {
+                const labelPopBillion = labelData.population_thousands / 1000000;
+                const labelGrowth = labelData.growth_rate;
+
+                // 1. Population Line Label 
+                g.append("text")
+                    .attr("class", "line-label population-label")
+                    .attr("x", xScale(labelYear))
+                    .attr("y", popScale(labelPopBillion))
+                    .attr("dx", 5) 
+                    .attr("dy", "-0.8em") 
+                    .attr("text-anchor", "start")
+                    .attr("fill", "#1e40af")
+                    .style("font-size", "12px")
+                    .style("font-weight", "bold")
+                    .text("Population");
+
+                // 2. Growth Rate Line Label 
+                g.append("text")
+                    .attr("class", "line-label growth-label")
+                    .attr("x", xScale(labelYear))
+                    .attr("y", growthScale(labelGrowth))
+                    .attr("dx", 5) 
+                    .attr("dy", "1.2em") 
+                    .attr("text-anchor", "start")
+                    .attr("fill", "#059669")
+                    .style("font-size", "12px")
+                    .style("font-weight", "bold")
+                    .text("Growth Rate");
+            }
+
+            g.append("g").attr("class", "chart-highlights").style("pointer-events", "none");
+        }
+
+        function updateWorldChartHighlights(year) {
+            if (!worldChartConfig.g) return;
+            const { g, xScale, popScale, growthScale, chartHeight } = worldChartConfig;
+            const pop = globalPopulationByYear[year];
+            const growth = globalGrowthRateByYear[year];
+            const popBillion = pop / 1000000;
+            d3.select("#worldCurrentYear").text(year);
+            d3.select("#worldCurrentPopulation").text(pop ? formatGlobalPopulation(pop) : "N/A");
+            
+            const growthDisplay = d3.select("#worldCurrentGrowth");
+            if (growth !== undefined) {
+                growthDisplay.text(growth.toFixed(2) + "%");
+                growthDisplay.attr("class", `text-lg font-extrabold ml-1 ${growth > 0 ? "text-green-700" : (growth < 0 ? "text-red-700" : "text-gray-700")}`);
+            }
+
+            const highlightGroup = g.select(".chart-highlights");
+            const highlightLine = highlightGroup.selectAll(".year-line").data([year]);
+            highlightLine.enter().append("line")
+                .attr("class", "year-line").attr("stroke", "#4f46e5").attr("stroke-width", 2).attr("stroke-dasharray", "4,4").attr("y1", 0).attr("y2", chartHeight)
+                .merge(highlightLine).transition().duration(200).attr("x1", xScale(year)).attr("x2", xScale(year));
+
+            const popCircle = highlightGroup.selectAll(".pop-circle").data([popBillion]);
+            popCircle.enter().append("circle").attr("class", "pop-circle").attr("r", 0).attr("fill", "#1e40af").attr("stroke", "#ffffff").attr("stroke-width", 2)
+                .merge(popCircle).transition().duration(200).attr("r", 7).attr("cx", xScale(year)).attr("cy", popScale(popBillion));
+                
+            const growthCircle = highlightGroup.selectAll(".growth-circle").data([growth]);
+            growthCircle.enter().append("circle").attr("class", "growth-circle").attr("r", 0).attr("fill", "#059669").attr("stroke", "#ffffff").attr("stroke-width", 2)
+                .merge(growthCircle).transition().duration(200).attr("r", 7).attr("cx", xScale(year)).attr("cy", growthScale(growth));
+        }
+        
+        // --- TOOLTIP FUNCTIONS (Section 3: Stacked Bar Chart) ---
+        function handleBarMouseOver(event, d) {
+            // Find all bars within the same country group (parent node of the hit-area rect)
+            d3.select(this.parentNode).selectAll("rect:not(.hit-area)")
+                .attr("stroke", "#000") // Black border on hover
+                .attr("stroke-width", 2);
+
+            barTooltip.html(`
+                <div style="font-size: 1.1rem; font-weight: bold; margin-bottom: 5px; color: #60a5fa;">${d.country}</div>
+                <div style="font-weight: 500;">Total Growth Rate: 
+                    <span style="color: ${d.totalChange > 0 ? '#4ade80' : d.totalChange < 0 ? '#f87171' : '#ccc'};">${d.totalChange.toFixed(2)}</span>
+                     / 1,000 pop
+                </div>
+                <hr style="margin: 6px 0; border-color: #4b5563;">
+                <div>Natural Change (Births - Deaths): 
+                    <span style="color: ${d.naturalChange > 0 ? '#34d399' : '#fca5a5'};">${d.naturalChange.toFixed(2)}</span>
+                </div>
+                <div>Net Migration (In - Out): 
+                    <span style="color: ${d.netMigration > 0 ? '#60a5fa' : '#f97316'};">${d.netMigration.toFixed(2)}</span>
+                </div>
+            `)
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px")
+            .style("opacity", 1);
+        }
+
+        function handleBarMouseOut(event, d) {
+             // Find all bars within the same country group
+             d3.select(this.parentNode).selectAll("rect:not(.hit-area)")
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 0.5);
+            barTooltip.style("opacity", 0);
+        }
+
+
+        // --- SECTION 3: Stacked Bar Chart ---
+        function renderMigrationFertilityChart(countryData2025) {
+            const container = d3.select("#stacked-bar-chart-svg");
+            const margin = { top: 20, right: 30, bottom: 120, left: 50 };
+            const fullWidth = container.node().getBoundingClientRect().width || 1100;
+            const fullHeight = 450;
+            const chartWidth = fullWidth - margin.left - margin.right;
+            const chartHeight = fullHeight - margin.top - margin.bottom;
+
+            container.select("svg").remove(); // Clear previous chart
+
+            const svg = container.append("svg")
+                .attr("width", fullWidth)
+                .attr("height", fullHeight)
+                .attr("class", "bar-chart");
+
+            const g = svg.append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+            
+            // Filter to top 10 countries by population in 2025
+            const sortedData = countryData2025
+                .sort((a, b) => b.population_thousands - a.population_thousands)
+                .slice(0, 10); 
+
+            // Data Transformation for Stacked Bars
+            const keys = ['naturalChange', 'netMigration'];
+            const mappedData = sortedData.map(d => ({
+                country: d.country,
+                naturalChange: +d[NATURAL_CHANGE_KEY] || 0,
+                netMigration: +d[NET_MIGRATION_KEY] || 0,
+                totalChange: (+d[NATURAL_CHANGE_KEY] || 0) + (+d[NET_MIGRATION_KEY] || 0)
+            }));
+
+            // Scales
+            const x = d3.scaleBand()
+                .domain(mappedData.map(d => d.country))
+                .range([0, chartWidth])
+                .padding(0.3); 
+
+            // Dynamic y-axis domain calculation
+            const maxAbsRate = d3.max(mappedData, d => Math.max(Math.abs(d.totalChange), 
+                                                                Math.abs(d.naturalChange), 
+                                                                Math.abs(d.netMigration))) || 1;
+            const y = d3.scaleLinear()
+                .domain([-maxAbsRate * .2, maxAbsRate * 1.1]) 
+                .range([chartHeight, 0]);
+
+            // Color Scale
+            const color = d3.scaleOrdinal()
+                .domain(keys)
+                .range(['#059669', '#3b82f6']); // Green for Natural Change, Blue for Migration
+
+            // Axes
+            const xAxis = d3.axisBottom(x).tickSizeOuter(0);
+            const yAxis = d3.axisLeft(y);
+
+            // Draw X Axis - Zero Line
+            g.append("g")
+                .attr("transform", `translate(0,${y(0)})`) // Place zero line at y(0)
+                .call(d3.axisBottom(x).tickSize(0).tickFormat("")) // Hide tick lines
+                .select(".domain")
+                .attr("stroke", "#9ca3af");
+            
+            g.append("g") // X Axis labels (below the chart area)
+                .attr("transform", `translate(0,${chartHeight})`)
+                .call(xAxis)
+                .selectAll("text")
+                    .attr("transform", "rotate(-45)")
+                    .style("text-anchor", "end")
+                    .attr("dy", "0.9em")
+                    .attr("dx", "-0.8em");
+
+            // Draw Y Axis
+            g.append("g")
+                .call(yAxis)
+                .append("text")
+                .attr("class", "axis-label")
+                .attr("transform", "rotate(-90)")
+                .attr("y", -margin.left + 15)
+                .attr("x", -chartHeight / 2)
+                .attr("text-anchor", "middle")
+                .text("Rate (per 1,000 population)");
+
+            // Zero Line
+            g.append("line")
+                .attr("x1", 0)
+                .attr("y1", y(0))
+                .attr("x2", chartWidth)
+                .attr("y2", y(0))
+                .attr("stroke", "#1f2937")
+                .attr("stroke-width", 1.5);
+            
+            // Create a group for each country
+            const countryGroups = g.selectAll(".country-group")
+                .data(mappedData)
+                .enter().append("g")
+                .attr("class", "country-group")
+                .attr("transform", d => `translate(${x(d.country)}, 0)`);
+
+            // Create a transparent rectangle to cover the entire column area for easy hover
+            countryGroups.append("rect")
+                .attr("class", "hit-area")
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("width", x.bandwidth()) // Full width of the bar slot
+                .attr("height", chartHeight) // Full height of the chart area
+                .attr("fill", "transparent") // Invisible hit area
+                .attr("pointer-events", "all") // Ensure it captures all pointer events
+                .on("mouseover", handleBarMouseOver) // Attach mouseover to the hit area
+                .on("mouseout", handleBarMouseOut); // Attach mouseout to the hit area
+                
+
+            // Stacked Bar Logic (Appended to the country group)
+            countryGroups.each(function(d) {
+                let currentY = 0;
+                let currentYNegative = 0;
+                const group = d3.select(this);
+
+                keys.forEach(key => {
+                    const value = d[key];
+                    let barY;
+                    let barHeight;
+                    let barColor;
+
+                    if (value >= 0) {
+                        barY = y(currentY + value);
+                        barHeight = y(currentY) - barY;
+                        currentY += value;
+                        barColor = color(key);
+                    } else { // Negative value
+                        barY = y(currentYNegative);
+                        barHeight = y(currentYNegative) - y(currentYNegative + value);
+                        currentYNegative += value;
+
+                        // Use red/orange for negative contributions
+                        if (key === 'naturalChange') barColor = '#ef4444'; // Red for negative Natural Change
+                        else barColor = '#f97316'; // Orange for negative Migration
+                    }
+
+                    if (barHeight > 0.1) { // Only draw bars if they have height
+                        group.append("rect")
+                            .attr("x", 0)
+                            .attr("y", barY)
+                            .attr("height", barHeight)
+                            .attr("width", x.bandwidth())
+                            .attr("fill", barColor)
+                            .attr("stroke", "#fff")
+                            .attr("stroke-width", 0.5);
+                    }
+                });
+            });
+
+            // Legend
+            const legend = svg.append("g")
+                .attr("transform", `translate(${fullWidth / 2 - 200}, ${fullHeight - 80})`);
+
+            const legendData = [
+                { key: 'Positive Natural Change', color: '#059669' },
+               // { key: 'Negative Natural Change', color: '#ef4444' },
+                { key: 'Positive Net Migration', color: '#3b82f6' },
+               // { key: 'Negative Net Migration', color: '#f97316' }
+            ];
+
+            legend.selectAll(".legend-item")
+                .data(legendData)
+                .enter().append("g")
+                .attr("class", "legend-item")
+                .attr("transform", (d, i) => `translate(${(i % 2) * 200}, ${Math.floor(i / 2) * 20})`);
+
+            legend.selectAll(".legend-item").append("rect")
+                .attr("x", 0)
+                .attr("y", 0)
+                .attr("width", 10)
+                .attr("height", 10)
+                .attr("fill", d => d.color);
+
+            legend.selectAll(".legend-item").append("text")
+                .attr("x", 15)
+                .attr("y", 9)
+                .style("font-size", "10px")
+                .text(d => d.key);
+        }
+
+        // --- SECTION 4: Static Line Chart with Hover ---
+        
+        // Function to extract and process data for Section 4
+        function processLifeExpectancyData(data, countryData2025) {
+            // 1. Determine the top 20 most populous countries in 2025
+            const top20Countries = countryData2025
+                .sort((a, b) => b.population_thousands - a.population_thousands)
+                .slice(0, 20)
+                .map(d => d.country);
+
+            top20CountriesLE = top20Countries.map(name => {
+                return name.includes("rkiye") ? "Turkey" : name;
+            }); 
+            
+            // 2. Filter the main dataset for these 20 countries
+            const leData = data.filter(d => top20Countries.includes(d[REGION_KEY]) || (d[REGION_KEY].includes("rkiye") && top20Countries.includes("Turkey")));
+            
+            // 3. Group and nest the data: [{country: "X", values: [{year: Y, value: Z}, ...]}, ...]
+            const nestedData = d3.group(leData, d => {
+                let country = d[REGION_KEY];
+                if (country.includes("rkiye")) country = "Turkey";
+                return country;
+            });
+
+            // Store in array for line drawing
+            lifeExpectancyDataNested = Array.from(nestedData, ([key, value]) => ({
+                country: key,
+                values: value.map(d => ({
+                    year: +d.Year,
+                    value: parseFloat(d[LIFE_EXPECTANCY_KEY]) || 0
+                })).filter(d => d.value > 0).sort((a, b) => a.year - b.year)
+            })).filter(d => top20CountriesLE.includes(d.country)); 
+
+            // 4. Create lookup table keyed by year for fast hover access
+            lifeExpectancyDataByYear = {};
+            lifeExpectancyDataNested.forEach(countryData => {
+                countryData.values.forEach(d => {
+                    if (!lifeExpectancyDataByYear[d.year]) {
+                        lifeExpectancyDataByYear[d.year] = [];
+                    }
+                    lifeExpectancyDataByYear[d.year].push({ 
+                        country: countryData.country, 
+                        value: d.value,
+                        yPos: 0 
+                    });
+                });
+            });
+
+            // Ensure the nested data contains only the years 1950-2100
+            lifeExpectancyDataNested.forEach(d => {
+                d.values = d.values.filter(v => v.year >= 1950 && v.year <= 2100);
+            });
+        }
+
+        function renderLifeExpectancyChart() {
+            const container = d3.select("#le-chart-svg");
+            const margin = { top: 20, right: 100, bottom: 50, left: 60 };
+            const fullWidth = container.node().getBoundingClientRect().width || 1100;
+            const fullHeight = 500;
+            const chartWidth = fullWidth - margin.left - margin.right;
+            const chartHeight = fullHeight - margin.top - margin.bottom;
+
+            container.select("svg").remove(); 
+
+            const svg = container.append("svg")
+                .attr("width", fullWidth)
+                .attr("height", fullHeight)
+                .attr("class", "line-chart");
+
+            const g = svg.append("g")
+                .attr("transform", `translate(${margin.left},${margin.top})`);
+            
+            // 1. SCALES
+            const x = d3.scaleLinear()
+                .domain([1950, 2100])
+                .range([0, chartWidth]);
+
+            const y = d3.scaleLinear()
+                .domain([d3.min(lifeExpectancyDataNested, d => d3.min(d.values, v => v.value)) - 2, 
+                         d3.max(lifeExpectancyDataNested, d => d3.max(d.values, v => v.value)) + 2])
+                .range([chartHeight, 0]);
+
+            const color = d3.scaleOrdinal(d3.schemeCategory10)
+                .domain(top20CountriesLE);
+
+            // 2. AXES
+            const xAxis = d3.axisBottom(x).tickFormat(d3.format("d")).tickValues(d3.range(1950, 2101, 10));
+            const yAxis = d3.axisLeft(y).tickFormat(d => d + " yrs");
+
+            g.append("g") 
+                .attr("class", "axis x-axis")
+                .attr("transform", `translate(0,${chartHeight})`)
+                .call(xAxis);
+
+            g.append("g")
+                .attr("class", "axis y-axis")
+                .call(yAxis)
+                .append("text")
+                .attr("class", "axis-label")
+                .attr("transform", "rotate(-90)")
+                .attr("y", -margin.left + 15)
+                .attr("x", -chartHeight / 2)
+                .attr("text-anchor", "middle")
+                .attr("fill", "#4b5563")
+                .text("Life Expectancy (Years)");
+
+            // 3. DRAW LINES
+            const line = d3.line()
+                .x(d => x(d.year))
+                .y(d => y(d.value))
+                .defined(d => !isNaN(d.value) && d.value > 0);
+
+            g.selectAll(".country-line-base")
+                .data(lifeExpectancyDataNested)
+                .enter().append("path")
+                .attr("class", d => `country-line-base ${d.country.replace(/\s/g, '-')}`)
+                .attr("d", d => line(d.values))
+                .attr("fill", "none")
+                .attr("stroke", d => color(d.country))
+                .attr("stroke-width", 2)
+                .attr("opacity", 0.7)
+                .attr("pointer-events", "none"); 
+
+
+            // 4. INTERACTIVITY SETUP (Focus Group)
+            
+            const focus = g.append("g")
+                .attr("class", "focus")
+                .style("display", "none");
+
+            // Vertical line
+            focus.append("line")
+                .attr("class", "focus-line")
+                .attr("y1", 0)
+                .attr("y2", chartHeight);
+            
+            // Single focus circle 
+            const focusCircle = focus.append("circle")
+                .attr("r", 7)
+                .attr("fill", "white")
+                .attr("stroke-width", 2);
+
+            // 5. DATA PREP FOR FASTEST HOVER DETECTION
+            Object.keys(lifeExpectancyDataByYear).forEach(year => {
+                lifeExpectancyDataByYear[year].forEach(d => {
+                    d.yPos = y(d.value);
+                });
+            });
+
+            // 6. OVERLAY AND MOUSE EVENTS
+            svg.append("rect")
+                .attr("class", "overlay")
+                .attr("width", chartWidth)
+                .attr("height", chartHeight)
+                .attr("transform", `translate(${margin.left},${margin.top})`)
+                .style("fill", "none")
+                .style("pointer-events", "all")
+                .on("mouseover", () => { focus.style("display", null); leTooltip.style("opacity", 1); })
+                .on("mouseout", mouseout)
+                .on("mousemove", mousemove);
+
+            function mouseout() {
+                focus.style("display", "none");
+                leTooltip.style("opacity", 0);
+                
+                // Reset all lines to base style
+                d3.selectAll(".country-line-base")
+                    .attr("stroke-width", 2)
+                    .attr("opacity", 0.7);
+                
+                d3.select("#leCurrentYear").text("");
+            }
+
+            function mousemove(event) {
+                const [mx, my] = d3.pointer(event, g.node());
+                
+                // 1. Determine the closest year (snapping to 5-year intervals)
+                const invertedX = x.invert(mx);
+                const closestYear = Math.round(invertedX / 5) * 5; 
+                const safeYear = Math.max(1950, Math.min(2100, closestYear));
+                const xPos = x(safeYear);
+                
+                // 2. Find the closest *line* near the cursor's Y position
+                const dataAtYear = lifeExpectancyDataByYear[safeYear] || [];
+                
+                let minDistance = Infinity;
+                let closestCountryData = null;
+
+                dataAtYear.forEach(d => {
+                    const distance = Math.abs(my - d.yPos);
+                    if (distance < minDistance) {
+                        minDistance = distance;
+                        closestCountryData = d;
+                    }
+                });
+                
+                if (!closestCountryData) {
+                    mouseout();
+                    return;
+                }
+
+                // 3. Highlight the closest line and update focus elements
+                d3.selectAll(".country-line-base")
+                    .attr("stroke-width", 2)
+                    .attr("opacity", 0.3); 
+                
+                const highlightedLine = d3.select(`.country-line-base.${closestCountryData.country.replace(/\s/g, '-')}`);
+                highlightedLine
+                    .attr("stroke-width", 4)
+                    .attr("opacity", 1)
+                    .raise(); 
+
+                // Update focus elements for the highlighted point
+                d3.select("#leCurrentYear").text(safeYear);
+                focus.select(".focus-line").attr("transform", `translate(${xPos}, 0)`);
+                focusCircle
+                    .attr("transform", `translate(${xPos}, ${closestCountryData.yPos})`)
+                    .attr("stroke", color(closestCountryData.country))
+                    .attr("fill", color(closestCountryData.country));
+
+                // 4. Update Tooltip
+                const leValue = closestCountryData.value;
+                const country = closestCountryData.country;
+
+                let tooltipHTML = `
+                    <div style="font-weight: bold; color: ${color(country)}; margin-bottom: 5px;">${country}</div>
+                    <hr style="border-color:#e5e7eb; margin: 5px 0;">
+                    <div>Year: <span style="font-weight: bold;">${safeYear}</span></div>
+                    <div>Life Expectancy: 
+                        <span style="font-weight: bold; color: ${color(country)};">${leValue.toFixed(1)} yrs</span>
+                    </div>
+                `;
+                
+                leTooltip.html(tooltipHTML);
+                
+                // Position tooltip
+                const containerRect = container.node().getBoundingClientRect();
+                const tooltipNode = leTooltip.node();
+                const tooltipRect = tooltipNode.getBoundingClientRect();
+                
+                let left = event.pageX + 15;
+                let top = event.pageY - 10;
+
+                if (left + tooltipRect.width > containerRect.right) {
+                    left = event.pageX - tooltipRect.width - 15;
+                }
+                
+                leTooltip.style("left", left + "px").style("top", top + "px");
+            }
+        }
+        
+        // --- DATA LOADING & INITIALIZATION ---
         d3.csv("UN POP ESTand MEDIUMV.csv").then(data => {
             
             const countryData = data.filter(d => d.Type === "Country/Area");
+            let worldData = [];
             
+            const countryData2025 = countryData.filter(d => +d.Year === 2025).map(d => {
+                let countryName = d[REGION_KEY];
+                if (countryName.includes("rkiye") || countryName.includes("RKIYE")) countryName = "Turkey";
+                
+                return {
+                    year: +d.Year,
+                    country: countryName,
+                    population_thousands: +d[POPULATION_KEY].replace(/\s/g, ''),
+                    growth_rate: parseFloat(d[GROWTH_RATE_KEY]) || 0,
+                    [NATURAL_CHANGE_KEY]: parseFloat(d[NATURAL_CHANGE_KEY]) || 0,
+                    [NET_MIGRATION_KEY]: parseFloat(d[NET_MIGRATION_KEY]) || 0
+                };
+            });
+            
+            // Prepare global time series data (World Chart - Section 1)
             data.filter(d => d.Type === "World")
                 .forEach(d => {
                     const year = +d.Year;
-                    globalPopulationByYear[year] = +d[POPULATION_KEY].replace(/\s/g, '');
-                    globalGrowthRateByYear[year] = parseFloat(d[GROWTH_RATE_KEY]) || 0;
+                    const pop = +d[POPULATION_KEY].replace(/\s/g, '');
+                    const growth = parseFloat(d[GROWTH_RATE_KEY]) || 0;
+                    globalPopulationByYear[year] = pop;
+                    globalGrowthRateByYear[year] = growth;
+                    worldData.push({ year: year, population_thousands: pop, growth_rate: growth });
                 });
 
-            // Find top 200 in 2025
-            const pop2025 = countryData
-                .filter(d => +d.Year === 2025)
-                .map(d => ({
-                    name: d[REGION_KEY],
-                    population: +d[POPULATION_KEY].replace(/\s/g, '')
-                }));
+            worldData = worldData.filter(d => d.year >= 1950 && d.year <= 2100).sort((a, b) => a.year - b.year);
             
-            pop2025.sort((a, b) => b.population - a.population);
-            // Use top 200
-            const top200Countries = pop2025.slice(0, 200).map(d => d.name); 
+            // --- RENDER VISUALIZATIONS ---
             
-            // Filter data for those top 200
+            // Section 1
+            renderWorldPopulationChart(worldData);
+            const worldYearSlider = d3.select("#worldYearSlider");
+            worldYearSlider.on("input", function() {
+                updateWorldChartHighlights(+this.value);
+            });
+            updateWorldChartHighlights(2025);
+
+            // Section 3
+            renderMigrationFertilityChart(countryData2025);
+
+            // Section 4 
+            processLifeExpectancyData(data, countryData2025);
+            renderLifeExpectancyChart();
+
+
+            // --- SECTION 2: Bubble Chart Setup ---
+            const pop2025 = countryData2025.sort((a, b) => b.population_thousands - a.population_thousands);
+            const top200Countries = pop2025.slice(0, 200).map(d => d.country); 
+            
             const allRelevantData = countryData
                 .filter(d => top200Countries.includes(d[REGION_KEY]))
                 .map(d => {
-                    
                     let countryName = d[REGION_KEY];
+                    if (countryName.includes("rkiye") || countryName.includes("RKIYE")) countryName = "Turkey";
                     
-                    // 1. Fix Unicode/special character issues (Türkiye / Côte d'Ivoire)
-                    if (countryName.includes("rkiye") || countryName.includes("RKIYE")) {
-                        countryName = "Turkey";
-                    }
-                    if (countryName.includes("d'Ivoire") || countryName.includes("Ivoire")) {
-                        countryName = "Ivory Coast";
-                    }
-                    
-                    // 2. Fix China region naming (for labels and map keys)
-                    if (countryName.includes("Taiwan")) {
-                        countryName = "Taiwan";
-                    } else if (countryName.includes("Hong Kong")) {
-                        countryName = "Hong Kong";
-                    } else if (countryName.includes("Macao")) {
-                        countryName = "Macao";
-                    }
-
-
                     return {
                         year: +d.Year,
-                        country: countryName, // Use normalized name
+                        country: countryName,
                         population_thousands: +d[POPULATION_KEY].replace(/\s/g, ''),
                         growth_rate: parseFloat(d[GROWTH_RATE_KEY]) || 0 
                     };
@@ -425,20 +1174,13 @@
 
             const globalMaxPop = d3.max(allRelevantData, d => d.population_thousands) || 1;
             
-            // Radius scale UPDATED: Averaged visual size [6, 100]
-            staticRadiusScale = d3.scaleSqrt()
-                .domain([0, globalMaxPop]) 
-                .range([6, 100]); 
-
+            staticRadiusScale = d3.scaleSqrt().domain([0, globalMaxPop]).range([2, 100]); 
             const minGrowthRate = d3.min(allRelevantData, d => d.growth_rate) || 0;
             const maxGrowthRate = d3.max(allRelevantData, d => d.growth_rate) || 0;
             const maxAbsoluteGrowth = Math.max(Math.abs(minGrowthRate), Math.abs(maxGrowthRate));
             
-            const RED = "#D32F2F";
-            const LIGHT_RED = "#FFCDD2";
-            const YELLOW = "#FFEB3B";
-            const LIGHT_GREEN = "#DCEDC8";
-            const GREEN = "#4CAF50";
+            const RED = "#D32F2F"; const LIGHT_RED = "#FFCDD2"; const YELLOW = "#FFEB3B";
+            const LIGHT_GREEN = "#DCEDC8"; const GREEN = "#4CAF50";
 
             growthColorScale = d3.scaleLinear()
                 .domain([ -maxAbsoluteGrowth, -0.5, 0, 0.5, maxAbsoluteGrowth ]) 
@@ -466,19 +1208,16 @@
             console.error("Error loading CSV:", error);
         });
 
+        // --- SECTION 2: Bubble Chart Functions ---
+
         function ticked() {
             circleLayer.selectAll(".node")
                 .attr("transform", d => {
-                    // UPDATED: Hard border collision based on RADIUS
                     const r = d.radius;
-                    // Ensure the circle center is at least 'r' away from the left/top 
-                    // and at least 'r' away from the right/bottom
                     d.x = Math.max(r + 1, Math.min(width - r - 1, d.x));
                     d.y = Math.max(r + 1, Math.min(height - r - 1, d.y));
-                    
                     return `translate(${d.x}, ${d.y})`;
                 });
-            
             labelLayer.selectAll(".label")
                 .attr("transform", d => `translate(${d.x}, ${d.y})`);
         }
@@ -487,7 +1226,6 @@
             if (!staticRadiusScale || !growthColorScale) return;
             
             const yearData = allData[year];
-            
             const globalPop = globalPopulationByYear[year];
             const globalGrowth = globalGrowthRateByYear[year];
 
@@ -506,10 +1244,8 @@
             yearData.sort((a, b) => b.population_thousands - a.population_thousands);
 
             const nodes = yearData.map((d, i) => {
-                
                 let targetX = width / 2; 
                 let targetY = height / 2; 
-                
                 let coords = latLonMap[d.country];
                 
                 if (coords) {
@@ -517,8 +1253,6 @@
                     targetX = projected[0];
                     targetY = projected[1];
                 } else {
-                    // Log missing to console for debugging if needed
-                    // console.log("Missing:", d.country);
                     targetX = width / 2;
                     targetY = height - 50;
                 }
@@ -555,34 +1289,19 @@
             circleGroup.exit().transition().duration(500).attr("transform", d => `translate(${d.x},${d.y}) scale(0)`).remove();
 
             const enterGroup = circleGroup.enter().append("g")
-                .attr("class", "node")
-                .attr("transform", d => `translate(${d.x},${d.y})`) 
-                .style("cursor", "pointer") 
-                .on("mouseover", handleMouseOver) 
-                .on("mouseout", handleMouseOut); 
+                .attr("class", "node").attr("transform", d => `translate(${d.x},${d.y})`).style("cursor", "pointer") 
+                .on("mouseover", handleMouseOver).on("mouseout", handleMouseOut); 
 
-            enterGroup.append("circle")
-                .attr("r", 0) 
-                .attr("fill", d => growthColorScale(d.growth_rate)) 
-                .attr("stroke", "#fff")
-                .attr("stroke-width", 2);
+            enterGroup.append("circle").attr("r", 0).attr("fill", d => growthColorScale(d.growth_rate)).attr("stroke", "#fff").attr("stroke-width", 2);
 
-            const updateGroup = enterGroup.merge(circleGroup)
-                .on("mouseover", handleMouseOver) 
-                .on("mouseout", handleMouseOut); 
+            const updateGroup = enterGroup.merge(circleGroup).on("mouseover", handleMouseOver).on("mouseout", handleMouseOut); 
 
             updateGroup.select("circle").transition().duration(750).ease(d3.easeCubicOut)
-                .attr("r", d => d.radius)
-                .attr("fill", d => growthColorScale(d.growth_rate)); 
+                .attr("r", d => d.radius).attr("fill", d => growthColorScale(d.growth_rate)); 
                 
             const label = labelLayer.selectAll(".label").data(nodes, d => d.id);
-
             label.exit().remove();
-
-            const enterLabel = label.enter().append("text")
-                .attr("class", "label")
-                .attr("opacity", 0);
-
+            const enterLabel = label.enter().append("text").attr("class", "label").attr("opacity", 0);
             const updateLabel = enterLabel.merge(label);
 
             updateLabel.transition().duration(750).attr("opacity", 1); 
@@ -594,17 +1313,12 @@
                     const popMillions = (d.population_thousands / 1000).toFixed(2);
                     const countryName = d.country.split(',')[0]; 
                     
-                    // UPDATED LOGIC: Top 50 always visible
                     if (d.rank <= 50) {
-                        // Detailed view for Top 20 or very large blobs
                         if (d.rank <= 20 || d.radius > 60) {
                              return `<tspan dy="-0.5em" x="0" style="font-weight:700;">${countryName}</tspan><tspan dy="1.2em" x="0">${popMillions}M</tspan>`;
                         }
-                        // Name only for 21-50
                         return `<tspan dy="0.3em" x="0" style="font-size: 0.6rem; font-weight:600;">${countryName}</tspan>`;
                     }
-
-                    // Fallback for non-top-50 if they happen to be large enough
                     if (d.radius > 30) { 
                         return `<tspan dy="0.3em" x="0">${countryName}</tspan>`;
                     }
@@ -612,5 +1326,3 @@
                 }); 
         } 
     </script>
-</body>
-</html>

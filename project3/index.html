@@ -235,7 +235,7 @@
             // Define the radius scale ONCE, based on the global max
             staticRadiusScale = d3.scaleSqrt()
                 .domain([0, globalMaxPop]) 
-                .range([8, 100]); 
+                .range([2, 100]); 
 
             // --- MODIFIED: Calculate Max/Min Growth Rate for Color Scale and make it even MORE DRAMATIC ---
             const minGrowthRate = d3.min(allRelevantData, d => d.growth_rate) || 0;

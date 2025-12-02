@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Population Dynamics Visualization</title>
+    <!-- Load Tailwind CSS for utility classes -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Load D3.js for visualization -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    
+    <style>
+        /* D3 Specific Styles */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8;
+        }
+        .chart-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
+        }
+        .slider-control {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+            gap: 15px;
+            padding: 10px 0;
+            user-select: none;
+        }
+        input[type=range] {
+            width: 100%;
+            height: 8px;
+            background: #d1d5db;
+            border-radius: 5px;
+            outline: none;
+            opacity: 0.9;
+            transition: opacity .15s;
+        }
+        input[type=range]:hover { opacity: 1; }
+        
+        .blob-label {
+            pointer-events: none;
+            font-size: 0.7rem;
+            text-anchor: middle;
+            fill: #1f2937;
+            font-weight: 500;
+            /* White glow for readability against colored circles */
+            text-shadow: 
+                -1px -1px 0 #fff,  
+                 1px -1px 0 #fff,
+                -1px  1px 0 #fff,
+                 1px  1px 0 #fff;
+        }
+        .blob-label-large {
+            font-size: 0.9rem;
+            font-weight: 700;
+        }
+        .tooltip {
+            position: absolute;
+            background-color: #1f2937;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            pointer-events: none;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.2s;
+            line-height: 1.4; 
+            z-index: 100; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chart-container">
+        <div class="text-center mb-4">
+            <h2 class="text-3xl font-bold text-gray-800 mb-2">Global Population Dynamics</h2>
+            <span class="text-lg font-semibold text-gray-700">Total Global Population in </span>
+            <span id="globalYear" class="text-xl font-extrabold text-indigo-600">2025</span>
+            <span class="text-lg font-semibold text-gray-700">:</span>
+            <span id="globalPopulationDisplay" class="text-2xl font-extrabold text-indigo-800 ml-2">...</span>
+            <br>
+            <span class="text-md font-semibold text-gray-700">Global Growth Rate: </span>
+            <span id="globalGrowthDisplay" class="text-lg font-extrabold text-green-700 ml-1">...</span>
+        </div>
+        <div class="slider-control px-10">
+            <span id="yearDisplay" class="text-2xl font-extrabold text-indigo-600 w-16 text-center">2025</span>
+            <input type="range" id="yearSlider" min="1950" max="2100" step="5" value="2025" />
+            <span class="text-lg font-semibold text-gray-500">2100</span>
+        </div>
+
+        <div id="visualization" class="flex justify-center overflow-hidden">
+            <!-- Ensure SVG dimensions are set correctly -->
+            <svg id="packed-circles" width="1100" height="650">
+                <g id="circle-layer"></g> 
+                <g id="label-layer"></g> 
+            </svg>
+        </div>
+    </div>
+    
+    <div id="tooltip" class="tooltip"></div>
+
+    <script>
+        // Data Structure for Map Coordinates (Essential for Geographic Placement)
+        const latLonMap = {
+            "China": [104.1954, 35.8617],
+            "India": [78.9629, 20.5937],
+            "United States of America": [-95.7129, 37.0902],
+            "Indonesia": [113.9213, -0.7893], "Pakistan": [69.3451, 30.3753], "Nigeria": [8.6753, 9.0820], 
+            "Brazil": [-51.9253, -14.2350], "Bangladesh": [90.3563, 23.6850], "Russian Federation": [105.3188, 61.5240], 
+            "Ethiopia": [40.4897, 9.1450], "Mexico": [-102.5528, 23.6345], "Japan": [138.2529, 36.2048], 
+            "Philippines": [121.7740, 12.8797], "Egypt": [30.8025, 26.8206], "DR Congo": [21.7587, -4.0383], 
+            "Democratic Republic of the Congo": [21.7587, -4.0383], "Viet Nam": [108.2772, 14.0583], 
+            "Iran (Islamic Republic of)": [53.6880, 32.4279], "Turkey": [35.2433, 38.9637], "Germany": [10.4515, 51.1657], 
+            "Thailand": [100.9925, 15.8700], "United Kingdom": [-3.4360, 55.3781], "United Republic of Tanzania": [34.8888, -6.3690], 
+            "France": [2.2137, 46.2276], "South Africa": [22.9375, -30.5595], "Italy": [12.5674, 41.8719], 
+            "Kenya": [37.9062, -0.0236], "Myanmar": [95.9560, 21.9162], "Colombia": [-74.2973, 4.5709], 
+            "Republic of Korea": [127.7669, 35.9078], "Uganda": [32.2903, 1.3733], "Sudan": [30.2176, 12.8628], 
+            "Spain": [-3.7492, 40.4637], "Argentina": [-63.6167, -38.4161], "Algeria": [1.6596, 28.0339], 
+            "Iraq": [43.6793, 33.2232], "Afghanistan": [67.7100, 33.9391], "Poland": [19.1451, 51.9194], 
+            "Canada": [-106.3468, 56.1304], "Morocco": [-7.0926, 31.7917], "Ukraine": [31.1656, 48.3794], 
+            "Saudi Arabia": [45.0792, 23.8859], "Angola": [17.8739, -11.2027], "Uzbekistan": [64.5853, 41.3775], 
+            "Yemen": [48.5164, 15.5527], "Peru": [-75.0152, -9.1900], "Malaysia": [101.9758, 4.2105], 
+            "Ghana": [-1.0232, 7.9465], "Mozambique": [35.5296, -18.6657], "Nepal": [84.1240, 28.3949], 
+            "Madagascar": [46.8691, -18.7669], "Ivory Coast": [-5.5471, 7.5400], 
+            "Venezuela (Bolivarian Republic of)": [-66.5897, 6.4238], 
+            "Cameroon": [12.3547, 7.3697], "Niger": [8.0817, 17.6078], "Australia": [133.7751, -25.2744], 
+            "Dem. People's Republic of Korea": [127.5101, 40.3399], "Mali": [-3.9962, 17.5707], "Burkina Faso": [-1.5616, 12.2383], 
+            "Syrian Arab Republic": [38.9968, 34.8021], "Sri Lanka": [80.7718, 7.8731], "Malawi": [34.3015, -13.2543], 
+            "Zambia": [27.8493, -13.1339], "Romania": [24.9668, 45.9432], "Chile": [-71.5430, -35.6751], 
+            "Kazakhstan": [66.9237, 48.0196], "Chad": [18.7322, 15.4542], "Ecuador": [-78.1834, -1.8312], 
+            "Somalia": [46.1996, 5.1521], "Guatemala": [-90.2308, 15.7835], "Senegal": [-14.4524, 14.4974], 
+            "Netherlands": [5.2913, 52.1326], "Cambodia": [104.9910, 12.5657], "Zimbabwe": [29.1549, -19.0154], 
+            "Guinea": [-9.6966, 9.9456], "Rwanda": [29.8739, -1.9403], "Benin": [2.3158, 9.3077], 
+            "Burundi": [29.9189, -3.3731], "Tunisia": [9.5375, 33.8869], "Bolivia (Plurinational State of)": [-63.5887, -16.2902], 
+            "Haiti": [-72.2852, 18.9712], "Belgium": [4.4699, 50.5039], "Jordan": [36.2384, 30.5852], 
+            "Dominican Republic": [-70.1627, 18.7357], "Cuba": [-77.7812, 21.5218], "South Sudan": [31.3070, 6.8770], 
+            "Sweden": [18.6435, 60.1282], "Czechia": [15.4730, 49.8175], "Honduras": [-86.2419, 15.1999], 
+            "Greece": [21.8243, 39.0742], "Azerbaijan": [47.5769, 40.1431], "Portugal": [-8.2245, 39.3999], 
+            "Papua New Guinea": [143.9555, -6.3149], "Hungary": [19.5033, 47.1625], "Tajikistan": [71.2761, 38.8610], 
+            "Belarus": [27.9534, 53.7098], "United Arab Emirates": [53.8478, 23.4241], "Israel": [34.8516, 31.0461], 
+            "Austria": [14.5501, 47.5162], "Togo": [0.8248, 8.6195], "Switzerland": [8.2275, 46.8182], 
+            "Sierra Leone": [-11.7799, 8.4606], "Lao People's Democratic Republic": [102.4955, 19.8563], 
+
+            // --- RECENTLY ADDED/UPDATED ---
+            "Kosovo": [20.9030, 42.6026], // Added Kosovo
+            "Jersey": [-2.1312, 49.2144], // Added Jersey
+            
+            // China Regions
+            "Hong Kong": [114.1694, 22.3193], 
+            "Macao": [113.5439, 22.1987],     
+            "Taiwan": [121.5654, 23.6975],   
+            
+            "Serbia": [21.0059, 44.0165], "Nicaragua": [-85.2072, 12.8654], 
+            "Libya": [17.2283, 26.3351], "Paraguay": [-58.4438, -23.4425], "Kyrgyzstan": [74.7661, 41.2044], 
+            "Bulgaria": [25.4858, 42.7339], "Turkmenistan": [59.5563, 38.9697], "El Salvador": [-88.8965, 13.7942], 
+            "Congo": [15.8277, -0.2280], "Singapore": [103.8198, 1.3521], "Denmark": [9.5018, 56.2639], 
+            "Central African Republic": [20.9394, 6.6111], "Slovakia": [19.6990, 48.6690], "Finland": [25.7482, 61.9241], 
+            "Liberia": [-9.4295, 6.4281], "Norway": [8.4689, 60.4720], "State of Palestine": [35.2332, 31.9522], 
+            "New Zealand": [174.8860, -40.9006], "Costa Rica": [-83.7534, 9.7489], "Lebanon": [35.8623, 33.8547], 
+            "Ireland": [-8.2439, 53.4129], "Mauritania": [-10.9408, 21.0079], "Oman": [55.9233, 21.5126], 
+            "Panama": [-80.7821, 8.5380], "Kuwait": [47.4818, 29.3117], "Croatia": [15.2000, 45.1000], 
+            "Eritrea": [39.7823, 15.1794], "Georgia": [43.3569, 42.3154], "Mongolia": [103.8467, 46.8625], 
+            "Republic of Moldova": [28.3699, 47.4116], "Uruguay": [-55.7658, -32.5228], "Bosnia and Herzegovina": [17.6791, 43.9159], 
+            "Puerto Rico": [-66.5901, 18.2208], "Armenia": [45.0382, 40.0691], "Lithuania": [23.8813, 55.1694], 
+            "Qatar": [51.1839, 25.3548], "Albania": [20.1683, 41.1533], "Jamaica": [-77.2975, 18.1096], 
+            "Namibia": [18.4904, -22.9576], "Gambia": [-15.3101, 13.4432], "Botswana": [24.6849, -22.3285], 
+            "Gabon": [11.6094, -0.8037], "Lesotho": [28.2336, -29.6100], "North Macedonia": [21.7453, 41.6086], 
+            "Slovenia": [14.9955, 46.1512], "Guinea-Bissau": [-15.1804, 11.8037], "Latvia": [24.6032, 56.8796], 
+            "Bahrain": [50.5577, 26.0667], "Equatorial Guinea": [10.2679, 1.6508], "Trinidad and Tobago": [-61.2225, 10.6918], 
+            "Estonia": [25.0136, 58.5953], "Timor-Leste": [125.7275, -8.8742], "Mauritius": [57.5522, -20.3484], 
+            "Cyprus": [33.4299, 35.1264], "Eswatini": [31.4659, -26.5225], "Djibouti": [42.5903, 11.8251], 
+            
+            // Updated spellings for CSV matching
+            "Réunion": [55.5364, -21.1151], 
+            "Reunion": [55.5364, -21.1151], // Alternative spelling for matching
+            
+            "Fiji": [178.0650, -17.7134], "Comoros": [43.3333, -11.6455], 
+            "Guyana": [-58.9302, 4.8604], "Bhutan": [90.4336, 27.5142], "Solomon Islands": [160.1562, -9.6457], 
+            "Montenegro": [19.3744, 42.7087], "Luxembourg": [6.1296, 49.8153], 
+            "Western Sahara": [-12.8858, 24.2155], "Suriname": [-56.0278, 3.9193], "Cabo Verde": [-24.0132, 16.0021], 
+            "Maldives": [73.2207, 3.2028], "Malta": [14.3754, 35.9375], "Brunei Darussalam": [114.7277, 4.5353], 
+            "Belize": [-88.4976, 17.1899], "Bahamas": [-77.3963, 25.0343], "Guadeloupe": [-61.5510, 16.2650], 
+            "Iceland": [-19.0208, 64.9631], "Martinique": [-61.0242, 14.6415], "Vanuatu": [166.9592, -15.3767], 
+            "French Guiana": [-53.1258, 3.9339], "Barbados": [-59.5432, 13.1939], "New Caledonia": [165.6180, -20.9043], 
+            "French Polynesia": [-149.4068, -17.6797], "Mayotte": [45.1662, -12.8275], "Sao Tome and Principe": [6.6131, 0.1864], 
+            "Samoa": [-172.1046, -13.7590], "Saint Lucia": [-60.9789, 13.9094], "Channel Islands": [-2.5392, 49.3723], 
+            "Guam": [144.7937, 13.4443], 
+            
+            // Updated Curacao
+            "Curaçao": [-68.9900, 12.1696], 
+            "Curacao": [-68.9900, 12.1696], // Alternative spelling for matching
+            
+            "Kiribati": [-168.7340, -3.3704], 
+            "Micronesia (Fed. States of)": [158.1508, 6.8874], "Grenada": [-61.6790, 12.1165], 
+            
+            // Updated St Vincent
+            "Saint Vincent": [-61.2872, 13.2528], 
+            "Saint Vincent and the Grenadines": [-61.2872, 13.2528], // Full spelling for matching
+            
+            "Aruba": [-69.9683, 12.5211], "Tonga": [-175.1982, -21.1790], 
+            "U.S. Virgin Islands": [-64.8963, 18.3358], "Seychelles": [55.4920, -4.6796], "Antigua and Barbuda": [-61.7964, 17.0608], 
+            "Isle of Man": [-4.5481, 54.2361], "Andorra": [1.5218, 42.5063], "Dominica": [-61.3710, 15.4150], 
+            "Cayman Islands": [-81.2546, 19.3133], "Bermuda": [-64.7574, 32.3078], "Marshall Islands": [171.1845, 7.1315], 
+            "Northern Mariana Islands": [145.6739, 15.0979], "Greenland": [-42.6043, 71.7069], "American Samoa": [-170.1322, -14.2710], 
+            "Saint Kitts and Nevis": [-62.7830, 17.3578], "Faeroe Islands": [-6.9118, 61.8926], 
+            "Sint Maarten (Dutch part)": [-63.0548, 18.0425], "Monaco": [7.4128, 43.7384], "Turks and Caicos Islands": [-71.7979, 21.9833], 
+            "Saint Martin (French part)": [-63.0501, 18.0708], "Liechtenstein": [9.5554, 47.1660], "San Marino": [12.4578, 43.9424], 
+            "Gibraltar": [-5.3536, 36.1408], "British Virgin Islands": [-64.6491, 18.4207], "Palau": [134.5825, 7.5135], 
+            "Cook Islands": [-159.7777, -21.2367], "Anguilla": [-63.0686, 18.2206], "Tuvalu": [177.6493, -7.1095], 
+            "Wallis and Futuna Islands": [-178.1165, -14.2938], "Nauru": [166.9315, -0.5228], "Saint Helena": [-5.7049, -15.9650], 
+            "Saint Pierre and Miquelon": [-56.2711, 46.8852], "Montserrat": [-62.1874, 16.7425], 
+            "Falkland Islands (Malvinas)": [-59.5236, -51.7963], "Tokelau": [-171.8484, -9.2002], "Niue": [-169.8546, -19.0544], 
+            "Holy See": [12.4534, 41.9029]
+        };
+
+        // --- D3 SETUP ---
+        const svg = d3.select("#packed-circles");
+        const circleLayer = d3.select("#circle-layer"); 
+        const labelLayer = d3.select("#label-layer");   
+        const tooltip = d3.select("#tooltip");
+        const width = +svg.attr("width");
+        const height = +svg.attr("height");
+        
+        // Map Projection (Mercator) - used to assign static x/y targets to countries
+        const projection = d3.geoMercator()
+            .scale(160)
+            .translate([width / 2, height / 1.6]); 
+        
+        let allData = {}; // Stores all yearly data keyed by year
+        let globalPopulationByYear = {}; // Stores global pop for display
+        let globalGrowthRateByYear = {}; // Stores global growth for display
+        let simulation = null; // D3 Force Simulation instance
+        let staticRadiusScale = null; // Scale for circle size based on population
+        let growthColorScale = null; // Color scale based on growth rate
+
+        // Constants for reading the CSV data columns
+        const POPULATION_KEY = "Total Population, as of 1 January (thousands)";
+        const REGION_KEY = "Region, subregion, country or area *";
+        const GROWTH_RATE_KEY = "Population Growth Rate (percentage)"; 
+
+        /**
+         * Formats population from thousands to Millions or Billions.
+         * @param {number} popThousands Population value in thousands.
+         * @returns {string} Formatted population string.
+         */
+        const formatGlobalPopulation = (popThousands) => {
+            const popMillions = popThousands / 1000;
+            if (popMillions >= 1000) { 
+                return (popMillions / 1000).toFixed(2) + " Billion";
+            }
+            return popMillions.toFixed(2) + " Million";
+        };
+
+        // --- TOOLTIP FUNCTIONS ---
+        function handleMouseOver(event, d) {
+            d3.select(this).select("circle")
+                .attr("stroke", "#4f46e5")
+                .attr("stroke-width", 4);
+
+            const popMillions = (d.population_thousands / 1000).toFixed(2);
+            const growthRate = d.growth_rate ? d.growth_rate.toFixed(2) + "%" : "N/A";
+
+            tooltip.html(`
+                <div style="font-size:1.1rem; font-weight:bold;">${d.country.split(',')[0]}</div>
+                <div style="font-size:0.8rem; color:#aaa;">Rank #${d.rank}</div>
+                Population: <strong>${popMillions} M</strong><br/>
+                Growth Rate: <strong>${growthRate}</strong>
+            `)
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 28) + "px")
+            .style("opacity", 1);
+        }
+
+        function handleMouseOut(event, d) {
+            d3.select(this).select("circle")
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 2);
+            tooltip.style("opacity", 0);
+        }
+
+        // --- DATA LOADING AND INITIALIZATION ---
+        // NOTE: This assumes a file named 'UN POP ESTand MEDIUMV.csv' is available
+        // in the environment, as referenced in the original code.
+        d3.csv("UN POP ESTand MEDIUMV.csv").then(data => {
+            
+            const countryData = data.filter(d => d.Type === "Country/Area");
+            
+            // Extract Global Population and Growth Rate by Year
+            data.filter(d => d.Type === "World")
+                .forEach(d => {
+                    const year = +d.Year;
+                    globalPopulationByYear[year] = +d[POPULATION_KEY].replace(/\s/g, '');
+                    globalGrowthRateByYear[year] = parseFloat(d[GROWTH_RATE_KEY]) || 0;
+                });
+
+            // Find top 200 countries by population in 2025 (to keep visualization clean)
+            const pop2025 = countryData
+                .filter(d => +d.Year === 2025)
+                .map(d => ({
+                    name: d[REGION_KEY],
+                    population: +d[POPULATION_KEY].replace(/\s/g, '')
+                }));
+            
+            pop2025.sort((a, b) => b.population - a.population);
+            const top200Countries = pop2025.slice(0, 200).map(d => d.name); 
+            
+            // Filter and clean all relevant data
+            const allRelevantData = countryData
+                .filter(d => top200Countries.includes(d[REGION_KEY]))
+                .map(d => {
+                    
+                    let countryName = d[REGION_KEY];
+                    
+                    // Normalization/Fixes for known data issues
+                    if (countryName.includes("rkiye") || countryName.includes("RKIYE")) {
+                        countryName = "Turkey";
+                    }
+                    if (countryName.includes("d'Ivoire") || countryName.includes("Ivoire")) {
+                        countryName = "Ivory Coast";
+                    }
+
+                    return {
+                        year: +d.Year,
+                        country: countryName,
+                        population_thousands: +d[POPULATION_KEY].replace(/\s/g, ''),
+                        growth_rate: parseFloat(d[GROWTH_RATE_KEY]) || 0 
+                    };
+                });
+
+            const globalMaxPop = d3.max(allRelevantData, d => d.population_thousands) || 1;
+            
+            // Setup Radius Scale (sqrt for visual area comparison)
+            staticRadiusScale = d3.scaleSqrt()
+                .domain([0, globalMaxPop]) 
+                .range([2, 100]); 
+
+            // Setup Color Scale (Diverging scale for Growth Rate)
+            const minGrowthRate = d3.min(allRelevantData, d => d.growth_rate) || 0;
+            const maxGrowthRate = d3.max(allRelevantData, d => d.growth_rate) || 0;
+            const maxAbsoluteGrowth = Math.max(Math.abs(minGrowthRate), Math.abs(maxGrowthRate));
+            
+            const RED = "#D32F2F";
+            const LIGHT_RED = "#FFCDD2";
+            const YELLOW = "#FFEB3B";
+            const LIGHT_GREEN = "#DCEDC8";
+            const GREEN = "#4CAF50";
+
+            growthColorScale = d3.scaleLinear()
+                .domain([ -maxAbsoluteGrowth, -0.5, 0, 0.5, maxAbsoluteGrowth ]) 
+                .range([ RED, LIGHT_RED, YELLOW, LIGHT_GREEN, GREEN ]) 
+                .clamp(true);
+
+            // Group data by year for easy access
+            allData = allRelevantData.reduce((acc, d) => {
+                if (!acc[d.year]) { acc[d.year] = []; }
+                acc[d.year].push(d);
+                return acc;
+            }, {});
+
+            // Initialize visualization with default year (2025)
+            updateVisualization(2025);
+
+            // Setup Slider interaction
+            const yearSlider = d3.select("#yearSlider");
+            const yearDisplay = d3.select("#yearDisplay");
+
+            yearSlider.on("input", function() {
+                const year = +this.value;
+                yearDisplay.text(year);
+                updateVisualization(year);
+            });
+
+        }).catch(error => {
+            console.error("Error loading CSV: Ensure 'UN POP ESTand MEDIUMV.csv' is available.", error);
+        });
+
+        // --- FORCE SIMULATION TICK FUNCTION ---
+        function ticked() {
+            // Update circle positions
+            circleLayer.selectAll(".node")
+                .attr("transform", d => {
+                    // Boundary collision logic
+                    const r = d.radius;
+                    d.x = Math.max(r + 1, Math.min(width - r - 1, d.x));
+                    d.y = Math.max(r + 1, Math.min(height - r - 1, d.y));
+                    
+                    return `translate(${d.x}, ${d.y})`;
+                });
+            
+            // Update label positions (centered on circles)
+            labelLayer.selectAll(".label")
+                .attr("transform", d => `translate(${d.x}, ${d.y})`);
+        }
+
+        // --- MAIN UPDATE FUNCTION (Called on slider change) ---
+        function updateVisualization(year) {
+            if (!staticRadiusScale || !growthColorScale) return;
+            
+            const yearData = allData[year];
+            
+            // Update Global Summary Metrics
+            const globalPop = globalPopulationByYear[year];
+            const globalGrowth = globalGrowthRateByYear[year];
+
+            d3.select("#globalYear").text(year);
+            d3.select("#globalPopulationDisplay").text(globalPop ? formatGlobalPopulation(globalPop) : "N/A");
+            
+            const globalGrowthDisplay = d3.select("#globalGrowthDisplay");
+            if (globalGrowth !== undefined) {
+                globalGrowthDisplay.text(globalGrowth.toFixed(2) + "%");
+                // Dynamic color coding for growth rate
+                if (globalGrowth > 0.5) globalGrowthDisplay.attr("class", "text-lg font-extrabold text-green-700 ml-1");
+                else if (globalGrowth < -0.5) globalGrowthDisplay.attr("class", "text-lg font-extrabold text-red-700 ml-1");
+                else globalGrowthDisplay.attr("class", "text-lg font-extrabold text-yellow-600 ml-1"); // Near zero
+            }
+
+            if (!yearData) return;
+            yearData.sort((a, b) => b.population_thousands - a.population_thousands);
+
+            // Prepare nodes for force simulation
+            const nodes = yearData.map((d, i) => {
+                let targetX = width / 2; 
+                let targetY = height / 2; 
+                
+                // Get geographic coordinates for positional targeting
+                let coords = latLonMap[d.country];
+                
+                if (coords) {
+                    const projected = projection(coords);
+                    targetX = projected[0];
+                    targetY = projected[1];
+                } 
+
+                return {
+                    ...d,
+                    id: d.country, 
+                    rank: i + 1, 
+                    radius: staticRadiusScale(d.population_thousands),
+                    fxTarget: targetX, 
+                    fyTarget: targetY, 
+                    x: d.x || targetX, // Preserve existing position if available
+                    y: d.y || targetY,
+                };
+            });
+
+            // Initialize or update the Force Simulation
+            if (simulation === null) {
+                simulation = d3.forceSimulation(nodes)
+                    .force("charge", d3.forceManyBody().strength(-5)) 
+                    .force("x", d3.forceX(d => d.fxTarget).strength(0.15)) 
+                    .force("y", d3.forceY(d => d.fyTarget).strength(0.15)) 
+                    .force("collide", d3.forceCollide().radius(d => d.radius + 1).iterations(2)) 
+                    .on("tick", ticked);
+            } else {
+                simulation.nodes(nodes);
+                simulation.force("x").strength(0.15);
+                simulation.force("y").strength(0.15);
+                simulation.force("collide").radius(d => d.radius + 1);
+                // Reheat the simulation to make transitions smooth
+                simulation.alpha(0.5).restart(); 
+            }
+
+            // --- DATA JOIN: CIRCLES ---
+            const circleGroup = circleLayer.selectAll(".node").data(nodes, d => d.id); 
+
+            // EXIT transition
+            circleGroup.exit().transition().duration(500).attr("transform", d => `translate(${d.x},${d.y}) scale(0)`).remove();
+
+            // ENTER selection
+            const enterGroup = circleGroup.enter().append("g")
+                .attr("class", "node")
+                .attr("transform", d => `translate(${d.x},${d.y})`) 
+                .style("cursor", "pointer") 
+                .on("mouseover", handleMouseOver) 
+                .on("mouseout", handleMouseOut); 
+
+            enterGroup.append("circle")
+                .attr("r", 0) 
+                .attr("fill", d => growthColorScale(d.growth_rate)) 
+                .attr("stroke", "#fff")
+                .attr("stroke-width", 2);
+
+            // UPDATE selection (Merge enter and update)
+            const updateGroup = enterGroup.merge(circleGroup);
+
+            updateGroup.select("circle").transition().duration(750).ease(d3.easeCubicOut)
+                .attr("r", d => d.radius)
+                .attr("fill", d => growthColorScale(d.growth_rate)); 
+                
+            // --- DATA JOIN: LABELS ---
+            const label = labelLayer.selectAll(".label").data(nodes, d => d.id);
+
+            // EXIT labels
+            label.exit().remove();
+
+            // ENTER labels
+            const enterLabel = label.enter().append("text")
+                .attr("class", "label")
+                .attr("opacity", 0);
+
+            // UPDATE labels (Merge enter and update)
+            const updateLabel = enterLabel.merge(label);
+
+            updateLabel.transition().duration(750).attr("opacity", 1); 
+
+            updateLabel
+                .attr("class", d => (d.rank <= 20 || d.radius > 50) ? "label blob-label blob-label-large" : "label blob-label")
+                .attr("fill", "#1f2937") 
+                .html(d => {
+                    const popMillions = (d.population_thousands / 1000).toFixed(2);
+                    const countryName = d.country.split(',')[0]; 
+                    
+                    // Show detailed labels for top countries or very large blobs
+                    if (d.rank <= 50) {
+                        if (d.rank <= 20 || d.radius > 60) {
+                             return `<tspan dy="-0.5em" x="0" style="font-weight:700;">${countryName}</tspan><tspan dy="1.2em" x="0">${popMillions}M</tspan>`;
+                        }
+                        // Name only for 21-50
+                        return `<tspan dy="0.3em" x="0" style="font-size: 0.6rem; font-weight:600;">${countryName}</tspan>`;
+                    }
+
+                    // Fallback visibility for smaller but still relevant blobs
+                    if (d.radius > 30) { 
+                        return `<tspan dy="0.3em" x="0">${countryName}</tspan>`;
+                    }
+                    return ""; 
+                }); 
+        } 
+    </script>
+</body>
+</html>
