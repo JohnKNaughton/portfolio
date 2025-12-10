@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earth's Population at an Unprecedented Inflection Point</title>
+    <title>Earth's Population is at an Unprecedented Inflection Point</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://d3js.org/d3.v7.min.js"></script>
@@ -11,7 +11,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8f8f8;
+            background-color: #386a91;
         }
         .viz-container {
             min-height: 400px;
@@ -148,7 +148,107 @@
     </style>
 </head>
 <body class="text-gray-800">
+<script src="https://cdn.jsdelivr.net/npm/d3@7"></script>
 
+<style>
+    /* CSS for the Counting Overlay */
+    #counting-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: #0d1a26; /* Dark background */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9998;
+        opacity: 1;
+        transition: opacity 1.5s ease-in-out; /* Smooth fade for manual removal */
+        color: #e6f7ff;
+        font-family: 'Consolas', monospace;
+    }
+
+    #count-value {
+        font-size: 4em;
+        margin-bottom: 20px;
+        color: #4CAF50; /* A contrasting color for the number */
+    }
+
+    #count-label {
+        font-size: 1.5em;
+        color: #8c9fae;
+        margin-bottom: 40px;
+    }
+
+    #continue-button {
+        padding: 12px 30px;
+        font-size: 1.1em;
+        background-color: #4682b4; /* Steel Blue for a UN theme */
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        opacity: 0; /* Initially hidden */
+        transition: opacity 0.5s ease-in;
+        pointer-events: none; /* Block clicks until visible */
+    }
+
+    #continue-button:hover {
+        background-color: #386a91;
+    }
+</style>
+
+<div id="counting-overlay">
+    <div id="count-value">0</div>
+    <div id="count-label">Population of Earth December 2025</div>
+    <button id="continue-button" onclick="hideOverlay()">What's Next?</button>
+</div>
+
+<script>
+    // D3 Counting Animation
+    // NOTE: This uses an approximate value for the current population (8,200,000,000)
+    const targetPopulation = 8261526668;
+    const durationTime = 3000; // 3 seconds for the count up
+
+    // Function to format the number with commas
+    const numberFormatter = d3.format(",");
+
+    function updateCount(value) {
+        // Formats the number with commas and removes any decimal part
+        d3.select("#count-value").text(numberFormatter(Math.floor(value)));
+    }
+
+    // Function to handle the button click and fade out the overlay
+    function hideOverlay() {
+        const overlay = document.getElementById('counting-overlay');
+        overlay.style.opacity = '0'; 
+
+        // Remove the overlay element completely after the transition is done (1.5s)
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 1500);
+    }
+
+    // Use D3's transition to animate the number from 0 to the target
+    d3.select("#count-value")
+        .transition()
+        .duration(durationTime)
+        .ease(d3.easeCubicOut)
+        .tween("text", function() {
+            const i = d3.interpolate(0, targetPopulation);
+            return function(t) {
+                updateCount(i(t));
+            };
+        })
+        .on("end", function() {
+            // Once the count is finished, make the button visible and clickable
+            const button = document.getElementById('continue-button');
+            button.style.opacity = '1';
+            button.style.pointerEvents = 'auto';
+        });
+</script>
     <nav class="bg-white shadow mb-4">
         <div class="max-w-7xl mx-auto px-4 py-3">
             <a href="../index.html" class="text-blue-600 hover:text-blue-800 font-semibold">← Back to Home</a>      | John Naughton December 2025 UCSD
@@ -159,7 +259,7 @@
 
         <header class="text-center py-10 bg-white rounded-xl shadow-lg mb-8">
             <h1 class="text-4xl sm:text-5xl font-extrabold text-blue-800 tracking-tight">
-                Earth's Population at an Unprecedented Inflection Point
+                Earth's Population is at an Unprecedented Inflection Point
             </h1>
             <p class="mt-3 text-xl text-gray-600">
                 
@@ -171,11 +271,16 @@
                 1. The Big Picture - UN Projections
             </h2>
             <p class="mb-4 text-lg leading-relaxed">
-                For centuries, the story of global population has been one of relentless, Malthusian growth. However, most models, and this set of official UN predictions, suggest the world population will reach its maximum—somewhere between 9.7 and 10.4 billion people—by the mid-2070s. For the first time in modern history, the global headcount is expected to stagnate and perhaps enter a slow, sustained decline. This shift marks a profound inflection point, moving global discourse from concerns of "overpopulation" to the challenges of smaller labor pools and aging societies.
+                For millennia, the story of human society has been one of relentless, Malthusian growth, culminating in an industrial, technological, and 
+                logistical boom that saw the population of Earth grow from 2 Billion to 8 Billion in the last century. However this trend of growth is reversing 
+                worldwide as the Earth fills up. The UN predicts the Earth's combined population will reach its maximum, somewhere between 9.7 and 10.4 Billion 
+                people, in the next 50 years. Then for the first time in modern history, the global headcount is expected to stagnate and perhaps enter a slow, 
+                sustained decline. This shift marks a profound inflection point, moving global discourse from concerns of overpopulation and limited resources,
+                 to the challenges of smaller labor pools, aging societies, and pivoting away from relentless exponential growth.
             </p>
 
             <div id="world-population-chart" class="chart-container mt-8 p-4">
-                <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">World Population and Annual Growth Rate (1950 - 2100)</h3>
+                <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">Global Population and Growth Rate (1950 - 2100)</h3>
                 
                 <div class="text-center mb-4">
                     <span class="text-lg font-semibold text-gray-700">Year: </span>
@@ -195,10 +300,14 @@
 
         <section class="mb-12 p-6 bg-white rounded-xl shadow-lg">
             <h2 class="text-3xl font-semibold text-blue-700 mb-4">
-                2. The Great Global Divide (Top 200 Countries)
+                2. The Great Global Divide (150 years of the most populous 200 Countries)
             </h2>
             <p class="mb-4 text-lg leading-relaxed">
-                The global average masks massive regional differences. Population growth remains robust in several regions, most notably Sub-Saharan Africa. Nations here still have relatively high fertility rates and young populations, driving the continued overall growth toward the peak. Meanwhile, developed nations are rapidly aging and begininng to plateau or even shrink. This divergence creates geopolitical and economic complexities: a young, growing, workforce-rich region on one side, and an aging, consumption-heavy, technologically advanced region on the other. Use the slider to see how the Earth fills up from 1950 to 2100. 
+                This global average masks decisive regional differences. Population growth remains robust in several regions, most notably in Sub-Saharan Africa 
+                and South Asia. Nations here still have relatively high fertility rates and young populations, driving the continued overall growth toward the peak.
+                 Meanwhile, developed nations are rapidly aging and begininng to plateau or even shrink. This divergence creates geopolitical and economic complexities:
+                  a young, growing, labor rich region on one side, and an aging, capital-heavy region on the other.  <br>
+                  Use the slider to see how the Earth fills up from 1950 to 2100, and hover over a blob for information on Population Rank and Growth Rate. 
             </p>
 
             <div class="chart-container mt-8">
@@ -230,17 +339,22 @@
 
         <section class="mb-12 p-6 bg-white rounded-xl shadow-lg">
             <h2 class="text-3xl font-semibold text-blue-700 mb-4">
-                3. Fertility or Migration?
+                3. Fertility Rates or Migration?
             </h2>
             <p class="mb-4 text-lg leading-relaxed">
-                The total change in a country's population is driven by only two factors, Natural Change and Net Migration. For many developed countries, population decline due to low fertility (negative natural change) is often offset by positive net migration. Conversely, some countries with high fertility rates (high natural change) still see their populations shrink due to large-scale emigration. This highlights the critical policy choice facing aging nations: addressing fertility, managing migration, or accepting demographic decline. However, the chart below shows the contribution of each factor for the largest countries, and we see that migration is only a small portion of this momentous growth.
+                The total change in a country's population is driven by only two factors, Natural Change and Net Migration. For many developed countries, 
+                population decline due to low fertility (negative natural change) is often offset by positive net migration. Conversely, some countries 
+                with high fertility rates (high natural change) will see that effect dampened by population outflows. This highlights the critical 
+                policy choice facing aging nations: addressing fertility, managing migration, or accepting demographic decline. <br> The illustration below shows 
+                the contribution of these two factors for the 10 most populous countries in 2025. We see positive natural growth is the largest contributior to growth in seven of these, 
+                except for in the U.S. which has large net migration inflows, and in China and Russia which have negative natural growth rates dominating the change. 
             </p>
 
             <div id="migration-vs-fertility-chart" class="chart-container mt-8 p-4">
                 <h3 class="text-xl font-semibold text-gray-700 mb-4 text-center">Population Change Drivers for Top 10 Countries (2025)</h3>
                 <div id="stacked-bar-chart-svg" class="flex justify-center"></div>
                 <div class="text-center mt-4">
-                    <span class="text-xs text-gray-500">Rates are per 1,000 population.</span>
+                   
                 </div>
             </div>
             <div id="bar-tooltip"></div>
@@ -248,10 +362,16 @@
 
         <section class="mb-12 p-6 bg-white rounded-xl shadow-lg">
             <h2 class="text-3xl font-semibold text-blue-700 mb-4">
-                4. The March of Longevity
+                4. The March of Longevity and Quality of Life
             </h2>
             <p class="mb-4 text-lg leading-relaxed">
-                Life expectancy at birth is a powerful indicator of human development. Historically low life expectancies were defined by high infant mortality. As nations develop, these rates climb dramatically, demonstrating improvements in sanitation, nutrition, and healthcare. The chart below shows the projected trend for the world's 20 most populous countries from 1950 to 2100, and we can see Life Excepcancy is expected to continue to rise across the board. Hover over the chart to see the life expectancy values for a specific year.
+                Life Expectancy at birth is a powerful indicator of human development. 
+                 As nations develop, these rates climb dramatically, demonstrating improvements in sanitation, nutrition, and healthcare. The chart below 
+                 shows the life expectancy trends
+                    for the 20 most populous countries. We can see life expectancy is projected to continue to rise across the board over the next 75 years. This displays the uniqueness of the current projections:
+                    population decrease due to very low birth rate, rather than a high death rate.  
+                     <br>Hover over the chart to see the life expectancy values for a specific country and year. (We can see projections going forward are smooth, 
+                   due to inability to predict bumpy single circumstances like Covid-19) 
             </p>
 
             <div id="life-expectancy-chart" class="chart-container mt-8 p-4">
@@ -268,42 +388,91 @@
             <div id="le-tooltip"></div>
             </section>
 
-        <section class="mb-12 p-6 bg-white rounded-xl shadow-lg grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
-                <h3 class="text-2xl font-semibold text-blue-600 mb-4">
-                    5. Fastest Growth
-                </h3>
-                <p class="mb-4 leading-relaxed">
-                    The nations driving the population push toward the peak are characterized by high birth rates, reduced child mortality, and increased life expectancy. These countries face challenges related to infrastructure, education, and job creation for their rapidly expanding youth demographic.
-                </p>
-                <div id="chart-top-growers" class="viz-container p-4 rounded-lg">
-    <img 
-        src="FASTEST GROWING.png" 
-        alt="Top 10 Fastest Growing Countries Visualization" 
-        style="width: auto; height: auto; display: block;"
-    >
-</div>
-            </div>
-            <div>
-                <h3 class="text-2xl font-semibold text-blue-600 mb-4">
-                    6. Fastest Decline
-                </h3>
-                <p class="mb-4 leading-relaxed">
-                    Conversely, countries experiencing the steepest decline often struggle with low birth rates coupled with outward migration. Their primary issues revolve around economic productivity, supporting an aging consumer base, and managing vacant housing and infrastructure.
-                </p>
-                <div id="chart-top-shrinkers" class="viz-container p-4 rounded-lg">
-    <img 
-        src="FASTEST SHRINKING.png" 
-        alt="Top 10 Fastest Shrinking Countries Visualization" 
-        style="width: auto; height: auto; display: block;"
-    >
+        <style>
+    /* Styling for the Conclusion Box */
+    .conclusion-box {
+        background-color: #ffffff; /* White background */
+        border: 1px solid #e0e0e0;
+        border-left: 6px solid #4682b4; /* UN-themed blue accent */
+        padding: 30px 40px;
+        margin-top: 60px; /* Space it out */
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        border-radius: 4px;
+        font-family: Arial, sans-serif;
+    }
+
+    .conclusion-header {
+        font-size: 1.8em;
+        font-weight: 600;
+        color: #1a1a1a;
+        margin-bottom: 20px;
+    }
+
+    .conclusion-body {
+        font-size: 1.05em;
+        line-height: 1.6;
+        color: #333;
+    }
+
+    .conclusion-body ul {
+        list-style-type: none;
+        padding-left: 0;
+        margin-top: 15px;
+    }
+
+    .conclusion-body li {
+        margin-bottom: 12px;
+        padding-left: 1.5em;
+        position: relative;
+    }
+
+    .conclusion-body li::before {
+        content: "•"; /* Use a simple dot as a list marker */
+        color: #4682b4;
+        font-weight: bold;
+        display: inline-block;
+        width: 1em;
+        margin-left: -1em;
+    }
+
+    .strong-point {
+        font-weight: bold;
+        color: #1a1a1a;
+    }
+</style>
+
+<div class="conclusion-box">
+    <div class="conclusion-header">Final Takeaways: </div>
+
+    <div class="conclusion-body">
+        <p>
+            My exploration of the UN World Population Prospects (WPP) confirms that humanity is rapidly approaching a unique 
+             demographic inflection point. This transition necessitates an immediate shift in global and national policy planning.
+        </p>
+
+        <ul>
+            <li>
+                <span class="strong-point">The End of Exponential Growth:</span> Global population stabilization and subsequent decline are imminent,
+                 driven primarily by successful development, rising longevity and falling birth rates instead than mortality.
+            </li>
+            <li>
+                <span class="strong-point">The Great Global Divergence:</span> A critical imbalance is emerging between rapidly aging, capital-rich regions
+                 (e.g., Western Europe, East Asia) and youthful, rapidly expanding labor pools in Sub-Saharan Africa and South Asia.
+            </li>
+            <li>
+                <span class="strong-point">The Policy Consensus:</span> There is none. Birth rates have fallen far quicker than initially projected,
+                 and countires are clueless as to how to "solve" this unprecedented problem. We are entering brand new territory, and with Artificial Intelligence 
+                 specifically impacting labor supply, it is unclear what the future equilibrium will look like. 
+            </li>
+        </ul>
+    </div>
 </div>
             </div>
         </section>
 
-        <footer class="text-center mt-10 py-6 text-gray-500 border-t border-gray-200">
-            <p>An Explorable Explanation on Global Demographics. John Naughton December 2025 for UCSD Data Visualization. Data sourced from United Nations World Population Prospects (WPP). https://population.un.org/wpp/downloads?folder=Standard%20Projections&group=Most%20used</p>
-        </footer>
+        <footer class="text-center mt-10 py-6 text-gray-500 border-t border-gray-200 bg-white">
+    <p>An Explorable Explanation on Global Demographics. John Naughton December 2025 for UCSD Data Visualization. Data sourced from United Nations World Population Prospects (WPP). https://population.un.org/wpp/downloads?folder=Standard%20Projections&group=Most%20used</p>
+</footer>
     </div>
 
   <script>
@@ -580,7 +749,7 @@
                     .attr("x", xScale(labelYear))
                     .attr("y", popScale(labelPopBillion))
                     .attr("dx", 5) 
-                    .attr("dy", "-0.8em") 
+                    .attr("dy", "-2em") 
                     .attr("text-anchor", "start")
                     .attr("fill", "#1e40af")
                     .style("font-size", "12px")
@@ -593,7 +762,7 @@
                     .attr("x", xScale(labelYear))
                     .attr("y", growthScale(labelGrowth))
                     .attr("dx", 5) 
-                    .attr("dy", "1.2em") 
+                    .attr("dy", "-1em") 
                     .attr("text-anchor", "start")
                     .attr("fill", "#059669")
                     .style("font-size", "12px")
@@ -669,188 +838,202 @@
         }
 
 
-        // --- SECTION 3: Stacked Bar Chart ---
-        function renderMigrationFertilityChart(countryData2025) {
-            const container = d3.select("#stacked-bar-chart-svg");
-            const margin = { top: 20, right: 30, bottom: 120, left: 50 };
-            const fullWidth = container.node().getBoundingClientRect().width || 1100;
-            const fullHeight = 450;
-            const chartWidth = fullWidth - margin.left - margin.right;
-            const chartHeight = fullHeight - margin.top - margin.bottom;
+        // --- SECTION 3: Stacked Bar Chart (FULL FIXED CODE) ---
+function renderMigrationFertilityChart(countryData2025) {
+    const container = d3.select("#stacked-bar-chart-svg");
+    const margin = { top: 20, right: 30, bottom: 120, left: 50 };
+    const fullWidth = container.node().getBoundingClientRect().width || 1100;
+    const fullHeight = 450;
+    const chartWidth = fullWidth - margin.left - margin.right;
+    const chartHeight = fullHeight - margin.top - margin.bottom;
 
-            container.select("svg").remove(); // Clear previous chart
+    container.select("svg").remove(); // Clear previous chart
 
-            const svg = container.append("svg")
-                .attr("width", fullWidth)
-                .attr("height", fullHeight)
-                .attr("class", "bar-chart");
+    const svg = container.append("svg")
+        .attr("width", fullWidth)
+        .attr("height", fullHeight)
+        .attr("class", "bar-chart");
 
-            const g = svg.append("g")
-                .attr("transform", `translate(${margin.left},${margin.top})`);
-            
-            // Filter to top 10 countries by population in 2025
-            const sortedData = countryData2025
-                .sort((a, b) => b.population_thousands - a.population_thousands)
-                .slice(0, 10); 
+    const g = svg.append("g")
+        .attr("transform", `translate(${margin.left},${margin.top})`);
+    
+    // Filter to top 10 countries by population in 2025
+    const sortedData = countryData2025
+        .sort((a, b) => b.population_thousands - a.population_thousands)
+        .slice(0, 10); 
 
-            // Data Transformation for Stacked Bars
-            const keys = ['naturalChange', 'netMigration'];
-            const mappedData = sortedData.map(d => ({
-                country: d.country,
-                naturalChange: +d[NATURAL_CHANGE_KEY] || 0,
-                netMigration: +d[NET_MIGRATION_KEY] || 0,
-                totalChange: (+d[NATURAL_CHANGE_KEY] || 0) + (+d[NET_MIGRATION_KEY] || 0)
-            }));
+    // Data Transformation for Stacked Bars
+    const keys = ['naturalChange', 'netMigration'];
+    const mappedData = sortedData.map(d => ({
+        country: d.country,
+        // Assumes NATURAL_CHANGE_KEY and NET_MIGRATION_KEY are defined globally
+        naturalChange: +d[NATURAL_CHANGE_KEY] || 0,
+        netMigration: +d[NET_MIGRATION_KEY] || 0,
+        totalChange: (+d[NATURAL_CHANGE_KEY] || 0) + (+d[NET_MIGRATION_KEY] || 0)
+    }));
 
-            // Scales
-            const x = d3.scaleBand()
-                .domain(mappedData.map(d => d.country))
-                .range([0, chartWidth])
-                .padding(0.3); 
+    // Scales
+    const x = d3.scaleBand()
+        .domain(mappedData.map(d => d.country))
+        .range([0, chartWidth])
+        .padding(0.3); 
 
-            // Dynamic y-axis domain calculation
-            const maxAbsRate = d3.max(mappedData, d => Math.max(Math.abs(d.totalChange), 
-                                                                Math.abs(d.naturalChange), 
-                                                                Math.abs(d.netMigration))) || 1;
-            const y = d3.scaleLinear()
-                .domain([-maxAbsRate * .2, maxAbsRate * 1.1]) 
-                .range([chartHeight, 0]);
+    // Dynamic y-axis domain calculation
+    const maxPositiveStack = d3.max(mappedData, d => {
+        const posA = Math.max(0, d.naturalChange);
+        const posB = Math.max(0, d.netMigration);
+        return posA + posB;
+    }) || 1;
+    const maxNegativeStack = d3.min(mappedData, d => {
+        const negA = Math.min(0, d.naturalChange);
+        const negB = Math.min(0, d.netMigration);
+        return negA + negB;
+    }) || -1;
 
-            // Color Scale
-            const color = d3.scaleOrdinal()
-                .domain(keys)
-                .range(['#059669', '#3b82f6']); // Green for Natural Change, Blue for Migration
+    const maxAbsRate = Math.max(Math.abs(maxPositiveStack), Math.abs(maxNegativeStack));
+    
+    const y = d3.scaleLinear()
+        .domain([-maxAbsRate * .4, maxAbsRate * 1.1]) 
+        .range([chartHeight, 0]);
 
-            // Axes
-            const xAxis = d3.axisBottom(x).tickSizeOuter(0);
-            const yAxis = d3.axisLeft(y);
+    // Color Scale
+    const color = d3.scaleOrdinal()
+        .domain(keys)
+        .range(['#059669', '#3b82f6']); // Green for Natural Change, Blue for Migration
 
-            // Draw X Axis - Zero Line
-            g.append("g")
-                .attr("transform", `translate(0,${y(0)})`) // Place zero line at y(0)
-                .call(d3.axisBottom(x).tickSize(0).tickFormat("")) // Hide tick lines
-                .select(".domain")
-                .attr("stroke", "#9ca3af");
-            
-            g.append("g") // X Axis labels (below the chart area)
-                .attr("transform", `translate(0,${chartHeight})`)
-                .call(xAxis)
-                .selectAll("text")
-                    .attr("transform", "rotate(-45)")
-                    .style("text-anchor", "end")
-                    .attr("dy", "0.9em")
-                    .attr("dx", "-0.8em");
+    // Axes
+    const xAxis = d3.axisBottom(x).tickSizeOuter(0);
+    const yAxis = d3.axisLeft(y);
 
-            // Draw Y Axis
-            g.append("g")
-                .call(yAxis)
-                .append("text")
-                .attr("class", "axis-label")
-                .attr("transform", "rotate(-90)")
-                .attr("y", -margin.left + 15)
-                .attr("x", -chartHeight / 2)
-                .attr("text-anchor", "middle")
-                .text("Rate (per 1,000 population)");
+    // Draw X Axis - Zero Line
+    g.append("g")
+        .attr("transform", `translate(0,${y(0)})`) 
+        .call(d3.axisBottom(x).tickSize(0).tickFormat("")) 
+        .select(".domain")
+        .attr("stroke", "#9ca3af");
+    
+    g.append("g") // X Axis labels (below the chart area)
+        .attr("transform", `translate(0,${chartHeight})`)
+        .call(xAxis)
+        .selectAll("text")
+            .attr("transform", "rotate(-45)")
+            .style("text-anchor", "end")
+            .attr("dy", "0.9em")
+            .attr("dx", "-0.8em");
 
-            // Zero Line
-            g.append("line")
-                .attr("x1", 0)
-                .attr("y1", y(0))
-                .attr("x2", chartWidth)
-                .attr("y2", y(0))
-                .attr("stroke", "#1f2937")
-                .attr("stroke-width", 1.5);
-            
-            // Create a group for each country
-            const countryGroups = g.selectAll(".country-group")
-                .data(mappedData)
-                .enter().append("g")
-                .attr("class", "country-group")
-                .attr("transform", d => `translate(${x(d.country)}, 0)`);
+    // Draw Y Axis
+    g.append("g")
+        .call(yAxis)
+        .append("text")
+        .attr("class", "axis-label")
+        .attr("transform", "rotate(-90)")
+        .attr("y", -margin.left + 15)
+        .attr("x", -chartHeight / 2)
+        .attr("text-anchor", "middle")
+        .text("Rate (per 1,000 population)");
 
-            // Create a transparent rectangle to cover the entire column area for easy hover
-            countryGroups.append("rect")
-                .attr("class", "hit-area")
-                .attr("x", 0)
-                .attr("y", 0)
-                .attr("width", x.bandwidth()) // Full width of the bar slot
-                .attr("height", chartHeight) // Full height of the chart area
-                .attr("fill", "transparent") // Invisible hit area
-                .attr("pointer-events", "all") // Ensure it captures all pointer events
-                .on("mouseover", handleBarMouseOver) // Attach mouseover to the hit area
-                .on("mouseout", handleBarMouseOut); // Attach mouseout to the hit area
+    // Zero Line 
+    g.append("line")
+        .attr("x1", 0)
+        .attr("y1", y(0))
+        .attr("x2", chartWidth)
+        .attr("y2", y(0))
+        .attr("stroke", "#1f2937")
+        .attr("stroke-width", 1.5);
+    
+    // Create a group for each country
+    const countryGroups = g.selectAll(".country-group")
+        .data(mappedData)
+        .enter().append("g")
+        .attr("class", "country-group")
+        .attr("transform", d => `translate(${x(d.country)}, 0)`);
+
+    // NOTE ON HIT-AREA:
+    // The previous hit-area was removed to attach events directly to the bar segments
+    // for accurate hovering, per the user's request.
+
+    // Stacked Bar Logic (Fixed for Diverging Stack)
+    countryGroups.each(function(d) {
+        let currentYPositive = 0; // Stacks UP from 0
+        let currentYNegative = 0; // Stacks DOWN from 0
+        const group = d3.select(this);
+
+        keys.forEach(key => {
+            const value = d[key];
+            let barY;
+            let barHeight;
+            let barColor;
+
+            if (value >= 0) {
+                // POSITIVE STACK
+                barY = y(currentYPositive + value); 
+                barHeight = y(currentYPositive) - barY;
+                currentYPositive += value;
+                barColor = color(key);
+            } else { 
+                // NEGATIVE STACK (FIXED)
+                const newNegativeTotal = currentYNegative + value;
                 
+                // barY is the top edge of the bar, which is the current negative total's screen position
+                barY = y(currentYNegative); 
+                
+                // barHeight extends from currentYNegative down to newNegativeTotal
+                barHeight = y(newNegativeTotal) - y(currentYNegative);
 
-            // Stacked Bar Logic (Appended to the country group)
-            countryGroups.each(function(d) {
-                let currentY = 0;
-                let currentYNegative = 0;
-                const group = d3.select(this);
+                currentYNegative = newNegativeTotal; 
 
-                keys.forEach(key => {
-                    const value = d[key];
-                    let barY;
-                    let barHeight;
-                    let barColor;
+                // Use red/orange for negative contributions
+                if (key === 'naturalChange') barColor = '#ef4444'; // Red
+                else barColor = '#f97316'; // Orange
+            }
 
-                    if (value >= 0) {
-                        barY = y(currentY + value);
-                        barHeight = y(currentY) - barY;
-                        currentY += value;
-                        barColor = color(key);
-                    } else { // Negative value
-                        barY = y(currentYNegative);
-                        barHeight = y(currentYNegative) - y(currentYNegative + value);
-                        currentYNegative += value;
+            if (barHeight > 0.01) { // Only draw bars if they have height
+                group.append("rect")
+                    .attr("x", 0)
+                    .attr("y", barY)
+                    .attr("height", barHeight)
+                    .attr("width", x.bandwidth())
+                    .attr("fill", barColor)
+                    .attr("stroke", "#fff")
+                    .attr("stroke-width", 0.5)
+                    .attr("data-key", key)
+                    // ATTACH EVENTS DIRECTLY TO THE BAR SEGMENT (The fix for the hover issue)
+                    .on("mouseover", handleBarMouseOver) 
+                    .on("mouseout", handleBarMouseOut); 
+            }
+        });
+    });
 
-                        // Use red/orange for negative contributions
-                        if (key === 'naturalChange') barColor = '#ef4444'; // Red for negative Natural Change
-                        else barColor = '#f97316'; // Orange for negative Migration
-                    }
+    // Legend (Unchanged)
+    const legend = svg.append("g")
+        .attr("transform", `translate(${fullWidth / 2 - 200}, ${fullHeight - 50})`);
 
-                    if (barHeight > 0.1) { // Only draw bars if they have height
-                        group.append("rect")
-                            .attr("x", 0)
-                            .attr("y", barY)
-                            .attr("height", barHeight)
-                            .attr("width", x.bandwidth())
-                            .attr("fill", barColor)
-                            .attr("stroke", "#fff")
-                            .attr("stroke-width", 0.5);
-                    }
-                });
-            });
+    const legendData = [
+        { key: 'Positive Natural Change', color: '#059669' },
+        { key: 'Negative Natural Change', color: '#ef4444' },
+        { key: 'Positive Net Migration', color: '#3b82f6' },
+        { key: 'Negative Net Migration', color: '#f97316' }
+    ];
 
-            // Legend
-            const legend = svg.append("g")
-                .attr("transform", `translate(${fullWidth / 2 - 200}, ${fullHeight - 80})`);
+    legend.selectAll(".legend-item")
+        .data(legendData)
+        .enter().append("g")
+        .attr("class", "legend-item")
+        .attr("transform", (d, i) => `translate(${(i % 2) * 200}, ${Math.floor(i / 2) * 20})`);
 
-            const legendData = [
-                { key: 'Positive Natural Change', color: '#059669' },
-               // { key: 'Negative Natural Change', color: '#ef4444' },
-                { key: 'Positive Net Migration', color: '#3b82f6' },
-               // { key: 'Negative Net Migration', color: '#f97316' }
-            ];
+    legend.selectAll(".legend-item").append("rect")
+        .attr("x", 0)
+        .attr("y", 0)
+        .attr("width", 10)
+        .attr("height", 10)
+        .attr("fill", d => d.color);
 
-            legend.selectAll(".legend-item")
-                .data(legendData)
-                .enter().append("g")
-                .attr("class", "legend-item")
-                .attr("transform", (d, i) => `translate(${(i % 2) * 200}, ${Math.floor(i / 2) * 20})`);
-
-            legend.selectAll(".legend-item").append("rect")
-                .attr("x", 0)
-                .attr("y", 0)
-                .attr("width", 10)
-                .attr("height", 10)
-                .attr("fill", d => d.color);
-
-            legend.selectAll(".legend-item").append("text")
-                .attr("x", 15)
-                .attr("y", 9)
-                .style("font-size", "10px")
-                .text(d => d.key);
-        }
+    legend.selectAll(".legend-item").append("text")
+        .attr("x", 15)
+        .attr("y", 9)
+        .style("font-size", "10px")
+        .text(d => d.key);
+}
 
         // --- SECTION 4: Static Line Chart with Hover ---
         
