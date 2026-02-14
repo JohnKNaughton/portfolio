@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deploy the Buoy</title>
+    <style>
+        body { 
+            background: #a8dadc; 
+            font-family: 'Courier New', Courier, monospace; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            color: #1d3557;
+        }
+
+        #game-container { 
+            display: flex; 
+            gap: 20px; 
+            margin-top: 20px; 
+            position: relative;
+        }
+
+        canvas { 
+            background: #457b9d; 
+            border: 8px solid #1d3557; 
+            border-radius: 15px; 
+            cursor: crosshair; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        #sidebar { 
+            width: 220px; 
+            background: rgba(255, 255, 255, 0.596); 
+            padding: 20px; 
+            border-radius: 15px; 
+            border: 5px solid #1d3557; 
+            box-shadow: 5px 5px 0px #457b9d;
+        }
+
+        .stats { 
+            font-size: 1.4rem; 
+            font-weight: bold; 
+            margin-bottom: 15px; 
+            background: #f1faee;
+            padding: 10px 20px;
+            border-radius: 50px;
+            border: 3px solid #1d3557;
+        }
+
+        /* The Feast Overlay */
+        #game-over-overlay {
+            display: none; 
+            position: absolute; 
+            top: 50%; 
+            left: 50%; 
+            transform: translate(-50%, -50%); 
+            background: #f1faee; 
+            border: 8px solid #1d3557; 
+            padding: 30px; 
+            text-align: center; 
+            border-radius: 20px; 
+            z-index: 100; 
+            width: 420px;
+            box-shadow: 15px 15px 0px #457b9d;
+        }
+
+        #game-over-overlay h2 { margin-top: 0; text-transform: uppercase; }
+
+        .portrait { 
+            font-size: 80px; 
+            margin: 20px 0; 
+            line-height: 1.2; 
+            filter: drop-shadow(4px 4px 0px #189e13b7);
+        }
+
+        button {
+            padding: 12px 25px; 
+            font-size: 1.2rem; 
+            cursor: pointer; 
+            background: #e63946; 
+            color: white; 
+            border: none; 
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-weight: bold;
+            transition: transform 0.1s;
+        }
+
+        button:hover { transform: scale(1.05); }
+        button:active { transform: scale(0.95); }
+
+        ol { padding-left: 25px; line-height: 1.6; }
+        a { color: #e63946; text-decoration: none; font-weight: bold; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <h1>🐟 Deploy the Buoys 🦭</h1>
+    
+    <div class="stats">
+        ⏱️ <span id="timer">30</span>s | 
+        🦭 <span id="score">0</span> vs 
+        🐻 <span id="bear-score">0</span>
+    </div>
+    
+    <div id="game-container">
+        <canvas id="gameCanvas" width="600" height="400"></canvas>
+        
+        <div id="game-over-overlay">
+            <h2 id="winner-text"></h2>
+            <p id="personal-stat" style="font-size: 1.2rem; color: #457b9d; font-weight: bold;"></p>
+            <div class="portrait">
+    <img src="feast.png" alt="The Great Feast" style="width: 100%; border-radius: 10px; border: 4px solid #1d3557;">
+</div>
+            <p><strong>The Great Valentines Feast!</strong><br>Bears and Seals realize there's enough for everyone and share the catch in harmony.</p>
+            <button onclick="resetGame()">PLAY AGAIN</button>
+        </div>
+
+        <div id="sidebar">
+            
+            <hr>
+            <p><a href="../index.html">← My Portfolio</a></p>
+        </div>
+    </div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="game.js"></script>
+</body>
+</html>
