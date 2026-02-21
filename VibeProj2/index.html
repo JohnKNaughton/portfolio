@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Trivial Adventure to the Galactic Core</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="game-container">
+    <section id="intro-terminal" class="view">
+        <div id="scroll-wrapper">
+            <p class="crawl-text">
+                In 2030, Scientists figured out how to refine quantum energy 
+                from interstellar asteroids using pure trivia. <br><br>
+                Escaping a stagnant and indifferent Earth in search of questions, this is...
+            </p>
+        </div>
+    </section>
+
+    <section id="menu-screen" class="view hidden">
+    <h1 class="glow-text">A TRIVIAL ADVENTURE</h1>
+    <h2 class="subtitle">TO THE GALACTIC CORE</h2>
+    
+    <div class="menu-options">
+        <button onclick="gameState.showCharacterSelect()">Choose your PILOT</button>
+        <button onclick="gameState.showLeaderboard()">GALACTIC Hall of Fame</button>
+    </div>
+
+    <div id="info-panel">
+        <div class="info-box">
+            <h3>MISSION LOG</h3>
+            <p>
+                In 2030, Scientists figured out how to refine quantum energy 
+                from interstellar asteroids using pure trivia. Escape a stagnant and indifferent Earth
+                in search of questions, and embark on a trivial adventure to the galactic core. 
+            </p>
+        </div>
+        <div class="info-box">
+            <h3>OPERATIONAL RULES</h3>
+            <p>
+                Each sapce-jump forward consumes 5 trivum and 5 food, running out of food ends the game, running out of trivium makes things bleak.
+            </p>
+        </div>
+    </div>
+</section>
+
+    <section id="char-screen" class="view hidden">
+    <h2 class="glow-text">SELECT YOUR PILOT</h2>
+    <div class="character-container">
+        <div class="char-card" onclick="gameState.selectCharacter('latke')">
+            <div class="sprite-placeholder latke-sprite"></div>
+            <h3>LATKE (The Dog)</h3>
+            <p>Resourceful and Loyal.</p>
+            <ul>
+                <li>Food: 20</li>
+                <li>Trivium: 10</li>
+                <li>Credits: 0</li>
+            </ul>
+        </div>
+
+        <div class="char-card" onclick="gameState.selectCharacter('glenn')">
+            <div class="sprite-placeholder glenn-sprite"></div>
+            <h3>GLENN (The Human)</h3>
+            <p>A Trivial Scholar.</p>
+            <ul>
+                <li>Food: 10</li>
+                <li>Trivium: 20</li>
+                <li>Credits: 0</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section id="game-screen" class="view hidden">
+    <div id="hud">
+        <div class="stats-group">
+            <span>FOOD: <b id="food-stat">0</b></span>
+            <span>TRIVIUM: <b id="trivium-stat">0</b></span>
+            <span>CREDITS: <b id="credits-stat">0</b></span>
+        </div>
+        <button id="quit-btn" onclick="gameState.returnToMenu()">ABANDON MISSION</button>
+    </div>
+    
+    <div id="spaceship-floor">
+        <div id="pilot-sprite"></div>
+    </div>
+
+    <div id="trivia-box">
+        <p id="question">Scanning Sector...</p>
+        <div id="answers"></div>
+    </div>
+</section>
+</div>
+
+    <script src="game.js"></script>
+</body>
+</html>
