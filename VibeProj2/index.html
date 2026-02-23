@@ -32,15 +32,15 @@
         <div class="info-box">
             <h3>MISSION LOG</h3>
             <p>
-                In 2030, Scientists figured out how to refine quantum energy 
-                from interstellar asteroids using pure trivia. Escape a stagnant and indifferent Earth
-                in search of questions, and embark on a trivial adventure to the galactic core. 
+                In 2030, Scientists figure out how to refine quantum energy 
+                from interstellar asteroids using pure trivia knowledge. Lead an escape from a stagnant and indifferent Earth, 
+                 and embark on a trivial adventure to the galactic core in search of questions. 
             </p>
         </div>
         <div class="info-box">
             <h3>OPERATIONAL RULES</h3>
             <p>
-                Each sapce-jump forward consumes 5 trivum and 5 food, running out of food ends the game, running out of trivium makes things bleak.
+                Each jump forward consumes 5 trivium and 5 food, running out of either ends the game. 
             </p>
         </div>
     </div>
@@ -72,7 +72,18 @@
         </div>
     </div>
 </section>
+<section id="shop-screen" class="view hidden">
+    <h2 class="glow-text">INTERSTELLAR OUTPOST</h2>
+    <div id="shopkeeper-area">
+        <div id="shopkeeper-gif"></div> 
+        <p id="shop-dialogue">"Credits are good, but survival is better. What'll it be?"</p>
+    </div>
+    
+    <div id="shop-offers">
+        </div>
 
+    <button class="menu-btn" onclick="gameState.closeShop()">RESUME MISSION</button>
+</section>
 <section id="game-screen" class="view hidden">
     <div id="hud">
         <div class="stats-group">
@@ -80,17 +91,48 @@
             <span>TRIVIUM: <b id="trivium-stat">0</b></span>
             <span>CREDITS: <b id="credits-stat">0</b></span>
         </div>
-        <button id="quit-btn" onclick="gameState.returnToMenu()">ABANDON MISSION</button>
+        <div id="stage-counter">SECTOR: SOL | STAGE: <span id="current-stage">1</span>/10</div>
+        <button id="quit-btn" onclick="gameState.returnToMenu()">ABANDON</button>
     </div>
-    
-    <div id="spaceship-floor">
-        <div id="pilot-sprite"></div>
+    <div id="feedback-overlay" class="hidden">
+        <div id="feedback-content">
+            <h2 id="feedback-title">MISSION SUCCESS</h2>
+            <p id="feedback-msg">Resources secured.</p>
+            <button onclick="gameState.closeFeedback()">CONTINUE JOURNEY</button>
+        </div>
     </div>
 
-    <div id="trivia-box">
-        <p id="question">Scanning Sector...</p>
-        <div id="answers"></div>
+    <div id="choice-container">
+        <h2>APPROACHING PLANETARY SYSTEM...</h2>
+        <div id="planet-options">
+            </div>
     </div>
+
+    <div id="trivia-box" class="hidden">
+        <h3 id="category-label">CATEGORY</h3>
+        <p id="question-text">Scanning for data...</p>
+        <div id="answer-grid"></div>
+    </div>
+
+    <div id="spaceship-floor">
+        <div class="module-group" id="left-modules">
+            <div class="slot" id="slot-1" data-tooltip="Empty"></div>
+            <div class="slot" id="slot-2" data-tooltip="Empty"></div>
+            <div class="slot" id="slot-3" data-tooltip="Empty"></div>
+        </div>
+        <div id="pilot-sprite"></div>
+        <div class="module-group" id="right-modules">
+            <div class="slot" id="slot-4" data-tooltip="Empty"></div>
+            <div class="slot" id="slot-5" data-tooltip="Empty"></div>
+            <div class="slot" id="slot-6" data-tooltip="Empty"></div>
+        </div>
+    </div>
+</section>
+
+   
+</div>
+
+    
 </section>
 </div>
 
