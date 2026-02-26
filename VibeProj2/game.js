@@ -240,7 +240,27 @@ const questionBank = {
         { q: "Which treaty officially ended World War I?", a: ["Treaty of Paris", "Treaty of Ghent", "Treaty of Versailles", "Treaty of Utrecht"], correct: "Treaty of Versailles" }
     ]
 };
-
+const questionBankHard = {
+    Particle_Physics: [
+        { q: "Which boson is responsible for giving particles mass?", a: ["Higgs", "Z Boson", "Photon", "Gluon"], correct: "Higgs" }
+    ],
+    Microbiology: [
+        { q: "What is the primary component of a bacterial cell wall?", a: ["Peptidoglycan", "Chitin", "Cellulose", "Keratin"], correct: "Peptidoglycan" }
+    ],
+    Renaissance_Art: [
+        { q: "Who painted the 'School of Athens' in the Apostolic Palace?", a: ["Raphael", "Michelangelo", "Donatello", "Da Vinci"], correct: "Raphael" }
+    ],
+    Number_Theory: [
+        { q: "What is the smallest number that can be expressed as the sum of two cubes in two different ways?", a: ["1729", "1241", "1024", "2711"], correct: "1729" }
+    ],
+    // Add 6 more categories here for a total of 10...
+    Organic_Chemistry: [{ q: "What is the IUPAC name for Isoprene?", a: ["2-methyl-1,3-butadiene", "1-pentene", "Benzene", "Propane"], correct: "2-methyl-1,3-butadiene" }],
+    Phonetics: [{ q: "Which IPA symbol represents the voiced post-alveolar fricative?", a: ["ʒ", "ʃ", "ð", "θ"], correct: "ʒ" }],
+    Botany: [{ q: "What is the common name for the 'Amorphophallus titanum'?", a: ["Corpse Flower", "Titan Arum", "Venus Flytrap", "Stinkhorn"], correct: "Corpse Flower" }],
+    Pre_Socratic_Philosophy: [{ q: "Which philosopher claimed 'All is Water'?", a: ["Thales", "Anaximander", "Heraclitus", "Zeno"], correct: "Thales" }],
+    Classical_Music: [{ q: "In what key is Beethoven's 3rd Symphony 'Eroica' written?", a: ["E-flat Major", "C Minor", "D Major", "G Major"], correct: "E-flat Major" }],
+    Obscure_Geography: [{ q: "What is the capital of the autonomous region of Gorno-Badakhshan?", a: ["Khorugh", "Dushanbe", "Murghab", "Osh"], correct: "Khorugh" }]
+};
 const gameState = {
     // 1. DATA TRACKING
     player: {
@@ -416,23 +436,22 @@ buyModule: function(modId, shopIndex) {
         overlay.classList.remove('hidden');
     },
 
-    closeFeedback: function() {
-        document.getElementById('feedback-overlay').classList.add('hidden');
-        
-        if (this.player.food <= 0 || this.player.trivium <= 0) {
-            this.returnToMenu();
-        } 
-        else if (this.currentStage === 5 || this.currentStage === 9) {
-            this.openShop();
-        }
-        else if (this.currentStage > 10) {
-            this.showFeedback(true, "Sol System Cleared. Engaging Hyperdrive...", "VICTORY");
-            this.currentStage = 1;
-        } 
-        else {
-            this.generatePlanets();
-        }
-    },
+  closeFeedback: function() {
+    document.getElementById('feedback-overlay').classList.add('hidden');
+    if (this.player.food <= 0 || this.player.trivium <= 0) return this.returnToMenu();
+
+    if (this.currentStage === 10) {
+        this.triggerBossEncounter();
+    } else if (this.currentStage === 5 || this.currentStage === 9) {
+        this.openShop();
+    } else if (this.currentStage > 10) {
+        this.showFeedback(true, "Hyperdrive calibrated. Entering Interstellar Space...", "SECTOR CLEAR");
+        this.currentStage = 1; 
+        this.generatePlanets();
+    } else {
+        this.generatePlanets();
+    }
+},
 
     generatePlanets: function() {
         document.getElementById('current-stage').innerText = this.currentStage;
@@ -460,7 +479,65 @@ buyModule: function(modId, shopIndex) {
             container.appendChild(card);
         }
     },
+triggerBossEncounter: function() {
+    document.getElementById('choice-container').classList.add('hidden');
+    document.getElementById('trivia-box').classList.add('hidden');
+    const bossUI = document.getElementById('boss-ui');
+    bossUI.classList.remove('hidden');
 
+    const grid = document.getElementById('boss-category-grid');
+    grid.innerHTML = "";
+
+    // Offer all 10 categories from questionBankHard
+    const hardCats = Object.keys(questionBankHard);
+    hardCats.forEach(cat => {
+        const btn = document.createElement('button');
+        btn.innerText = cat.replace(/_/g, ' ');
+        btn.onclick = () => this.startSuddenDeath(cat);
+        grid.appendChild(btn);
+    });
+},
+
+startSuddenDeath: function(category) {
+    const bossIcon = document.getElementById('boss-icon');
+    const transferContainer = document.getElementById('boss-sprite-transfer');
+    const bossUI = document.getElementById('boss-ui');
+    const triviaBox = document.getElementById('trivia-box');
+
+    // 1. Move the Boss Icon into the Trivia Box
+    transferContainer.appendChild(bossIcon);
+    
+    // 2. Hide the selection UI and show the Trivia Box
+    bossUI.classList.add('hidden');
+    triviaBox.classList.remove('hidden');
+
+    const qData = questionBankHard[category][0];
+    
+    document.getElementById('category-label').innerText = `CRITICAL: ${category.replace(/_/g, ' ')}`;
+    document.getElementById('question-text').innerText = qData.q;
+    
+    const grid = document.getElementById('answer-grid');
+    grid.innerHTML = "";
+
+    qData.a.forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => {
+            if (opt === qData.correct) {
+                this.currentStage++;
+                // Move the boss back to the boss-ui for future use/cleanup
+                document.getElementById('boss-sprite-container').appendChild(bossIcon);
+                this.showFeedback(true, "The Great Filter has been bypassed. Sector 1 Complete!", "BOSS DEFEATED");
+            } else {
+                this.player.food = 0; 
+                this.player.trivium = 0;
+                this.updateHUD();
+                this.showFeedback(false, "SUDDEN DEATH: Your signal was corrupted.", "MISSION TERMINATED");
+            }
+        };
+        grid.appendChild(btn);
+    });
+},
     startTrivia: function(category, reward) {
         document.getElementById('choice-container').classList.add('hidden');
         const tBox = document.getElementById('trivia-box');
@@ -535,17 +612,33 @@ buyModule: function(modId, shopIndex) {
     },
 
     updateHUD: function() {
-        const foodEl = document.getElementById('food-stat');
-        const trivEl = document.getElementById('trivium-stat');
-        const credEl = document.getElementById('credits-stat');
+    // 1. Update Main Totals
+    const foodEl = document.getElementById('food-stat');
+    const trivEl = document.getElementById('trivium-stat');
+    const credEl = document.getElementById('credits-stat');
 
-        foodEl.innerText = this.player.food;
-        trivEl.innerText = this.player.trivium;
-        credEl.innerText = this.player.credits;
+    foodEl.innerText = this.player.food;
+    trivEl.innerText = this.player.trivium;
+    credEl.innerText = this.player.credits;
 
-        this.player.food <= 10 ? foodEl.classList.add('low-resource') : foodEl.classList.remove('low-resource');
-        this.player.trivium <= 10 ? trivEl.classList.add('low-resource') : trivEl.classList.remove('low-resource');
-    },
+    // 2. Calculate Current Jump Costs
+    // Default is 5, but Biosphere reduces it by 4
+    let foodCost = 5;
+    this.player.modules.forEach(m => { 
+        if(m?.id === 'biosphere') foodCost -= 4; 
+    });
+    foodCost = Math.max(0, foodCost); // Don't let it go below 0
+
+    let triviumCost = 5; // You can add modules later that reduce this too
+
+    // 3. Update the Jump Cost Row
+    document.getElementById('food-cost').innerText = `-${foodCost} FOOD`;
+    document.getElementById('trivium-cost').innerText = `-${triviumCost} TRIVIUM`;
+
+    // Visual Alerts for low resources
+    this.player.food <= 10 ? foodEl.classList.add('low-resource') : foodEl.classList.remove('low-resource');
+    this.player.trivium <= 10 ? trivEl.classList.add('low-resource') : trivEl.classList.remove('low-resource');
+},
 
     returnToMenu: function() {
         this.gameScreen.classList.add('hidden');
