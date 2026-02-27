@@ -53,32 +53,46 @@ body {
     padding-bottom: 10px;
     margin-bottom: 50px;
 }
-/* Intro Text Crawl */
+/* 1. The Full Screen Overlay */
 #intro-terminal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    z-index: 2000;
     display: flex;
-    justify-content: center;
     align-items: center;
-    perspective: 400px; /* Gives 3D depth to the crawl */
+    justify-content: center;
 }
 
-#scroll-wrapper {
-    width: 80%;
-    transform: rotateX(20deg); /* Tilts text back */
+/* 2. The "Window" (This sits inside the border) */
+.crawl-container {
+    width: 70%;       /* Adjust to fit inside your giant border */
+    height: 50vh;     /* Adjust to fit inside your giant border */
+    overflow: hidden; /* This clips the text */
+    position: relative;
+    border: 2px solid #00f2ff; /* Your visual border */
+    padding: 20px;
 }
 
-.crawl-text {
-    font-size: 1.8rem;
-    line-height: 1.6;
+/* 3. The Text itself */
+#intro-terminal p {
+    position: absolute;
+    top: 100%;       /* Start at the bottom of the CONTAINER */
+    left: 0;
+    width: 100%;
+    margin: 0;
     text-align: center;
-    animation: crawl 15s linear forwards;
-    opacity: 0;
+    line-height: 4;
+    font-size: 24px;         /* Standard large size */
+    animation: crawl 25s linear forwards;
 }
 
 @keyframes crawl {
-    0% { transform: translateY(100%); opacity: 0; }
-    10% { opacity: 1; }
-    90% { opacity: 1; }
-    100% { transform: translateY(-100%); opacity: 0; }
+    0% { top: 100%; }
+    100% { top: -150%; } /* Moves up until it's above the top edge */
 }
 .character-container {
     display: flex;
@@ -424,29 +438,29 @@ body {
 
 #boss-category-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-top: 20px;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns */
+    grid-template-rows: repeat(2, auto);    /* 2 rows */
+    gap: 15px;
+    width: 80%;
+    margin: 0 auto;
 }
 
-#boss-category-grid button {
-    background: #111;
-    color: #ff4444;
-    border: 1px solid #ff4444;
-    padding: 10px;
+.category-btn {
+    padding: 20px;
+    font-family: 'Courier New', monospace;
+    background: rgba(0, 0, 0, 0.6);
+    border: 1px solid #00f2ff;
+    color: #00f2ff;
     cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.2s;
 }
 
-#boss-category-grid button:hover {
-    background: #ff4444;
+.category-btn:hover {
+    background: #00f2ff;
     color: #000;
-}
-@keyframes boss-shake {
-    0% { transform: translate(0, 0); }
-    25% { transform: translate(2px, -2px); }
-    50% { transform: translate(-2px, 2px); }
-    75% { transform: translate(2px, 2px); }
-    100% { transform: translate(0, 0); }
+    box-shadow: 0 0 15px #00f2ff;
+    transform: translateY(-2px);
 }
 
 #boss-icon {
@@ -482,4 +496,89 @@ body {
 .cost-val {
     color: #ff4444; /* Red to indicate a drain/loss */
     font-weight: bold;
+}
+#tavern-screen { text-align: center; }
+#buddy-offers {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+#tavern-keeper-gif {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto;
+    background-image: url('tavern_keeper.gif'); /* The filename goes here */
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    image-rendering: pixelated; /* Keeps him looking like retro pixel art */
+    
+    /* Optional: Give him a warm tavern glow */
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4)); 
+}
+#stage-counter {
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+    color: #00f2ff;
+    text-shadow: 0 0 5px rgba(0, 242, 255, 0.5);
+}
+
+#current-stage {
+    font-weight: bold;
+    min-width: 20px; /* Prevents layout jitter when 9 becomes 10 */
+    display: inline-block;
+    text-align: right;
+}
+
+/* Optional: Add this class via JS when stage === 10 */
+.final-stage-glow {
+    color: #ff4444 !important;
+    text-shadow: 0 0 10px #ff0000 !important;
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.7; }
+    100% { opacity: 1; }
+}
+.domain-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 80%;
+    margin: 20px auto;
+    border-bottom: 1px solid rgba(0, 242, 255, 0.3);
+    padding-bottom: 10px;
+}
+
+.domain-header h3 {
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+    color: #fff;
+}
+
+#reroll-btn {
+    background: transparent;
+    border: 1px solid #ff4444;
+    color: #ff4444;
+    padding: 5px 15px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+#reroll-btn:hover:not(:disabled) {
+    background: #ff4444;
+    color: #000;
+    box-shadow: 0 0 10px #ff4444;
+}
+
+#reroll-btn:disabled {
+    border-color: #444;
+    color: #444;
+    cursor: not-allowed;
 }

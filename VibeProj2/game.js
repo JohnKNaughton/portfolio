@@ -238,53 +238,440 @@ const questionBank = {
         { q: "Nelson Mandela was the first black president of which country?", a: ["South Africa", "Nigeria", "Kenya", "Ghana"], correct: "South Africa" },
         { q: "In what year did the terrorist attacks of September 11 occur?", a: ["2000", "2001", "2002", "1999"], correct: "2001" },
         { q: "Which treaty officially ended World War I?", a: ["Treaty of Paris", "Treaty of Ghent", "Treaty of Versailles", "Treaty of Utrecht"], correct: "Treaty of Versailles" }
+    ], 
+    Astronomy: [
+        { q: "What is the name of our galaxy?", a: ["Andromeda", "Whirlpool", "Milky Way", "Sombrero"], correct: "Milky Way" },
+        { q: "Which planet has the shortest orbital period around the Sun?", a: ["Venus", "Mercury", "Mars", "Jupiter"], correct: "Mercury" },
+        { q: "What type of star is the Sun classified as?", a: ["Red Giant", "White Dwarf", "Yellow Dwarf", "Neutron Star"], correct: "Yellow Dwarf" },
+        { q: "What is the term for the apparent brightness of a star as seen from Earth?", a: ["Luminosity", "Absolute Magnitude", "Apparent Magnitude", "Flux"], correct: "Apparent Magnitude" },
+        { q: "Which planet has the most extensive ring system?", a: ["Jupiter", "Uranus", "Neptune", "Saturn"], correct: "Saturn" },
+        { q: "What is the boundary surrounding a black hole beyond which nothing can escape?", a: ["Singularity", "Photon Sphere", "Event Horizon", "Ergosphere"], correct: "Event Horizon" },
+        { q: "Which spacecraft was the first to exit the heliosphere?", a: ["Voyager 1", "Voyager 2", "Pioneer 10", "New Horizons"], correct: "Voyager 1" },
+        { q: "What is the name of the closest star system to Earth?", a: ["Sirius", "Proxima Centauri", "Alpha Centauri", "Betelgeuse"], correct: "Alpha Centauri" },
+        { q: "What phenomenon occurs when the Moon completely covers the Sun?", a: ["Lunar Eclipse", "Solar Flare", "Total Solar Eclipse", "Transit"], correct: "Total Solar Eclipse" },
+        { q: "Which law describes the relationship between a planet’s orbital period and its distance from the Sun?", a: ["Newton’s First Law", "Hubble’s Law", "Kepler’s Third Law", "Ohm’s Law"], correct: "Kepler’s Third Law" }
+    ],
+
+    Physics: [
+        { q: "What is the SI unit of force?", a: ["Joule", "Pascal", "Newton", "Watt"], correct: "Newton" },
+        { q: "Who formulated the laws of motion?", a: ["Albert Einstein", "Galileo Galilei", "Isaac Newton", "Niels Bohr"], correct: "Isaac Newton" },
+        { q: "What is the speed of light in vacuum (approximately)?", a: ["3 x 10^6 m/s", "3 x 10^8 m/s", "3 x 10^5 km/s", "3 x 10^10 m/s"], correct: "3 x 10^8 m/s" },
+        { q: "What particle carries a negative electric charge?", a: ["Proton", "Neutron", "Electron", "Photon"], correct: "Electron" },
+        { q: "What branch of physics deals with very small particles?", a: ["Thermodynamics", "Quantum Mechanics", "Optics", "Acoustics"], correct: "Quantum Mechanics" },
+        { q: "What is the unit of electrical resistance?", a: ["Volt", "Ampere", "Ohm", "Coulomb"], correct: "Ohm" },
+        { q: "Which principle states that energy cannot be created or destroyed?", a: ["Relativity", "Conservation of Energy", "Uncertainty Principle", "Superposition"], correct: "Conservation of Energy" },
+        { q: "What is the name of the force that opposes motion between two surfaces?", a: ["Gravity", "Magnetism", "Friction", "Tension"], correct: "Friction" },
+        { q: "Who developed the theory of general relativity?", a: ["Max Planck", "Albert Einstein", "Erwin Schrödinger", "Werner Heisenberg"], correct: "Albert Einstein" },
+        { q: "What is measured in Hertz?", a: ["Energy", "Frequency", "Voltage", "Power"], correct: "Frequency" }
+    ],
+
+    Mathematics: [
+        { q: "What is the value of pi (π) to two decimal places?", a: ["3.12", "3.14", "3.16", "3.18"], correct: "3.14" },
+        { q: "What is the derivative of x²?", a: ["x", "2x", "x²", "2"], correct: "2x" },
+        { q: "What is the square root of 144?", a: ["10", "11", "12", "14"], correct: "12" },
+        { q: "What is a polygon with eight sides called?", a: ["Hexagon", "Heptagon", "Octagon", "Nonagon"], correct: "Octagon" },
+        { q: "What is the sum of the angles in a triangle (Euclidean geometry)?", a: ["90°", "180°", "270°", "360°"], correct: "180°" },
+        { q: "What is the Fibonacci sequence defined by?", a: ["Prime numbers", "Multiples of two", "Sum of previous two terms", "Factorials"], correct: "Sum of previous two terms" },
+        { q: "What is the natural logarithm base?", a: ["π", "e", "10", "2"], correct: "e" },
+        { q: "What is 7 factorial (7!)?", a: ["720", "5040", "40320", "120"], correct: "5040" },
+        { q: "What is the term for a number divisible only by 1 and itself?", a: ["Composite", "Integer", "Prime", "Rational"], correct: "Prime" },
+        { q: "What theorem relates the sides of a right triangle?", a: ["Binomial Theorem", "Pythagorean Theorem", "Fundamental Theorem of Calculus", "Euler’s Formula"], correct: "Pythagorean Theorem" }
+    ],
+
+    Environmental_Science: [
+        { q: "What gas is primarily responsible for the greenhouse effect?", a: ["Oxygen", "Nitrogen", "Carbon Dioxide", "Helium"], correct: "Carbon Dioxide" },
+        { q: "What is the process by which water vapor turns into liquid water?", a: ["Evaporation", "Condensation", "Precipitation", "Sublimation"], correct: "Condensation" },
+        { q: "Which renewable energy source uses photovoltaic cells?", a: ["Wind", "Hydroelectric", "Solar", "Geothermal"], correct: "Solar" },
+        { q: "What is biodiversity?", a: ["Climate patterns", "Variety of life", "Ocean currents", "Soil composition"], correct: "Variety of life" },
+        { q: "What international agreement aims to limit global warming to well below 2°C?", a: ["Kyoto Protocol", "Paris Agreement", "Montreal Protocol", "Geneva Convention"], correct: "Paris Agreement" },
+        { q: "What layer of the atmosphere contains the ozone layer?", a: ["Troposphere", "Stratosphere", "Mesosphere", "Thermosphere"], correct: "Stratosphere" },
+        { q: "What is the main cause of ocean acidification?", a: ["Plastic waste", "Oil spills", "CO2 absorption", "Overfishing"], correct: "CO2 absorption" },
+        { q: "What type of resource is replenished naturally over short periods?", a: ["Nonrenewable", "Finite", "Renewable", "Synthetic"], correct: "Renewable" },
+        { q: "Deforestation primarily impacts which global cycle?", a: ["Nitrogen", "Carbon", "Phosphorus", "Sulfur"], correct: "Carbon" },
+        { q: "What term describes species at risk of extinction?", a: ["Invasive", "Endangered", "Native", "Dominant"], correct: "Endangered" }
+    ],
+
+    Medicine: [
+        { q: "What is the largest artery in the human body?", a: ["Pulmonary Artery", "Aorta", "Carotid Artery", "Femoral Artery"], correct: "Aorta" },
+        { q: "What blood type is known as the universal donor?", a: ["AB+", "O-", "A+", "B-"], correct: "O-" },
+        { q: "What organ produces insulin?", a: ["Liver", "Pancreas", "Kidney", "Spleen"], correct: "Pancreas" },
+        { q: "What does MRI stand for?", a: ["Magnetic Resonance Imaging", "Medical Radio Imaging", "Magnetized Radiology Instrument", "Molecular Resonance Inspection"], correct: "Magnetic Resonance Imaging" },
+        { q: "Which disease is caused by the bacterium Mycobacterium tuberculosis?", a: ["Malaria", "Tuberculosis", "Cholera", "Influenza"], correct: "Tuberculosis" },
+        { q: "What vitamin deficiency causes scurvy?", a: ["Vitamin A", "Vitamin B12", "Vitamin C", "Vitamin K"], correct: "Vitamin C" },
+        { q: "What is the normal resting heart rate range for adults (approx.)?", a: ["20–40 bpm", "40–60 bpm", "60–100 bpm", "100–140 bpm"], correct: "60–100 bpm" },
+        { q: "What part of the cell contains genetic material?", a: ["Ribosome", "Nucleus", "Cytoplasm", "Membrane"], correct: "Nucleus" },
+        { q: "Which pathogen type is influenza?", a: ["Bacterium", "Virus", "Fungus", "Protozoan"], correct: "Virus" },
+        { q: "What is the medical term for high blood pressure?", a: ["Hypotension", "Hypertension", "Arrhythmia", "Atherosclerosis"], correct: "Hypertension" }
+    ],
+
+    Architecture: [
+        { q: "Which architectural style is characterized by pointed arches and flying buttresses?", a: ["Baroque", "Romanesque", "Gothic", "Neoclassical"], correct: "Gothic" },
+        { q: "Who designed the Guggenheim Museum in Bilbao?", a: ["Frank Lloyd Wright", "Zaha Hadid", "Frank Gehry", "I. M. Pei"], correct: "Frank Gehry" },
+        { q: "The Parthenon is located in which city?", a: ["Rome", "Athens", "Istanbul", "Alexandria"], correct: "Athens" },
+        { q: "What is a dome-shaped Islamic shrine called?", a: ["Minaret", "Mausoleum", "Ziggurat", "Stupa"], correct: "Mausoleum" },
+        { q: "Which ancient civilization built Machu Picchu?", a: ["Maya", "Aztec", "Inca", "Olmec"], correct: "Inca" },
+        { q: "What is the primary structural advantage of an arch?", a: ["Decoration", "Lightness", "Compression distribution", "Flexibility"], correct: "Compression distribution" },
+        { q: "Which city is known for Antoni Gaudí’s architectural works?", a: ["Madrid", "Lisbon", "Barcelona", "Seville"], correct: "Barcelona" },
+        { q: "What is the name of the tallest building in the world (as of 2023)?", a: ["Shanghai Tower", "Burj Khalifa", "One World Trade Center", "Taipei 101"], correct: "Burj Khalifa" },
+        { q: "What architectural period followed the Renaissance?", a: ["Gothic", "Baroque", "Modernism", "Brutalism"], correct: "Baroque" },
+        { q: "What term describes a building’s detailed scale model?", a: ["Blueprint", "Facade", "Maquette", "Section"], correct: "Maquette" }
+    ],
+
+    Economics: [
+        { q: "What does GDP stand for?", a: ["Gross Domestic Product", "General Domestic Profit", "Global Development Plan", "Gross Development Product"], correct: "Gross Domestic Product" },
+        { q: "What economic system is based on private ownership of the means of production?", a: ["Socialism", "Communism", "Capitalism", "Feudalism"], correct: "Capitalism" },
+        { q: "Inflation refers to a general increase in what?", a: ["Employment", "Interest Rates", "Prices", "Exports"], correct: "Prices" },
+        { q: "What is the opportunity cost?", a: ["Total spending", "Next best alternative forgone", "Profit margin", "Tax rate"], correct: "Next best alternative forgone" },
+        { q: "What type of market has many buyers and sellers with homogeneous products?", a: ["Monopoly", "Oligopoly", "Perfect Competition", "Duopoly"], correct: "Perfect Competition" },
+        { q: "Who wrote 'The Wealth of Nations'?", a: ["Karl Marx", "John Maynard Keynes", "Adam Smith", "David Ricardo"], correct: "Adam Smith" },
+        { q: "What is stagflation?", a: ["High growth and low inflation", "High inflation and high unemployment", "Low inflation and high employment", "Deflation and recession"], correct: "High inflation and high unemployment" },
+        { q: "What is the law of demand?", a: ["Higher price, higher demand", "Lower price, lower demand", "Higher price, lower demand", "Demand is fixed"], correct: "Higher price, lower demand" },
+        { q: "What is a central bank primarily responsible for?", a: ["Collecting taxes", "Setting monetary policy", "Passing laws", "Issuing passports"], correct: "Setting monetary policy" },
+        { q: "What term describes a prolonged economic downturn?", a: ["Boom", "Bubble", "Recession", "Expansion"], correct: "Recession" }
+    ],
+
+    Computer_Science: [
+        { q: "What data structure uses LIFO (Last In, First Out)?", a: ["Queue", "Stack", "Tree", "Graph"], correct: "Stack" },
+        { q: "What does 'HTTP' stand for?", a: ["HyperText Transfer Protocol", "High Transmission Text Process", "Hyperlink Transfer Program", "Host Transfer Protocol"], correct: "HyperText Transfer Protocol" },
+        { q: "What is the time complexity of binary search?", a: ["O(n)", "O(log n)", "O(n^2)", "O(1)"], correct: "O(log n)" },
+        { q: "Which programming paradigm focuses on objects and classes?", a: ["Procedural", "Functional", "Object-Oriented", "Declarative"], correct: "Object-Oriented" },
+        { q: "What is a primary key in a database?", a: ["Encrypted field", "Unique identifier", "Foreign reference", "Backup index"], correct: "Unique identifier" },
+        { q: "Which sorting algorithm has average time complexity O(n log n)?", a: ["Bubble Sort", "Insertion Sort", "Merge Sort", "Selection Sort"], correct: "Merge Sort" },
+        { q: "What does 'AI' stand for?", a: ["Automated Input", "Artificial Intelligence", "Advanced Integration", "Algorithmic Interface"], correct: "Artificial Intelligence" },
+        { q: "What is the binary representation of the decimal number 5?", a: ["101", "110", "111", "100"], correct: "101" },
+        { q: "What protocol is used to securely browse the web?", a: ["FTP", "SMTP", "HTTPS", "SSH"], correct: "HTTPS" },
+        { q: "What is a recursive function?", a: ["Function without parameters", "Function that calls itself", "Function returning void", "Function with global scope"], correct: "Function that calls itself" }
+    ],
+
+    Cultural_Studies: [
+        { q: "What is the traditional Japanese tea ceremony called?", a: ["Ikebana", "Chanoyu", "Kabuki", "Shodo"], correct: "Chanoyu" },
+        { q: "Which festival is known as the 'Festival of Lights' in India?", a: ["Holi", "Diwali", "Navratri", "Vaisakhi"], correct: "Diwali" },
+        { q: "What is the name of the traditional Scottish garment worn by men?", a: ["Sari", "Kimono", "Kilt", "Poncho"], correct: "Kilt" },
+        { q: "Which religion observes Ramadan as a month of fasting?", a: ["Hinduism", "Islam", "Buddhism", "Judaism"], correct: "Islam" },
+        { q: "What is the indigenous people of New Zealand called?", a: ["Inuit", "Aboriginal", "Maori", "Sami"], correct: "Maori" },
+        { q: "Flamenco originated in which country?", a: ["Portugal", "Italy", "Spain", "Mexico"], correct: "Spain" },
+        { q: "What is the name of the Chinese philosophical system founded by Confucius?", a: ["Taoism", "Buddhism", "Confucianism", "Legalism"], correct: "Confucianism" },
+        { q: "What is the Mexican holiday honoring deceased loved ones?", a: ["Carnaval", "Cinco de Mayo", "Día de los Muertos", "Las Posadas"], correct: "Día de los Muertos" },
+        { q: "Which African country is famous for the Maasai people?", a: ["Nigeria", "Kenya", "Ghana", "Ethiopia"], correct: "Kenya" },
+        { q: "What is the name of the traditional Korean dress?", a: ["Hanbok", "Cheongsam", "Ao Dai", "Yukata"], correct: "Hanbok" }
+    ],
+
+    Law: [
+        { q: "What is the highest court in the United States?", a: ["Court of Appeals", "Supreme Court", "District Court", "Federal Court"], correct: "Supreme Court" },
+        { q: "What does 'habeas corpus' protect against?", a: ["Double jeopardy", "Unlawful detention", "Self-incrimination", "Excessive bail"], correct: "Unlawful detention" },
+        { q: "What is the burden of proof in criminal cases in the U.S.?", a: ["Preponderance of evidence", "Clear and convincing evidence", "Beyond a reasonable doubt", "Probable cause"], correct: "Beyond a reasonable doubt" },
+        { q: "What is a contract?", a: ["Verbal promise", "Legally binding agreement", "Corporate charter", "Government decree"], correct: "Legally binding agreement" },
+        { q: "What does 'amicus curiae' mean?", a: ["Friend of the court", "Against the state", "Legal remedy", "Case precedent"], correct: "Friend of the court" },
+        { q: "What is tort law primarily concerned with?", a: ["Criminal punishment", "Civil wrongs", "Taxation", "Property transfer"], correct: "Civil wrongs" },
+        { q: "What is the presumption of innocence?", a: ["Defendant must testify", "Guilt assumed", "Innocent until proven guilty", "Automatic acquittal"], correct: "Innocent until proven guilty" },
+        { q: "What is intellectual property?", a: ["Land ownership", "Creative works protection", "Corporate shares", "Physical goods"], correct: "Creative works protection" },
+        { q: "What is extradition?", a: ["Appeal process", "Transfer of suspect between jurisdictions", "Jury selection", "Sentencing reduction"], correct: "Transfer of suspect between jurisdictions" },
+        { q: "What is precedent in common law?", a: ["New legislation", "Executive order", "Prior judicial decision guiding future cases", "International treaty"], correct: "Prior judicial decision guiding future cases" }
     ]
+
+
 };
 const questionBankHard = {
     Particle_Physics: [
-        { q: "Which boson is responsible for giving particles mass?", a: ["Higgs", "Z Boson", "Photon", "Gluon"], correct: "Higgs" }
+        { q: "Which boson is responsible for giving elementary particles mass via spontaneous symmetry breaking?", a: ["Higgs", "Z Boson", "Photon", "Gluon"], correct: "Higgs" },
+        { q: "What quantum number is conserved in strong interactions and associated with quark content?", a: ["Isospin", "Strangeness", "Color Charge", "Hypercharge"], correct: "Color Charge" },
+        { q: "Which accelerator at CERN discovered the Higgs boson in 2012?", a: ["LEP", "Tevatron", "LHC", "RHIC"], correct: "LHC" }
     ],
+
     Microbiology: [
-        { q: "What is the primary component of a bacterial cell wall?", a: ["Peptidoglycan", "Chitin", "Cellulose", "Keratin"], correct: "Peptidoglycan" }
+        { q: "What is the primary component of a bacterial cell wall?", a: ["Peptidoglycan", "Chitin", "Cellulose", "Keratin"], correct: "Peptidoglycan" },
+        { q: "Which structure enables horizontal gene transfer via direct contact?", a: ["Flagellum", "Pilus", "Capsule", "Ribosome"], correct: "Pilus" },
+        { q: "What staining technique differentiates bacteria by cell wall composition?", a: ["Ziehl-Neelsen", "Gram Stain", "Giemsa", "Endospore Stain"], correct: "Gram Stain" }
     ],
+
     Renaissance_Art: [
-        { q: "Who painted the 'School of Athens' in the Apostolic Palace?", a: ["Raphael", "Michelangelo", "Donatello", "Da Vinci"], correct: "Raphael" }
+        { q: "Who painted the 'School of Athens' in the Apostolic Palace?", a: ["Raphael", "Michelangelo", "Donatello", "Da Vinci"], correct: "Raphael" },
+        { q: "Which technique uses wet plaster for mural painting?", a: ["Sfumato", "Fresco", "Tempera", "Impasto"], correct: "Fresco" },
+        { q: "Which Medici commissioned much of Michelangelo’s early work?", a: ["Lorenzo de' Medici", "Cosimo I", "Giovanni de' Medici", "Piero di Cosimo"], correct: "Lorenzo de' Medici" }
     ],
+
     Number_Theory: [
-        { q: "What is the smallest number that can be expressed as the sum of two cubes in two different ways?", a: ["1729", "1241", "1024", "2711"], correct: "1729" }
+        { q: "What is the smallest number expressible as the sum of two cubes in two different ways?", a: ["1729", "1241", "1024", "2711"], correct: "1729" },
+        { q: "What theorem states that there are infinitely many prime numbers?", a: ["Fermat's Last Theorem", "Euclid's Theorem", "Wilson's Theorem", "Lagrange's Theorem"], correct: "Euclid's Theorem" },
+        { q: "What is a prime of the form 2^p − 1 called?", a: ["Fermat Prime", "Mersenne Prime", "Twin Prime", "Gaussian Prime"], correct: "Mersenne Prime" }
     ],
-    // Add 6 more categories here for a total of 10...
-    Organic_Chemistry: [{ q: "What is the IUPAC name for Isoprene?", a: ["2-methyl-1,3-butadiene", "1-pentene", "Benzene", "Propane"], correct: "2-methyl-1,3-butadiene" }],
-    Phonetics: [{ q: "Which IPA symbol represents the voiced post-alveolar fricative?", a: ["ʒ", "ʃ", "ð", "θ"], correct: "ʒ" }],
-    Botany: [{ q: "What is the common name for the 'Amorphophallus titanum'?", a: ["Corpse Flower", "Titan Arum", "Venus Flytrap", "Stinkhorn"], correct: "Corpse Flower" }],
-    Pre_Socratic_Philosophy: [{ q: "Which philosopher claimed 'All is Water'?", a: ["Thales", "Anaximander", "Heraclitus", "Zeno"], correct: "Thales" }],
-    Classical_Music: [{ q: "In what key is Beethoven's 3rd Symphony 'Eroica' written?", a: ["E-flat Major", "C Minor", "D Major", "G Major"], correct: "E-flat Major" }],
-    Obscure_Geography: [{ q: "What is the capital of the autonomous region of Gorno-Badakhshan?", a: ["Khorugh", "Dushanbe", "Murghab", "Osh"], correct: "Khorugh" }]
-};
+
+    Organic_Chemistry: [
+        { q: "What is the IUPAC name for isoprene?", a: ["2-methyl-1,3-butadiene", "1-pentene", "Benzene", "Propane"], correct: "2-methyl-1,3-butadiene" },
+        { q: "What reaction forms an alkene from an alcohol via dehydration?", a: ["Substitution", "Elimination", "Oxidation", "Hydrogenation"], correct: "Elimination" },
+        { q: "Which spectroscopy method identifies functional groups by bond vibrations?", a: ["NMR", "IR", "UV-Vis", "Mass Spec"], correct: "IR" }
+    ],
+
+    Phonetics: [
+        { q: "Which IPA symbol represents the voiced post-alveolar fricative?", a: ["ʒ", "ʃ", "ð", "θ"], correct: "ʒ" },
+        { q: "What is the term for vowel sound quality?", a: ["Prosody", "Timbre", "Formant", "Allophone"], correct: "Formant" },
+        { q: "Which feature distinguishes /p/ from /b/?", a: ["Voicing", "Place", "Manner", "Aspiration"], correct: "Voicing" }
+    ],
+
+    Botany: [
+        { q: "What is the common name for Amorphophallus titanum?", a: ["Corpse Flower", "Titan Arum", "Venus Flytrap", "Stinkhorn"], correct: "Corpse Flower" },
+        { q: "What plant tissue transports water upward?", a: ["Phloem", "Xylem", "Cambium", "Mesophyll"], correct: "Xylem" },
+        { q: "What process converts atmospheric nitrogen into ammonia biologically?", a: ["Nitrification", "Denitrification", "Nitrogen Fixation", "Ammonification"], correct: "Nitrogen Fixation" }
+    ],
+
+    Pre_Socratic_Philosophy: [
+        { q: "Which philosopher claimed 'All is Water'?", a: ["Thales", "Anaximander", "Heraclitus", "Zeno"], correct: "Thales" },
+        { q: "Who proposed the concept of the 'Apeiron'?", a: ["Parmenides", "Anaximander", "Empedocles", "Democritus"], correct: "Anaximander" },
+        { q: "Which thinker argued that reality is unchanging and motion is illusion?", a: ["Heraclitus", "Zeno", "Parmenides", "Anaxagoras"], correct: "Parmenides" }
+    ],
+
+    Classical_Music: [
+        { q: "In what key is Beethoven's Symphony No. 3 'Eroica' written?", a: ["E-flat Major", "C Minor", "D Major", "G Major"], correct: "E-flat Major" },
+        { q: "Which composer pioneered the twelve-tone technique?", a: ["Mahler", "Schoenberg", "Debussy", "Stravinsky"], correct: "Schoenberg" },
+        { q: "What is the final movement of a sonata often called?", a: ["Adagio", "Scherzo", "Finale", "Intermezzo"], correct: "Finale" }
+    ],
+
+    Obscure_Geography: [
+        { q: "What is the capital of the autonomous region of Gorno-Badakhshan?", a: ["Khorugh", "Dushanbe", "Murghab", "Osh"], correct: "Khorugh" },
+        { q: "Which country administers the Åland Islands?", a: ["Sweden", "Finland", "Norway", "Estonia"], correct: "Finland" },
+        { q: "What is the southernmost capital city in the world?", a: ["Wellington", "Hobart", "Canberra", "Montevideo"], correct: "Wellington" }
+    ],
+
+    // --- 40 Additional Niche Categories (3 Questions Each) ---
+
+    Cryptography: [
+        { q: "Which problem underpins RSA encryption?", a: ["Discrete Logarithm", "Integer Factorization", "Elliptic Curve Pairing", "Knapsack"], correct: "Integer Factorization" },
+        { q: "What does AES stand for?", a: ["Advanced Encryption Standard", "Automated Encoding System", "Applied Encryption Suite", "Advanced Encoding Scheme"], correct: "Advanced Encryption Standard" },
+        { q: "Which cipher did Alan Turing help break?", a: ["Caesar", "Enigma", "Vigenere", "Lorenz"], correct: "Enigma" }
+    ],
+
+    Astrobiology: [
+        { q: "What zone around a star allows liquid water to exist?", a: ["Goldilocks Zone", "Roche Limit", "Event Horizon", "Oort Cloud"], correct: "Goldilocks Zone" },
+        { q: "What molecule is often considered a biosignature gas?", a: ["Methane", "Oxygen", "Helium", "Argon"], correct: "Oxygen" },
+        { q: "Which Mars rover searches for signs of ancient microbial life?", a: ["Spirit", "Opportunity", "Perseverance", "Sojourner"], correct: "Perseverance" }
+    ],
+
+    Topology: [
+        { q: "What invariant counts the number of holes in a surface?", a: ["Euler Characteristic", "Genus", "Homotopy", "Metric"], correct: "Genus" },
+        { q: "A coffee mug is topologically equivalent to what?", a: ["Sphere", "Torus", "Cube", "Cone"], correct: "Torus" },
+        { q: "What is a space that is locally Euclidean called?", a: ["Vector Space", "Manifold", "Ring", "Field"], correct: "Manifold" }
+    ],
+
+    Entomology: [
+        { q: "What order do butterflies belong to?", a: ["Diptera", "Coleoptera", "Lepidoptera", "Hymenoptera"], correct: "Lepidoptera" },
+        { q: "What is the hardened forewing of a beetle called?", a: ["Tegmen", "Elytron", "Carapace", "Mandible"], correct: "Elytron" },
+        { q: "Which insect undergoes complete metamorphosis?", a: ["Grasshopper", "Dragonfly", "Ant", "Silverfish"], correct: "Ant" }
+    ],// --- 15 Additional Categories (3 Questions Each) ---
+
+Anime_and_Manga: [
+    { q: "In 'Neon Genesis Evangelion', what does NERV stand for?", a: ["Neuro-Engineered Response Vanguard", "Neo Evangelion Research Vessel", "Nuclear Emergency Response Vector", "It is never officially expanded"], correct: "It is never officially expanded" },
+    { q: "Who created the manga 'Berserk'?", a: ["Kentaro Miura", "Eiichiro Oda", "Masashi Kishimoto", "Hajime Isayama"], correct: "Kentaro Miura" },
+    { q: "What is the name of the pirate crew led by Monkey D. Luffy in 'One Piece'?", a: ["Red-Hair Pirates", "Straw Hat Pirates", "Whitebeard Pirates", "Heart Pirates"], correct: "Straw Hat Pirates" }
+],
+
+Superhero_Comics: [
+    { q: "What is the real name of the Marvel character Moon Knight?", a: ["Marc Spector", "Matt Murdock", "Stephen Strange", "Frank Castle"], correct: "Marc Spector" },
+    { q: "Which DC storyline introduced the Court of Owls?", a: ["The Long Halloween", "Flashpoint", "The New 52 Batman", "Crisis on Infinite Earths"], correct: "The New 52 Batman" },
+    { q: "What metal gives Wolverine his claws?", a: ["Vibranium", "Adamantium", "Promethium", "Nth Metal"], correct: "Adamantium" }
+],
+
+Video_Game_Lore: [
+    { q: "What is the name of the continent where most of 'The Witcher 3' takes place?", a: ["Tamriel", "The Continent", "Midgard", "Valoran"], correct: "The Continent" },
+    { q: "In 'Dark Souls', what is the linking of the fire meant to prevent?", a: ["The Abyss", "The Age of Dark", "The Curse of the Undead", "The Dragon War"], correct: "The Age of Dark" },
+    { q: "Which corporation creates the androids in 'NieR: Automata'?", a: ["YoRHa", "Shinra", "Umbrella", "Vault-Tec"], correct: "YoRHa" }
+],
+
+Prestige_Television: [
+    { q: "Who composed the original score for 'Succession'?", a: ["Ramin Djawadi", "Nicholas Britell", "Hans Zimmer", "Bear McCreary"], correct: "Nicholas Britell" },
+    { q: "In 'Breaking Bad', what is the name of Walter White's alter ego?", a: ["Heisenberg", "Gus", "Saul", "Tuco"], correct: "Heisenberg" },
+    { q: "Which fictional company is central to the plot of 'Severance'?", a: ["Lumon Industries", "Waystar Royco", "Massive Dynamic", "E Corp"], correct: "Lumon Industries" }
+],
+
+Contemporary_Hip_Hop: [
+    { q: "Which artist released the album 'To Pimp a Butterfly'?", a: ["J. Cole", "Kanye West", "Kendrick Lamar", "Drake"], correct: "Kendrick Lamar" },
+    { q: "What producer tag is associated with Metro Boomin?", a: ["If Young Metro don't trust you...", "Mustard on the beat", "We the Best", "Mike WiLL Made-It"], correct: "If Young Metro don't trust you..." },
+    { q: "Which city is considered the birthplace of drill music?", a: ["Atlanta", "Chicago", "New York", "Los Angeles"], correct: "Chicago" }
+],
+
+Fantasy_Literature: [
+    { q: "What is the name of the sword reforged from Narsil in 'The Lord of the Rings'?", a: ["Glamdring", "Anduril", "Sting", "Orcrist"], correct: "Anduril" },
+    { q: "Who wrote 'The Name of the Wind'?", a: ["Brandon Sanderson", "Patrick Rothfuss", "Joe Abercrombie", "George R.R. Martin"], correct: "Patrick Rothfuss" },
+    { q: "In 'A Song of Ice and Fire', what is the motto of House Greyjoy?", a: ["Winter is Coming", "Fire and Blood", "We Do Not Sow", "Hear Me Roar"], correct: "We Do Not Sow" }
+],
+
+Sci_Fi_Cinema: [
+    { q: "Who directed 'Blade Runner 2049'?", a: ["Christopher Nolan", "Denis Villeneuve", "Ridley Scott", "Alex Garland"], correct: "Denis Villeneuve" },
+    { q: "What is the name of the ship in 'Alien' (1979)?", a: ["Prometheus", "Nostromo", "Sulaco", "Endurance"], correct: "Nostromo" },
+    { q: "In 'The Matrix', what color pill does Neo take?", a: ["Blue", "Green", "Red", "Yellow"], correct: "Red" }
+],
+
+Reality_TV_and_Streaming: [
+    { q: "Which streaming platform produced 'Stranger Things'?", a: ["Hulu", "Amazon Prime Video", "Netflix", "Disney+"], correct: "Netflix" },
+    { q: "What is the grand prize on 'RuPaul's Drag Race' traditionally awarded alongside the crown?", a: ["$50,000", "$100,000", "$250,000", "$1,000,000"], correct: "$100,000" },
+    { q: "Which dating show popularized the phrase 'Can I steal you for a second?'", a: ["Love Island", "The Bachelor", "Too Hot to Handle", "Are You the One?"], correct: "The Bachelor" }
+],
+
+Esports: [
+    { q: "Which game features the tournament 'The International'?", a: ["League of Legends", "Dota 2", "CS:GO", "Valorant"], correct: "Dota 2" },
+    { q: "What role is typically responsible for jungling in MOBA games?", a: ["Support", "ADC", "Jungler", "Top Laner"], correct: "Jungler" },
+    { q: "Which South Korean player is nicknamed 'Faker'?", a: ["Lee Sang-hyeok", "Jang Min-chul", "Park Jae-hyuk", "Heo Su"], correct: "Lee Sang-hyeok" }
+],
+
+Internet_Culture: [
+    { q: "What does the acronym 'ARG' stand for?", a: ["Alternate Reality Game", "Automated Response Generator", "Augmented Reality Grid", "Active Roleplay Group"], correct: "Alternate Reality Game" },
+    { q: "Which platform popularized the 'subreddit' structure?", a: ["Tumblr", "Reddit", "4chan", "Discord"], correct: "Reddit" },
+    { q: "What meme format begins with 'Distracted Boyfriend'?", a: ["Stock photo meme", "Advice animal", "Rage comic", "Deep fried meme"], correct: "Stock photo meme" }
+],
+
+Fashion_History: [
+    { q: "Who founded the fashion house Chanel?", a: ["Elsa Schiaparelli", "Coco Chanel", "Donatella Versace", "Yves Saint Laurent"], correct: "Coco Chanel" },
+    { q: "What 1960s fashion movement popularized miniskirts?", a: ["Mod", "Goth", "Punk", "Bohemian"], correct: "Mod" },
+    { q: "Which city is considered one of the 'Big Four' fashion capitals?", a: ["Milan", "Zurich", "Dubai", "Seoul"], correct: "Milan" }
+],
+
+Culinary_Techniques: [
+    { q: "What does 'sous vide' literally mean in French?", a: ["Under vacuum", "Slow fire", "In water", "Cold sear"], correct: "Under vacuum" },
+    { q: "Which emulsion is stabilized primarily by egg yolk?", a: ["Vinaigrette", "Hollandaise", "Bechamel", "Veloute"], correct: "Hollandaise" },
+    { q: "What Japanese knife is traditionally used for slicing sashimi?", a: ["Santoku", "Nakiri", "Yanagiba", "Deba"], correct: "Yanagiba" }
+],
+
+Urban_Legends_and_Folklore: [
+    { q: "What creature is said to inhabit Loch Ness?", a: ["Mokele-Mbembe", "Nessie", "Chupacabra", "Kraken"], correct: "Nessie" },
+    { q: "The Slender Man myth originated on which type of platform?", a: ["Television series", "Reddit forum", "Photoshop contest", "Creepypasta blog"], correct: "Photoshop contest" },
+    { q: "What is the name of the internet folklore character known for endless staircases and distorted faces?", a: ["The Rake", "SCP-173", "Ben Drowned", "The Backrooms Entity"], correct: "SCP-173" }
+],
+
+Board_Games: [
+    { q: "In 'Settlers of Catan', what resource is required to build a city?", a: ["Ore and Grain", "Brick and Wood", "Sheep and Wheat", "Wood and Ore"], correct: "Ore and Grain" },
+    { q: "Which chess piece moves in an L-shape?", a: ["Bishop", "Knight", "Rook", "Queen"], correct: "Knight" },
+    { q: "What hidden-role board game features characters like the Seer and Werewolf?", a: ["Avalon", "Secret Hitler", "Werewolf", "Coup"], correct: "Werewolf" }
+],
+
+Space_Opera: [
+    { q: "What is the name of Han Solo's ship in 'Star Wars'?", a: ["Serenity", "Millennium Falcon", "Galactica", "Rocinante"], correct: "Millennium Falcon" },
+    { q: "Who wrote the 'Dune' series?", a: ["Isaac Asimov", "Arthur C. Clarke", "Frank Herbert", "Philip K. Dick"], correct: "Frank Herbert" },
+    { q: "In 'Mass Effect', what species is Garrus Vakarian?", a: ["Turian", "Asari", "Krogan", "Quarian"], correct: "Turian" }
+],
+// --- 15 Previously Omitted Niche Categories (3 Questions Each) ---
+
+Naval_History: [
+    { q: "What was the flagship of Admiral Nelson at the Battle of Trafalgar?", a: ["HMS Victory", "HMS Dreadnought", "HMS Bounty", "HMS Warrior"], correct: "HMS Victory" },
+    { q: "Which class of battleship did the USS Iowa belong to?", a: ["Essex-class", "Iowa-class", "Yamato-class", "Bismarck-class"], correct: "Iowa-class" },
+    { q: "What innovation made HMS Dreadnought revolutionary in 1906?", a: ["Steam turbines", "All-big-gun armament", "Iron hull", "Radar"], correct: "All-big-gun armament" }
+],
+
+Watchmaking: [
+    { q: "What mechanism compensates for gravity’s effect on a watch’s escapement?", a: ["Perpetual calendar", "Tourbillon", "Chronograph", "Minute repeater"], correct: "Tourbillon" },
+    { q: "What does COSC certification measure?", a: ["Water resistance", "Shock resistance", "Chronometric accuracy", "Magnetic shielding"], correct: "Chronometric accuracy" },
+    { q: "Which country is most associated with haute horlogerie?", a: ["Germany", "Japan", "Switzerland", "France"], correct: "Switzerland" }
+],
+
+Paleoclimatology: [
+    { q: "What ice core location provides climate data spanning over 800,000 years?", a: ["Greenland", "Vostok Station", "Svalbard", "Patagonia"], correct: "Vostok Station" },
+    { q: "What ratio in foraminifera shells indicates ancient ocean temperatures?", a: ["Carbon-14", "Oxygen-18/Oxygen-16", "Nitrogen-15", "Helium-3"], correct: "Oxygen-18/Oxygen-16" },
+    { q: "What rapid climate event occurred ~12,900 years ago?", a: ["Holocene Optimum", "Younger Dryas", "Little Ice Age", "PETM"], correct: "Younger Dryas" }
+],
+
+Sumerology: [
+    { q: "What writing system did the Sumerians develop?", a: ["Hieroglyphics", "Linear B", "Cuneiform", "Runes"], correct: "Cuneiform" },
+    { q: "What city is associated with the Epic of Gilgamesh?", a: ["Ur", "Uruk", "Lagash", "Eridu"], correct: "Uruk" },
+    { q: "Who was the Sumerian sky god?", a: ["Enki", "Enlil", "Anu", "Inanna"], correct: "Anu" }
+],
+
+Competitive_Chess: [
+    { q: "What opening begins with 1.e4 c5?", a: ["French Defense", "Sicilian Defense", "Caro-Kann", "Ruy Lopez"], correct: "Sicilian Defense" },
+    { q: "What is the highest title awarded by FIDE?", a: ["International Master", "Candidate Master", "Grandmaster", "Super GM"], correct: "Grandmaster" },
+    { q: "Which tiebreak system is commonly used in Swiss tournaments?", a: ["Elo", "Buchholz", "Sonneborn-Berger", "K-factor"], correct: "Buchholz" }
+],
+
+Formula_One_Technics: [
+    { q: "What does DRS stand for?", a: ["Dynamic Racing System", "Drag Reduction System", "Downforce Recovery Setup", "Dual Rear Spoiler"], correct: "Drag Reduction System" },
+    { q: "Which tire compound is typically marked with red sidewalls?", a: ["Hard", "Medium", "Soft", "Intermediate"], correct: "Soft" },
+    { q: "What unit measures engine power output in F1?", a: ["Newton", "Horsepower", "Bar", "Joule"], correct: "Horsepower" }
+],
+
+Brewing_Science: [
+    { q: "What sugar is primarily fermented in beer production?", a: ["Lactose", "Sucrose", "Maltose", "Fructose"], correct: "Maltose" },
+    { q: "What does IBU measure?", a: ["Alcohol content", "Bitterness", "Color", "Carbonation"], correct: "Bitterness" },
+    { q: "Which microorganism performs fermentation in most ales?", a: ["Saccharomyces cerevisiae", "Lactobacillus", "Brettanomyces", "Acetobacter"], correct: "Saccharomyces cerevisiae" }
+],
+
+Quantum_Computing: [
+    { q: "What is the basic unit of quantum information?", a: ["Bit", "Qubit", "Gate", "Register"], correct: "Qubit" },
+    { q: "Which algorithm provides exponential speedup for factoring integers?", a: ["Grover's Algorithm", "Shor's Algorithm", "Deutsch-Jozsa", "Viterbi"], correct: "Shor's Algorithm" },
+    { q: "What phenomenon allows qubits to exhibit correlated states instantly?", a: ["Superposition", "Decoherence", "Entanglement", "Tunneling"], correct: "Entanglement" }
+],
+
+Calligraphy: [
+    { q: "What script style is characterized by flowing, connected strokes in Arabic calligraphy?", a: ["Kufic", "Naskh", "Thuluth", "Diwani"], correct: "Diwani" },
+    { q: "Which tool is traditionally used in East Asian brush calligraphy?", a: ["Quill", "Reed pen", "Brush", "Stylus"], correct: "Brush" },
+    { q: "What term refers to decorative handwritten lettering in medieval manuscripts?", a: ["Illumination", "Engraving", "Etching", "Relief"], correct: "Illumination" }
+],
+
+Linguistic_Typology: [
+    { q: "What language type primarily uses word order rather than inflection?", a: ["Agglutinative", "Fusional", "Isolating", "Polysynthetic"], correct: "Isolating" },
+    { q: "What alignment treats the subject of an intransitive verb like the object of a transitive verb?", a: ["Nominative-Accusative", "Ergative-Absolutive", "Tripartite", "Active-Stative"], correct: "Ergative-Absolutive" },
+    { q: "Which language is a classic example of polysynthesis?", a: ["English", "Mandarin", "Inuktitut", "Spanish"], correct: "Inuktitut" }
+],
+
+Mycology: [
+    { q: "What is the vegetative body of a fungus called?", a: ["Spore", "Hypha", "Mycelium", "Ascus"], correct: "Mycelium" },
+    { q: "Which division contains mushrooms with gills?", a: ["Zygomycota", "Basidiomycota", "Chytridiomycota", "Glomeromycota"], correct: "Basidiomycota" },
+    { q: "What symbiotic association exists between fungi and plant roots?", a: ["Lichen", "Mycorrhiza", "Rhizome", "Endophyte"], correct: "Mycorrhiza" }
+],
+
+Cartography: [
+    { q: "What projection preserves area but distorts shape?", a: ["Mercator", "Peters", "Robinson", "Lambert"], correct: "Peters" },
+    { q: "What line connects points of equal elevation?", a: ["Isobar", "Contour line", "Meridian", "Transect"], correct: "Contour line" },
+    { q: "What does GIS stand for?", a: ["Geographic Information System", "Global Imaging Survey", "Geospatial Index Standard", "Ground Interface System"], correct: "Geographic Information System" }
+],
+
+Numismatics: [
+    { q: "What does 'obverse' refer to on a coin?", a: ["Edge", "Back", "Front", "Mint mark"], correct: "Front" },
+    { q: "Which metal was primarily used in Roman denarii?", a: ["Gold", "Bronze", "Silver", "Copper"], correct: "Silver" },
+    { q: "What term describes a coin struck from worn dies?", a: ["Proof", "Mint state", "Weak strike", "Clipped"], correct: "Weak strike" }
+],
+
+Volcanology: [
+    { q: "What type of volcano is Mount Fuji?", a: ["Shield", "Stratovolcano", "Cinder cone", "Caldera"], correct: "Stratovolcano" },
+    { q: "What scale measures volcanic explosivity?", a: ["Richter", "VEI", "Mercalli", "Saffir-Simpson"], correct: "VEI" },
+    { q: "What molten rock beneath Earth's surface is called?", a: ["Lava", "Magma", "Basalt", "Tuff"], correct: "Magma" }
+],
+
+Gothic_Literature: [
+    { q: "Who wrote 'The Castle of Otranto'?", a: ["Mary Shelley", "Horace Walpole", "Bram Stoker", "Ann Radcliffe"], correct: "Horace Walpole" },
+    { q: "What creature is central to Bram Stoker's 'Dracula'?", a: ["Werewolf", "Ghost", "Vampire", "Demon"], correct: "Vampire" },
+    { q: "Which novel features the character Victor Frankenstein?", a: ["Dracula", "Frankenstein", "The Monk", "Melmoth the Wanderer"], correct: "Frankenstein" }
+]
+}
+
 const gameState = {
     // 1. DATA TRACKING
     player: {
         name: "",
         food: 0,
         trivium: 0,
+        bossRerollCost: 2,
         credits: 0,
         type: "",
         modules: [null, null, null, null, null, null]
     },
     currentStage: 1,
     categories: [
-        "Ancient_History", "Biology", "World_Geography", "Literature", 
-        "Art_History", "Music", "Chemistry", "Movies", "Mythology", 
-        "Technology", "Sports", "Philosophy", "Food_and_Drink", 
-        "Politics", "Space_Exploration", "Language", "Business", 
-        "Geology", "Psychology", "Modern_History"
+    "Ancient_History", "Biology", "World_Geography", "Literature", 
+    "Art_History", "Music", "Chemistry", "Movies", "Mythology", 
+    "Technology", "Sports", "Philosophy", "Food_and_Drink", 
+    "Politics", "Space_Exploration", "Language", "Business", 
+    "Geology", "Psychology", "Modern_History",
+    "Astronomy", "Physics", "Mathematics", "Environmental_Science",
+    "Medicine", "Architecture", "Economics", "Computer_Science",
+    "Cultural_Studies", "Law"
+],
+
+    shopModules: [
+        { id: 'accumulator', name: "Trivium Aplifier", cost: 15, desc: "50% chance to double rewards.", icon: "✨" },
+        { id: 'laser', name: "Defense Laser", cost: 5, desc: "1-Use: Remove a wrong answer during regular question.", icon: "🔫" },
+        { id: 'biosphere', name: "Biosphere", cost: 10, desc: "Produces 4 Food per Jump.", icon: "🌿" }
     ],
 
-    // Module Definitions
-    shopModules: [
-        { id: 'accumulator', name: "Adv. Accumulator", cost: 15, desc: "50% chance to double rewards.", icon: "✨" },
-        { id: 'laser', name: "Defense Laser", cost: 5, desc: "1-Use: Remove a wrong answer.", icon: "🔫" },
-        { id: 'biosphere', name: "Biosphere", cost: 10, desc: "Reduces jump food cost by 4.", icon: "🌿" }
+    buddies: [
+        { id: 'octopus', name: "Hydroponic Octopus", desc: "Grows 2 Food per Jump.", icon: "🐙", gif: "octopus_idle.gif" },
+        { id: 'aardvark', name: "Arbitrage Aardvark", desc: "Arbitrages 1 Credit per Jump.", icon: "🐜", gif: "aardvark_idle.gif" }
     ],
 
     // 2. ELEMENT GETTERS
@@ -322,9 +709,9 @@ const gameState = {
 
     selectCharacter: function(choice) {
         if (choice === 'latke') {
-            this.player = { name: "Latke", food: 20, trivium: 10, credits: 0, type: "latke", modules: [null, null, null, null, null, null] };
+            this.player = { name: "Latke", food: 20, trivium: 12, credits: 0, type: "latke", modules: [null, null, null, null, null, null] };
         } else {
-            this.player = { name: "Glenn", food: 10, trivium: 20, credits: 0, type: "glenn", modules: [null, null, null, null, null, null] };
+            this.player = { name: "Glenn", food: 12, trivium: 10, credits: 10, type: "glenn", modules: [null, null, null, null, null, null] };
         }
         this.enterGame();
     },
@@ -333,36 +720,36 @@ const gameState = {
         this.charScreen.classList.add('hidden');
         this.gameScreen.classList.remove('hidden');
         this.currentStage = 1; 
-        
         const sprite = document.getElementById('pilot-sprite');
         if (sprite) {
             sprite.className = "";
             sprite.classList.add(this.player.type + "-active"); 
         }
-
         this.updateHUD();
         this.renderModules();
         this.generatePlanets();
     },
 
-    // --- SHOP LOGIC ---
-    // Inside gameState...
-
-openShop: function() {
+    openShop: function() {
     this.gameScreen.classList.add('hidden');
     this.shopScreen.classList.remove('hidden');
+    
+    // Update the dialogue to show current credits with highlight span
+    const shopDialogue = document.querySelector('#shop-screen .shop-dialogue');
+    if (shopDialogue) {
+        shopDialogue.innerHTML = `"Credits are good, but survival is better. You've got <span class="credit-highlight">${this.player.credits}C</span>. What'll it be?"`;
+    }
     
     const container = document.getElementById('shop-offers');
     container.innerHTML = "";
     
-    // Pick 2 random modules for this visit
+    // Pick 3 random modules for this visit
     const shuffled = [...this.shopModules].sort(() => 0.5 - Math.random());
-    const selections = shuffled.slice(0, 2);
+    const selections = shuffled.slice(0, 3);
 
     selections.forEach((mod, index) => {
         const canAfford = this.player.credits >= mod.cost;
         const item = document.createElement('div');
-        // Give it a unique ID so we can target it during purchase
         item.id = `shop-item-${index}`; 
         item.className = 'shop-item';
         item.innerHTML = `
@@ -377,30 +764,31 @@ openShop: function() {
     });
 },
 
-buyModule: function(modId, shopIndex) {
-    const mod = this.shopModules.find(m => m.id === modId);
-    const emptySlot = this.player.modules.indexOf(null);
-    
-    if (emptySlot !== -1 && this.player.credits >= mod.cost) {
-        // 1. Process the transaction
-        this.player.credits -= mod.cost;
-        this.player.modules[emptySlot] = { ...mod }; 
-        
-        // 2. Update the UI
-        this.renderModules();
-        this.updateHUD();
-
-        // 3. Clear the shop slot so it stays empty
-        const itemDiv = document.getElementById(`shop-item-${shopIndex}`);
-        if (itemDiv) {
-            itemDiv.innerHTML = `<div class="sold-out">SOLD OUT</div>`;
-            itemDiv.style.opacity = "0.5";
-            itemDiv.style.borderStyle = "dashed";
+    buyModule: function(modId, shopIndex) {
+        const mod = this.shopModules.find(m => m.id === modId);
+        const emptySlot = this.player.modules.indexOf(null);
+        if (emptySlot !== -1 && this.player.credits >= mod.cost) {
+            this.player.credits -= mod.cost;
+            
+            // Highlight update inside buyModule
+            const shopDialogue = document.querySelector('#shop-screen .shop-dialogue');
+            if (shopDialogue) {
+                shopDialogue.innerHTML = `"Credits are good, but survival is better. You've got <span class="credit-highlight">${this.player.credits}C</span>. What'll it be?"`;
+            }
+            
+            this.player.modules[emptySlot] = { ...mod }; 
+            this.renderModules();
+            this.updateHUD();
+            const itemDiv = document.getElementById(`shop-item-${shopIndex}`);
+            if (itemDiv) {
+                itemDiv.innerHTML = `<div class="sold-out">SOLD OUT</div>`;
+                itemDiv.style.opacity = "0.5";
+                itemDiv.style.borderStyle = "dashed";
+            }
+        } else if (emptySlot === -1) {
+            alert("No module slots available!");
         }
-    } else if (emptySlot === -1) {
-        alert("No module slots available! Sell or replace a module first.");
-    }
-},
+    },
 
     closeShop: function() {
         this.shopScreen.classList.add('hidden');
@@ -429,25 +817,31 @@ buyModule: function(modId, shopIndex) {
         const overlay = document.getElementById('feedback-overlay');
         const titleEl = document.getElementById('feedback-title');
         const msgEl = document.getElementById('feedback-msg');
-        
         titleEl.innerText = title;
         msgEl.innerText = message;
         titleEl.className = isCorrect ? "success-text" : "failure-text";
         overlay.classList.remove('hidden');
     },
 
-  closeFeedback: function() {
+    closeFeedback: function() {
     document.getElementById('feedback-overlay').classList.add('hidden');
+    
+    // Death check
     if (this.player.food <= 0 || this.player.trivium <= 0) return this.returnToMenu();
-
-    if (this.currentStage === 10) {
-        this.triggerBossEncounter();
-    } else if (this.currentStage === 5 || this.currentStage === 9) {
+    
+    // Stage logic
+    if (this.currentStage === 4) {
+        this.openTavern();
+    } else if (this.currentStage === 8) {
         this.openShop();
+    } else if (this.currentStage === 10) {
+        // FORCE HUD UPDATE TO SHOW 10/10
+        document.getElementById('current-stage').innerText = "10";
+        this.triggerBossEncounter();
     } else if (this.currentStage > 10) {
-        this.showFeedback(true, "Hyperdrive calibrated. Entering Interstellar Space...", "SECTOR CLEAR");
-        this.currentStage = 1; 
-        this.generatePlanets();
+        this.showFeedback(true, "Sector Clear! You escaped the Sol System and beat the end of the Demo! Continue your journey or click Abandon for a fresh challenge");
+        this.currentStage = 1;
+        this.updateHUD(); // Reset counter for next sector
     } else {
         this.generatePlanets();
     }
@@ -457,102 +851,121 @@ buyModule: function(modId, shopIndex) {
         document.getElementById('current-stage').innerText = this.currentStage;
         document.getElementById('choice-container').classList.remove('hidden');
         document.getElementById('trivia-box').classList.add('hidden');
-
         const container = document.getElementById('planet-options');
         container.innerHTML = ""; 
-
         const resources = ["Food", "Trivium", "Credits"];
         const shuffledCats = [...this.categories].sort(() => 0.5 - Math.random());
-
         for (let i = 0; i < 3; i++) {
             const cat = shuffledCats[i];
             const resType = resources[i]; 
             const amount = Math.floor(Math.random() * (14 - 9 + 1) + 9);
-
             const card = document.createElement('div');
             card.className = 'planet-card';
-            card.innerHTML = `
-                <h3>${cat.replace(/_/g, ' ')} Node</h3>
-                <span class="reward-tag">+${amount} ${resType}</span>
-            `;
+            card.innerHTML = `<h3>${cat.replace(/_/g, ' ')} Node</h3><span class="reward-tag">+${amount} ${resType}</span>`;
             card.onclick = () => this.startTrivia(cat, {type: resType, val: amount});
             container.appendChild(card);
         }
     },
-triggerBossEncounter: function() {
+
+    triggerBossEncounter: function() {
     document.getElementById('choice-container').classList.add('hidden');
     document.getElementById('trivia-box').classList.add('hidden');
     const bossUI = document.getElementById('boss-ui');
     bossUI.classList.remove('hidden');
 
+    // Reset reroll cost for each new sector boss
+    this.bossRerollCost = 2;
+    this.renderBossCategories();
+},
+
+renderBossCategories: function() {
     const grid = document.getElementById('boss-category-grid');
     grid.innerHTML = "";
 
-    // Offer all 10 categories from questionBankHard
+    // 1. Get all hard categories
     const hardCats = Object.keys(questionBankHard);
-    hardCats.forEach(cat => {
+    
+    // 2. Shuffle and pick exactly 6
+    const shuffled = hardCats.sort(() => 0.5 - Math.random()).slice(0, 6);
+
+    shuffled.forEach(cat => {
         const btn = document.createElement('button');
+        btn.className = "category-btn";
         btn.innerText = cat.replace(/_/g, ' ');
         btn.onclick = () => this.startSuddenDeath(cat);
         grid.appendChild(btn);
     });
+
+    // Update the button on the Domain Line
+    this.updateRerollButton();
 },
 
-startSuddenDeath: function(category) {
-    const bossIcon = document.getElementById('boss-icon');
-    const transferContainer = document.getElementById('boss-sprite-transfer');
-    const bossUI = document.getElementById('boss-ui');
-    const triviaBox = document.getElementById('trivia-box');
+updateRerollButton: function() {
+    const container = document.getElementById('reroll-container');
+    if (!container) return;
 
-    // 1. Move the Boss Icon into the Trivia Box
-    transferContainer.appendChild(bossIcon);
+    const canAfford = this.player.credits >= this.bossRerollCost;
     
-    // 2. Hide the selection UI and show the Trivia Box
-    bossUI.classList.add('hidden');
-    triviaBox.classList.remove('hidden');
-
-    const qData = questionBankHard[category][0];
-    
-    document.getElementById('category-label').innerText = `CRITICAL: ${category.replace(/_/g, ' ')}`;
-    document.getElementById('question-text').innerText = qData.q;
-    
-    const grid = document.getElementById('answer-grid');
-    grid.innerHTML = "";
-
-    qData.a.forEach((opt) => {
-        const btn = document.createElement('button');
-        btn.innerText = opt;
-        btn.onclick = () => {
-            if (opt === qData.correct) {
-                this.currentStage++;
-                // Move the boss back to the boss-ui for future use/cleanup
-                document.getElementById('boss-sprite-container').appendChild(bossIcon);
-                this.showFeedback(true, "The Great Filter has been bypassed. Sector 1 Complete!", "BOSS DEFEATED");
-            } else {
-                this.player.food = 0; 
-                this.player.trivium = 0;
-                this.updateHUD();
-                this.showFeedback(false, "SUDDEN DEATH: Your signal was corrupted.", "MISSION TERMINATED");
-            }
-        };
-        grid.appendChild(btn);
-    });
+    container.innerHTML = `
+        <button id="reroll-btn" ${canAfford ? '' : 'disabled'} 
+            onclick="gameState.rerollBossCategories()">
+            RE-ROLL [${this.bossRerollCost}C]
+        </button>
+    `;
 },
+
+rerollBossCategories: function() {
+    if (this.player.credits >= this.bossRerollCost) {
+        this.player.credits -= this.bossRerollCost;
+        this.bossRerollCost *= 2; // Double the cost
+        this.updateHUD();
+        this.renderBossCategories();
+    }
+},
+
+    startSuddenDeath: function(category) {
+        const bossIcon = document.getElementById('boss-icon');
+        const transferContainer = document.getElementById('boss-sprite-transfer');
+        const bossUI = document.getElementById('boss-ui');
+        const triviaBox = document.getElementById('trivia-box');
+        transferContainer.appendChild(bossIcon);
+        bossUI.classList.add('hidden');
+        triviaBox.classList.remove('hidden');
+        const qData = questionBankHard[category][0];
+        document.getElementById('category-label').innerText = `CRITICAL: ${category.replace(/_/g, ' ')}`;
+        document.getElementById('question-text').innerText = qData.q;
+        const grid = document.getElementById('answer-grid');
+        grid.innerHTML = "";
+        qData.a.forEach((opt) => {
+            const btn = document.createElement('button');
+            btn.innerText = opt;
+            btn.onclick = () => {
+                if (opt === qData.correct) {
+                    this.currentStage++;
+                    document.getElementById('boss-sprite-container').appendChild(bossIcon);
+                    this.showFeedback(true, "The Great Filter has been bypassed. Sector 1 Complete!", "BOSS DEFEATED");
+                } else {
+                    this.player.food = 0; 
+                    this.player.trivium = 0;
+                    this.updateHUD();
+                    this.showFeedback(false, "SUDDEN DEATH: Your signal was corrupted.", "MISSION TERMINATED");
+                }
+            };
+            grid.appendChild(btn);
+        });
+    },
+
     startTrivia: function(category, reward) {
         document.getElementById('choice-container').classList.add('hidden');
         const tBox = document.getElementById('trivia-box');
         tBox.classList.remove('hidden');
-        
         const questions = questionBank[category];
         const qData = questions[Math.floor(Math.random() * questions.length)];
-        
         document.getElementById('category-label').innerText = category.replace(/_/g, ' ');
         document.getElementById('question-text').innerText = qData.q;
-        
         const grid = document.getElementById('answer-grid');
         grid.innerHTML = "";
 
-        // Defense Laser Logic
         const laserIdx = this.player.modules.findIndex(m => m?.id === 'laser');
         if (laserIdx !== -1) {
             const lBtn = document.createElement('button');
@@ -578,7 +991,6 @@ startSuddenDeath: function(category) {
                 let bonusText = "";
                 let finalVal = reward.val;
 
-                // Accumulator Logic
                 if (isCorrect && this.player.modules.some(m => m?.id === 'accumulator')) {
                     if (Math.random() > 0.5) {
                         finalVal *= 2;
@@ -590,17 +1002,29 @@ startSuddenDeath: function(category) {
                     this.player[reward.type.toLowerCase()] += finalVal;
                 }
 
-                // Biosphere Logic (Drain Calculation)
-                let foodDrain = 5;
-                this.player.modules.forEach(m => { if(m?.id === 'biosphere') foodDrain -= 4; });
-                
-                this.player.food -= Math.max(0, foodDrain);
-                this.player.trivium -= 5;
+                // MERGED DRAIN & GAIN LOGIC
+                // Calculate Net Changes
+                let foodNet = -5;
+                let triviumNet = -5;
+                let creditNet = 0;
+
+                this.player.modules.forEach(m => {
+                    if (m?.id === 'biosphere') foodNet += 4;
+                    if (m?.id === 'octopus') foodNet += 2;
+                    if (m?.id === 'aardvark') creditNet += 1;
+                });
+
+                // Apply changes
+                this.player.food += foodNet;
+                this.player.trivium += triviumNet;
+                this.player.credits += creditNet;
+
+                // Capping and HUD update happens inside updateHUD()
                 this.updateHUD();
 
                 if (this.player.food <= 0 || this.player.trivium <= 0) {
                     const cause = this.player.food <= 0 ? "starving to death" : "running out of brain fuel";
-                    this.showFeedback(false, `You drifted into the void while ${cause}. Stagnant Earth awaits your return.`, "MISSION ABORTED");
+                    this.showFeedback(false, `You drifted into the void while ${cause}.`, "MISSION ABORTED");
                 } else {
                     this.currentStage++;
                     let msg = isCorrect ? `Correct! +${finalVal} ${reward.type}${bonusText}` : `Incorrect. The correct answer was ${qData.correct}.`;
@@ -611,40 +1035,108 @@ startSuddenDeath: function(category) {
         });
     },
 
+    openTavern: function() {
+        this.gameScreen.classList.add('hidden');
+        document.getElementById('tavern-screen').classList.remove('hidden');
+        const container = document.getElementById('buddy-offers');
+        container.innerHTML = "";
+        const available = this.buddies.filter(b => !this.player.modules.some(m => m?.id === b.id));
+        available.forEach(buddy => {
+            const div = document.createElement('div');
+            div.className = 'shop-item';
+            div.innerHTML = `
+                <div style="background-image: url('${buddy.gif}'); width: 50px; height: 50px; margin: 0 auto; background-size: contain; background-repeat: no-repeat;"></div>
+                <h4>${buddy.name}</h4>
+                <p>${buddy.desc}</p>
+                <button class="buy-btn" onclick="gameState.recruitBuddy('${buddy.id}')">RECRUIT</button>
+            `;
+            container.appendChild(div);
+        });
+    },
+
+    recruitBuddy: function(buddyId) {
+        const buddy = this.buddies.find(b => b.id === buddyId);
+        const emptySlot = this.player.modules.indexOf(null);
+        const alreadyHasBuddy = this.player.modules.some(m => m?.id === buddyId);
+        if (emptySlot !== -1 && !alreadyHasBuddy) {
+            this.player.modules[emptySlot] = { ...buddy };
+            this.renderModules();
+            this.updateHUD();
+            this.closeTavern(); 
+        } else {
+            alert("Cannot recruit buddy!");
+        }
+    },
+
+    closeTavern: function() {
+        const tavern = document.getElementById('tavern-screen');
+        if (tavern) tavern.classList.add('hidden');
+        this.gameScreen.classList.remove('hidden');
+        this.generatePlanets();
+    },
+
     updateHUD: function() {
-    // 1. Update Main Totals
-    const foodEl = document.getElementById('food-stat');
-    const trivEl = document.getElementById('trivium-stat');
-    const credEl = document.getElementById('credits-stat');
+    // 1. Cap resources at 999
+    this.player.food = Math.min(999, Math.max(0, this.player.food));
+    this.player.trivium = Math.min(999, Math.max(0, this.player.trivium));
+    this.player.credits = Math.min(999, Math.max(0, this.player.credits));
 
-    foodEl.innerText = this.player.food;
-    trivEl.innerText = this.player.trivium;
-    credEl.innerText = this.player.credits;
+    // 2. Update Main Totals
+    document.getElementById('food-stat').innerText = this.player.food;
+    document.getElementById('trivium-stat').innerText = this.player.trivium;
+    document.getElementById('credits-stat').innerText = this.player.credits;
 
-    // 2. Calculate Current Jump Costs
-    // Default is 5, but Biosphere reduces it by 4
-    let foodCost = 5;
+    // 3. Calculate Net Change per Jump
+    let foodNet = -5;    // Base cost
+    let triviumNet = -5; // Base cost
+    let creditNet = 0;   // Base gain
+
     this.player.modules.forEach(m => { 
-        if(m?.id === 'biosphere') foodCost -= 4; 
+        if (m) {
+            if (m.id === 'biosphere') foodNet += 4; 
+            if (m.id === 'octopus') foodNet += 2;   // If you have both, foodNet becomes +1
+            if (m.id === 'aardvark') creditNet += 1;
+        }
     });
-    foodCost = Math.max(0, foodCost); // Don't let it go below 0
 
-    let triviumCost = 5; // You can add modules later that reduce this too
+    // 4. Update the Jump Cost Row with dynamic signs
+    const fCostEl = document.getElementById('food-cost');
+    const tCostEl = document.getElementById('trivium-cost');
+    const cGainEl = document.getElementById('credit-gain');
 
-    // 3. Update the Jump Cost Row
-    document.getElementById('food-cost').innerText = `-${foodCost} FOOD`;
-    document.getElementById('trivium-cost').innerText = `-${triviumCost} TRIVIUM`;
+    // Helper to format the string (e.g., +1 or -3)
+    const formatNet = (val) => (val >= 0 ? `+${val}` : `${val}`);
+
+    if (fCostEl) {
+        fCostEl.innerText = `${formatNet(foodNet)} FOOD`;
+        fCostEl.style.color = foodNet >= 0 ? "#00ff88" : "#ff4444";
+    }
+    if (tCostEl) {
+        tCostEl.innerText = `${formatNet(triviumNet)} TRIVIUM`;
+        tCostEl.style.color = triviumNet >= 0 ? "#00ff88" : "#ff4444";
+    }
+    if (cGainEl) {
+        cGainEl.innerText = `${formatNet(creditNet)} CREDITS`;
+        cGainEl.style.color = creditNet > 0 ? "#00f2ff" : "#888";
+    }
 
     // Visual Alerts for low resources
-    this.player.food <= 10 ? foodEl.classList.add('low-resource') : foodEl.classList.remove('low-resource');
-    this.player.trivium <= 10 ? trivEl.classList.add('low-resource') : trivEl.classList.remove('low-resource');
+    this.player.food <= 10 ? document.getElementById('food-stat').classList.add('low-resource') : document.getElementById('food-stat').classList.remove('low-resource');
+    this.player.trivium <= 10 ? document.getElementById('trivium-stat').classList.add('low-resource') : document.getElementById('trivium-stat').classList.remove('low-resource');
 },
 
     returnToMenu: function() {
-        this.gameScreen.classList.add('hidden');
-        this.menuScreen.classList.remove('hidden');
-    }
+    // Hide ALL possible gameplay views
+    this.gameScreen.classList.add('hidden');
+    this.shopScreen.classList.add('hidden');
+    document.getElementById('tavern-screen').classList.add('hidden');
+    document.getElementById('boss-ui').classList.add('hidden');
+    document.getElementById('feedback-overlay').classList.add('hidden');
+    document.getElementById('trivia-box').classList.add('hidden');
+
+    // Show the menu
+    this.menuScreen.classList.remove('hidden');
+}
 };
 
 window.onload = () => gameState.init();
-

@@ -12,16 +12,16 @@
     <section id="intro-terminal" class="view">
         <div id="scroll-wrapper">
             <p class="crawl-text">
-                In 2030, Scientists figured out how to refine quantum energy 
-                from interstellar asteroids using pure trivia. <br><br>
-                Escaping a stagnant and indifferent Earth in search of questions, this is...
+                In 2030, Scientists figure out how to refine quantum energy 
+                from interstellar asteroids using pure trivia knowledge. <br><br>
+                You board the final ship escaping the solar system, welcome to...
             </p>
         </div>
     </section>
 
     <section id="menu-screen" class="view hidden">
     <h1 class="glow-text">A TRIVIAL ADVENTURE</h1>
-    <h2 class="subtitle">TO THE GALACTIC CORE</h2>
+    <h2 class="glow-text">TO THE GALACTIC CORE</h2>
     
     <div class="menu-options">
         <button onclick="gameState.showCharacterSelect()">Choose your PILOT</button>
@@ -33,14 +33,14 @@
             <h3>MISSION LOG</h3>
             <p>
                 In 2030, Scientists figure out how to refine quantum energy 
-                from interstellar asteroids using pure trivia knowledge. Lead an escape from a stagnant and indifferent Earth, 
-                 and embark on a trivial adventure to the galactic core in search of questions. 
+                from interstellar asteroids using pure trivia knowledge. You board the final ship escaping the solar system. 
+                Welcome to a trivia adventure roguelite. 
             </p>
         </div>
         <div class="info-box">
             <h3>OPERATIONAL RULES</h3>
             <p>
-                Each jump forward consumes 5 trivium and 5 food, running out of either ends the game. 
+                Each jump forward consumes 5 trivium and 5 food, running out of either results in systems faliure and ends the game. Choose categories to harvest their corresponding resources
             </p>
         </div>
     </div>
@@ -55,7 +55,7 @@
             <p>Resourceful and Loyal.</p>
             <ul>
                 <li>Food: 20</li>
-                <li>Trivium: 10</li>
+                <li>Trivium: 12</li>
                 <li>Credits: 0</li>
             </ul>
         </div>
@@ -65,9 +65,9 @@
             <h3>GLENN (The Human)</h3>
             <p>A Trivial Scholar.</p>
             <ul>
-                <li>Food: 10</li>
-                <li>Trivium: 20</li>
-                <li>Credits: 0</li>
+                <li>Food: 12</li>
+                <li>Trivium: 10</li>
+                <li>Credits: 10</li>
             </ul>
         </div>
     </div>
@@ -84,6 +84,14 @@
 
     <button class="menu-btn" onclick="gameState.closeShop()">RESUME MISSION</button>
 </section>
+<section id="tavern-screen" class="view hidden">
+    <h2 class="glow-text">THE COMET TAVERN</h2>
+    <div id="shopkeeper-area">
+        <div id="tavern-keeper-gif"></div> <p>"The sector's getting dangerous, dangerous to go alone. These talented drifters could make excellent crew members."</p>
+    </div>
+    <div id="buddy-offers"></div>
+    <button class="menu-btn" onclick="gameState.closeTavern()">CONTINUE MISSION</button>
+</section>
 <section id="game-screen" class="view hidden">
     <div id="hud">
         <div id="resource-hud">
@@ -94,17 +102,18 @@
     </div>
 
     <div id="jump-cost-row">
-        JUMP COST: 
-        <span id="food-cost" class="cost-val">-5 FOOD</span> | 
-        <span id="trivium-cost" class="cost-val">-5 TRIVIUM</span>
-    </div>
+    JUMP COST: 
+    <span id="food-cost" class="cost-val">-5 FOOD</span> | 
+    <span id="trivium-cost" class="cost-val">-5 TRIVIUM</span> |
+    <span id="credit-gain" style="color: #00f2ff;">+0 CREDITS</span>
+</div>
 </div>
         <div id="stage-counter">SECTOR: SOL | STAGE: <span id="current-stage">1</span>/10</div>
         <button id="quit-btn" onclick="gameState.returnToMenu()">ABANDON</button>
     </div>
     <div id="feedback-overlay" class="hidden">
         <div id="feedback-content">
-            <h2 id="feedback-title">MISSION SUCCESS</h2>
+            <h2 id="feedback-title">Correct!</h2>
             <p id="feedback-msg">Resources secured.</p>
             <button onclick="gameState.closeFeedback()">CONTINUE JOURNEY</button>
         </div>
@@ -142,13 +151,19 @@
         </div>
     </div>
 </section>
-<div id="boss-ui" class="hidden">
+<section id="boss-ui" class="view hidden">
+    <h2 class="failure-text">GREAT FILTER DETECTED- Pluto the Pufferfish </h2>
+    
     <div id="boss-sprite-container">
-        <div id="boss-icon"></div> <h2 class="boss-title">THE GREAT FILTER</h2>
+        <div id="boss-icon"></div>
     </div>
-    <p id="boss-warning">SUDDEN DEATH PROTOCOL INITIATED. SELECT YOUR DOMAIN.</p>
+
+    <div class="domain-header">
+        <h3>SELECT YOUR DOMAIN</h3>
+        <div id="reroll-container"></div> </div>
+
     <div id="boss-category-grid"></div>
-</div>
+</section>
    
 </div>
 
