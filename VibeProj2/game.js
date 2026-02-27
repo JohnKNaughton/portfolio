@@ -639,7 +639,6 @@ Gothic_Literature: [
     { q: "Which novel features the character Victor Frankenstein?", a: ["Dracula", "Frankenstein", "The Monk", "Melmoth the Wanderer"], correct: "Frankenstein" }
 ]
 }
-
 const gameState = {
     // 1. DATA TRACKING
     player: {
@@ -651,6 +650,10 @@ const gameState = {
         type: "",
         modules: [null, null, null, null, null, null]
     },
+    // 1. DATA TRACKING
+    bgMusic: new Audio('assets/space_music.mp3'), // 1. Put your filename here
+    musicStarted: false,                      // 2. Track if music is playing
+    // ... rest of your data ...
     currentStage: 1,
     categories: [
     "Ancient_History", "Biology", "World_Geography", "Literature", 
@@ -664,14 +667,16 @@ const gameState = {
 ],
 
     shopModules: [
-        { id: 'accumulator', name: "Trivium Aplifier", cost: 15, desc: "50% chance to double rewards.", icon: "✨" },
+        { id: 'accumulator', name: "Trivium Amplifier", cost: 15, desc: "Always doubles Trivium rewards.", icon: "✨" },
         { id: 'laser', name: "Defense Laser", cost: 5, desc: "1-Use: Remove a wrong answer during regular question.", icon: "🔫" },
-        { id: 'biosphere', name: "Biosphere", cost: 10, desc: "Produces 4 Food per Jump.", icon: "🌿" }
+        { id: 'biosphere', name: "Biosphere", cost: 10, desc: "Produces 4 Food per Jump.", icon: "🌿" },
+        { id: 'content_farm', name: "Content Farm", cost: 12, desc: "+2 Food, +4 Credits, -1 Trivium per Jump.", icon: "🚜" }
     ],
 
     buddies: [
-        { id: 'octopus', name: "Hydroponic Octopus", desc: "Grows 2 Food per Jump.", icon: "🐙", gif: "octopus_idle.gif" },
-        { id: 'aardvark', name: "Arbitrage Aardvark", desc: "Arbitrages 1 Credit per Jump.", icon: "🐜", gif: "aardvark_idle.gif" }
+        { id: 'octopus', name: "Hydroponic Octopus", desc: "Grows 2 Food per Jump.", icon: "🐙", gif: "assets/octopus_idle.gif" },
+        { id: 'aardvark', name: "Arbitrage Aardvark", desc: "Arbitrages 1 Credit for you per Jump.", icon: "🐜", gif: "assets/aardvark_idle.gif" },
+        { id: 'trivia_toad', name: "Trivia Toad", desc: "-1 Food, +4 Trivium per Jump.", icon: "🐸", gif: "assets/toad_idle.gif" }
     ],
 
     // 2. ELEMENT GETTERS
@@ -684,10 +689,21 @@ const gameState = {
     // 3. CORE FUNCTIONS
     init: function() {
         console.log("Sequence Initiated...");
+        this.bgMusic.loop = true;
+        this.bgMusic.volume = 0.3; // Start at 30% volume
+
+        // 3. Start music on the very first interaction (click anywhere)
+        document.body.addEventListener('click', () => {
+            if (!this.musicStarted) {
+                this.bgMusic.play();
+                this.musicStarted = true;
+            }
+        }, { once: true }); // 'once: true' ensures this only runs once
+
         this.introScreen.onclick = () => this.skipIntro();
         this.introTimer = setTimeout(() => {
             this.showMenu();
-        }, 9000);
+        }, 15000);
     },
 
     skipIntro: function() {
@@ -734,10 +750,13 @@ const gameState = {
     this.gameScreen.classList.add('hidden');
     this.shopScreen.classList.remove('hidden');
     
-    // Update the dialogue to show current credits with highlight span
+    // 1. Store the entry balance
+    const entryCredits = this.player.credits; 
+
+    // 2. Update the dialogue to show current AND entry credits
     const shopDialogue = document.querySelector('#shop-screen .shop-dialogue');
     if (shopDialogue) {
-        shopDialogue.innerHTML = `"Credits are good, but survival is better. You've got <span class="credit-highlight">${this.player.credits}C</span>. What'll it be?"`;
+        shopDialogue.innerHTML = `"Credits are good, but survival is better. You entered with ${entryCredits}C, and you've currently got <span class="credit-highlight">${this.player.credits}C</span>. What'll it be?"`;
     }
     
     const container = document.getElementById('shop-offers');
@@ -797,21 +816,34 @@ const gameState = {
     },
 
     renderModules: function() {
-        this.player.modules.forEach((mod, index) => {
-            const slot = document.getElementById(`slot-${index + 1}`);
-            if (slot) {
-                if (mod) {
-                    slot.classList.add('equipped');
-                    slot.innerText = mod.icon;
-                    slot.setAttribute('data-tooltip', mod.name);
+    this.player.modules.forEach((mod, index) => {
+        const slot = document.getElementById(`slot-${index + 1}`);
+        if (slot) {
+            if (mod) {
+                slot.classList.add('equipped');
+                
+                // --- UPDATE HERE ---
+                if (mod.gif) {
+                    // If it's a buddy, set the gif as background
+                    slot.style.backgroundImage = `url('${mod.gif}')`;
+                    slot.innerText = ""; // Clear text icon
                 } else {
-                    slot.classList.remove('equipped');
-                    slot.innerText = "";
-                    slot.setAttribute('data-tooltip', "Empty Slot");
+                    // If it's a module, use the text icon
+                    slot.style.backgroundImage = "none";
+                    slot.innerText = mod.icon;
                 }
+                // ------------------
+                
+                slot.setAttribute('data-tooltip', mod.name);
+            } else {
+                slot.classList.remove('equipped');
+                slot.style.backgroundImage = "none"; // Clear background
+                slot.innerText = "";
+                slot.setAttribute('data-tooltip', "Empty Slot");
             }
-        });
-    },
+        }
+    });
+},
 
     showFeedback: function(isCorrect, message, title = "TRANSMISSION RECEIVED") {
         const overlay = document.getElementById('feedback-overlay');
@@ -847,25 +879,42 @@ const gameState = {
     }
 },
 
-    generatePlanets: function() {
-        document.getElementById('current-stage').innerText = this.currentStage;
-        document.getElementById('choice-container').classList.remove('hidden');
-        document.getElementById('trivia-box').classList.add('hidden');
-        const container = document.getElementById('planet-options');
-        container.innerHTML = ""; 
-        const resources = ["Food", "Trivium", "Credits"];
-        const shuffledCats = [...this.categories].sort(() => 0.5 - Math.random());
-        for (let i = 0; i < 3; i++) {
-            const cat = shuffledCats[i];
-            const resType = resources[i]; 
-            const amount = Math.floor(Math.random() * (14 - 9 + 1) + 9);
-            const card = document.createElement('div');
-            card.className = 'planet-card';
-            card.innerHTML = `<h3>${cat.replace(/_/g, ' ')} Node</h3><span class="reward-tag">+${amount} ${resType}</span>`;
-            card.onclick = () => this.startTrivia(cat, {type: resType, val: amount});
-            container.appendChild(card);
-        }
-    },
+   generatePlanets: function() {
+    document.getElementById('current-stage').innerText = this.currentStage;
+    document.getElementById('choice-container').classList.remove('hidden');
+    document.getElementById('trivia-box').classList.add('hidden');
+    const container = document.getElementById('planet-options');
+    
+    container.innerHTML = ""; 
+    const resources = ["Food", "Trivium", "Credits"];
+    
+    const shuffledCats = [...this.categories].sort(() => 0.5 - Math.random());
+    for (let i = 0; i < 3; i++) {
+        const cat = shuffledCats[i];
+        const resType = resources[i]; 
+        
+        // 1. Generate the amount first
+        const amount = Math.floor(Math.random() * (14 - 9 + 1) + 9);
+        
+        // 2. Map the amount to a name
+        let nodeName = "";
+        if (amount === 14) nodeName = "Planet";
+        else if (amount === 13) nodeName = "Dwarf Planet";
+        else if (amount === 12) nodeName = "Moon";
+        else if (amount === 11) nodeName = "Asteroid";
+        else if (amount === 10) nodeName = "Trading Beacon";
+        else if (amount === 9) nodeName = "Research Habitat";
+
+        const card = document.createElement('div');
+        card.className = 'planet-card';
+        
+        // 3. Updated innerHTML to use the mapped nodeName
+        card.innerHTML = `<h3>${cat.replace(/_/g, ' ')} ${nodeName}</h3><span class="reward-tag">+${amount} ${resType}</span>`; 
+        
+        card.onclick = () => this.startTrivia(cat, {type: resType, val: amount});
+        container.appendChild(card);
+    }
+},
 
     triggerBossEncounter: function() {
     document.getElementById('choice-container').classList.add('hidden');
@@ -943,12 +992,12 @@ rerollBossCategories: function() {
                 if (opt === qData.correct) {
                     this.currentStage++;
                     document.getElementById('boss-sprite-container').appendChild(bossIcon);
-                    this.showFeedback(true, "The Great Filter has been bypassed. Sector 1 Complete!", "BOSS DEFEATED");
+                    this.showFeedback(true, "Pluto has been defeated! Sector 1 Complete!", "BOSS DEFEATED");
                 } else {
                     this.player.food = 0; 
                     this.player.trivium = 0;
                     this.updateHUD();
-                    this.showFeedback(false, "SUDDEN DEATH: Your signal was corrupted.", "MISSION TERMINATED");
+                    this.showFeedback(false, "Too bad you didn't know more. Try again!", "Misson Failed");
                 }
             };
             grid.appendChild(btn);
@@ -991,11 +1040,10 @@ rerollBossCategories: function() {
                 let bonusText = "";
                 let finalVal = reward.val;
 
-                if (isCorrect && this.player.modules.some(m => m?.id === 'accumulator')) {
-                    if (Math.random() > 0.5) {
-                        finalVal *= 2;
-                        bonusText = " (ACCUMULATOR DOUBLED!)";
-                    }
+                // NEW LOGIC: Always double Trivium
+                if (isCorrect && reward.type === 'Trivium' && this.player.modules.some(m => m?.id === 'accumulator')) {
+                    finalVal *= 2;
+                    bonusText = " (Trivium Doubled by Accumulator!)";
                 }
 
                 if (isCorrect) {
@@ -1012,6 +1060,16 @@ rerollBossCategories: function() {
                     if (m?.id === 'biosphere') foodNet += 4;
                     if (m?.id === 'octopus') foodNet += 2;
                     if (m?.id === 'aardvark') creditNet += 1;
+                    // NEW PASSIVES
+                    if (m?.id === 'content_farm') {
+                        foodNet += 2;
+                        creditNet += 4;
+                        triviumNet -= 1;
+                    }
+                    if (m?.id === 'trivia_toad') {
+                        foodNet -= 1;
+                        triviumNet += 4;
+                    }
                 });
 
                 // Apply changes
@@ -1024,7 +1082,7 @@ rerollBossCategories: function() {
 
                 if (this.player.food <= 0 || this.player.trivium <= 0) {
                     const cause = this.player.food <= 0 ? "starving to death" : "running out of brain fuel";
-                    this.showFeedback(false, `You drifted into the void while ${cause}.`, "MISSION ABORTED");
+                    this.showFeedback(false, `You drifted into the void while ${cause}.`, "Mission Failed");
                 } else {
                     this.currentStage++;
                     let msg = isCorrect ? `Correct! +${finalVal} ${reward.type}${bonusText}` : `Incorrect. The correct answer was ${qData.correct}.`;
@@ -1040,8 +1098,14 @@ rerollBossCategories: function() {
         document.getElementById('tavern-screen').classList.remove('hidden');
         const container = document.getElementById('buddy-offers');
         container.innerHTML = "";
+        
+        // 1. Filter out buddies already owned
         const available = this.buddies.filter(b => !this.player.modules.some(m => m?.id === b.id));
-        available.forEach(buddy => {
+        
+        // 2. Shuffle and take only the first 2
+        const selections = available.sort(() => 0.5 - Math.random()).slice(0, 2);
+
+        selections.forEach(buddy => {
             const div = document.createElement('div');
             div.className = 'shop-item';
             div.innerHTML = `
@@ -1096,6 +1160,16 @@ rerollBossCategories: function() {
             if (m.id === 'biosphere') foodNet += 4; 
             if (m.id === 'octopus') foodNet += 2;   // If you have both, foodNet becomes +1
             if (m.id === 'aardvark') creditNet += 1;
+            // NEW PASSIVES
+            if (m.id === 'content_farm') {
+                foodNet += 2;
+                creditNet += 4;
+                triviumNet -= 1;
+            }
+            if (m.id === 'trivia_toad') {
+                foodNet -= 1;
+                triviumNet += 4;
+            }
         }
     });
 

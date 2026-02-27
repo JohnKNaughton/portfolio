@@ -1,7 +1,13 @@
 body {
     margin: 0;
-    background: #050a10; /* Deep space blue */
-    color: #00f2ff; /* Data cyan */
+    /* Add this line: */
+    background-image: url('assets/Pismis24.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    /* --- */
+    color: #00f2ff;
     font-family: 'Courier New', Courier, monospace;
     display: flex;
     justify-content: center;
@@ -9,6 +15,8 @@ body {
     height: 100vh;
     overflow: hidden;
 }
+
+
 
 .hidden { display: none !important; }
 
@@ -20,6 +28,7 @@ body {
     padding: 20px;
     text-align: center;
     background: rgba(10, 20, 30, 0.9);
+    position: relative; /* Added to keep absolute children contained */
 }
 
 .glow-text {
@@ -67,13 +76,13 @@ body {
     justify-content: center;
 }
 
-/* 2. The "Window" (This sits inside the border) */
+/* 2. The "Window" */
 .crawl-container {
-    width: 70%;       /* Adjust to fit inside your giant border */
-    height: 50vh;     /* Adjust to fit inside your giant border */
+    width: 70%;      
+    height: 50vh;    
     overflow: hidden; /* This clips the text */
     position: relative;
-    border: 2px solid #00f2ff; /* Your visual border */
+    border: 2px solid #00f2ff; 
     padding: 20px;
 }
 
@@ -86,7 +95,7 @@ body {
     margin: 0;
     text-align: center;
     line-height: 4;
-    font-size: 24px;         /* Standard large size */
+    font-size: 24px;        
     animation: crawl 25s linear forwards;
 }
 
@@ -121,9 +130,9 @@ body {
     left: 50%;
     transform: translateX(-50%);
     
-    /* Opaque styling */
+    /* FIX: Corrected lch() syntax */
     background-color: lch(51.34% 9.62 71.02); 
-    border-top: 2px solid #00f2ff; /* Optional: adds a "cyber" top border */
+    border-top: 2px solid #00f2ff;
     
     display: flex;
     justify-content: center;
@@ -147,6 +156,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative; /* Needed for tooltip positioning */
 }
 
 .slot:hover {
@@ -167,6 +177,7 @@ body {
     font-size: 10px;
     white-space: nowrap;
     border: 1px solid #00f2ff;
+    z-index: 10;
 }
 
 /* Style for when a module is actually equipped */
@@ -177,18 +188,40 @@ body {
 }
 
 #pilot-sprite {
-    width: 64px;
-    height: 64px;
+    width: 128px;
+    height: 128px;
     margin: 0 auto;
     background-size: contain;
     background-repeat: no-repeat;
+    background-position: bottom center;
     image-rendering: pixelated; /* Keeps 8-bit art crisp */
+    image-rendering: crisp-edges;
 }
 
-/* Placeholder Pilot Visuals (Until you have your art files) */
-.latke-active { background-image: url('latke_idle.gif'); }
-.glenn-active { background-image: url('glenn_idle.gif'); }
-/* Animations for screen transitions */
+/* Character Specific Classes */
+.latke-active { background-image: url('assets/latke_idle.gif'); }
+.glenn-active { background-image: url('assets/glenn_idle.gif'); }
+
+/* Character select cards */
+.latke-sprite {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+    background-image: url('assets/latke_idle.gif');
+    background-size: contain;
+    image-rendering: pixelated;
+    background-repeat: no-repeat;
+}
+
+.glenn-sprite {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto;
+    background-image: url('assets/glenn_idle.gif');
+    background-size: contain;
+    image-rendering: pixelated;
+    background-repeat: no-repeat;
+}
 .fade-in {
     animation: fadeIn 2s forwards;
 }
@@ -223,47 +256,6 @@ body {
     color: #00f2ff;
     border-bottom: 1px solid #00f2ff;
     display: inline-block;
-}
-/* This class is applied to the pilot div in your JS */
-#pilot-sprite {
-    width: 128px;  /* Scale up from 64px */
-    height: 128px;
-    margin: 0 auto;
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: bottom center;
-    
-    /* THE SECRET SAUCE: Keeps pixels sharp */
-    image-rendering: pixelated; 
-    image-rendering: crisp-edges;
-}
-
-/* Character Specific Classes */
-.latke-active {
-    background-image: url('latke_idle.gif');
-}
-
-.glenn-active {
-    background-image: url('glenn_idle.gif');
-}
-
-/* Also update the character select cards to show the gifs */
-.latke-sprite {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto;
-    background-image: url('latke_idle.gif');
-    background-size: contain;
-    image-rendering: pixelated;
-}
-
-.glenn-sprite {
-    width: 64px;
-    height: 64px;
-    margin: 0 auto;
-    background-image: url('glenn_idle.gif');
-    background-size: contain;
-    image-rendering: pixelated;
 }
 #planet-options {
     display: flex;
@@ -306,6 +298,7 @@ body {
     border: 1px solid #00f2ff;
     color: #00f2ff;
     cursor: pointer;
+    font-family: 'Courier New', monospace;
 }
 @keyframes pulse-red {
     0% { color: #00f2ff; text-shadow: none; }
@@ -327,7 +320,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100; /* Ensures it sits on top of everything */
+    z-index: 100;
 }
 
 #feedback-content {
@@ -353,22 +346,18 @@ body {
     border: 1px solid #00f2ff;
     color: #00f2ff;
     cursor: pointer;
+    font-family: 'Courier New', monospace;
 }
 #shopkeeper-gif {
-    width: 120px; /* Adjust based on your GIF's actual dimensions */
+    width: 120px;
     height: 120px;
     margin: 20px auto;
-    
-    /* Hook up the file here */
-    background-image: url('shopkeeper_idle.gif'); 
+    background-image: url('assets/shopkeeper_idle.gif'); 
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-
-    /* Keeps pixel art sharp if your gif is 8-bit style */
     image-rendering: pixelated; 
-    
-    border: 1px solid #00f2ff; /* Optional: keep the frame or remove it */
+    border: 1px solid #00f2ff;
     box-shadow: 0 0 15px rgba(0, 242, 255, 0.2);
 }
 
@@ -396,11 +385,11 @@ body {
     cursor: pointer;
     font-weight: bold;
     margin-top: 10px;
+    font-family: 'Courier New', monospace;
 }
 
 .buy-btn:disabled { background: #444; color: #888; cursor: not-allowed; }
 
-/* Defense Laser Button during Trivia */
 #laser-action-btn {
     background: #ff4444;
     color: white;
@@ -430,16 +419,22 @@ body {
     width: 100px;
     height: 100px;
     margin: 0 auto;
-    background-image: url('boss1-idle.gif');
+    background-image: url('assets/boss1-idle.gif');
     background-size: contain;
     background-repeat: no-repeat;
     image-rendering: pixelated;
+    animation: boss-shake 0.2s infinite;
+    animation-play-state: paused;
+}
+
+#boss-ui:not(.hidden) #boss-icon {
+    animation-play-state: running;
 }
 
 #boss-category-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr); /* 3 columns */
-    grid-template-rows: repeat(2, auto);    /* 2 rows */
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(2, auto);
     gap: 15px;
     width: 80%;
     margin: 0 auto;
@@ -463,15 +458,6 @@ body {
     transform: translateY(-2px);
 }
 
-#boss-icon {
-    /* Existing styles... */
-    animation: boss-shake 0.2s infinite;
-    animation-play-state: paused; /* Only shake when we want it to */
-}
-
-#boss-ui:not(.hidden) #boss-icon {
-    animation-play-state: running; /* Shakes when the boss screen is visible */
-}
 #boss-sprite-transfer {
     display: flex;
     justify-content: center;
@@ -479,12 +465,29 @@ body {
 }
 
 #boss-sprite-transfer #boss-icon {
-    width: 100px; /* Slightly smaller during the question to save space */
+    width: 100px;
     height: 100px;
-    border: none; /* Remove the frame for a "ghostly" look */
+    border: none;
     box-shadow: 0 0 20px rgba(255, 0, 0, 0.8);
-    animation: boss-shake 0.2s infinite; /* Faster shake during battle */
+    animation: boss-shake 0.2s infinite;
+    animation-play-state: running;
 }
+
+/* FIX: Added missing animation keyframes */
+@keyframes boss-shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
 #jump-cost-row {
     font-size: 0.75rem;
     color: rgba(255, 255, 255, 0.6);
@@ -494,7 +497,7 @@ body {
 }
 
 .cost-val {
-    color: #ff4444; /* Red to indicate a drain/loss */
+    color: #ff4444;
     font-weight: bold;
 }
 #tavern-screen { text-align: center; }
@@ -508,14 +511,12 @@ body {
     width: 100px;
     height: 100px;
     margin: 0 auto;
-    background-image: url('tavern_keeper.gif'); /* The filename goes here */
+    background-image: url('assets/tavern_keeper.gif');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    image-rendering: pixelated; /* Keeps him looking like retro pixel art */
-    
-    /* Optional: Give him a warm tavern glow */
-    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4)); 
+    image-rendering: pixelated;
+    filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4));
 }
 #stage-counter {
     font-family: 'Courier New', monospace;
@@ -526,12 +527,11 @@ body {
 
 #current-stage {
     font-weight: bold;
-    min-width: 20px; /* Prevents layout jitter when 9 becomes 10 */
+    min-width: 20px;
     display: inline-block;
     text-align: right;
 }
 
-/* Optional: Add this class via JS when stage === 10 */
 .final-stage-glow {
     color: #ff4444 !important;
     text-shadow: 0 0 10px #ff0000 !important;

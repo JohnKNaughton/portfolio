@@ -76,13 +76,14 @@
     <h2 class="glow-text">INTERSTELLAR OUTPOST</h2>
     <div id="shopkeeper-area">
         <div id="shopkeeper-gif"></div> 
-        <p id="shop-dialogue">"Credits are good, but survival is better. What'll it be?"</p>
+        <p class="shop-dialogue">"Credits are good, but survival is better. What'll it be?"</p>
     </div>
     
     <div id="shop-offers">
-        </div>
-
+    </div>
     <button class="menu-btn" onclick="gameState.closeShop()">RESUME MISSION</button>
+</section>
+    
 </section>
 <section id="tavern-screen" class="view hidden">
     <h2 class="glow-text">THE COMET TAVERN</h2>
@@ -96,9 +97,9 @@
     <div id="hud">
         <div id="resource-hud">
     <div class="stat-row">
-        <span>FOOD: <span id="food-stat">0</span></span>
-        <span>TRIVIUM: <span id="trivium-stat">0</span></span>
-        <span>CREDITS: <span id="credits-stat">0</span></span>
+        <span>Stockpiled FOOD:<span id="food-stat">0</span></span>|
+        <span>TRIVIUM:<span id="trivium-stat">0</span></span>|
+        <span>CREDITS:<span id="credits-stat">0</span></span>
     </div>
 
     <div id="jump-cost-row">
@@ -118,20 +119,15 @@
             <button onclick="gameState.closeFeedback()">CONTINUE JOURNEY</button>
         </div>
     </div>
-<div id="trivia-box" class="hidden">
-    <div id="boss-sprite-transfer"></div> 
-    
-    <h3 id="category-label">CATEGORY</h3>
-    <p id="question-text"></p>
-    <div id="answer-grid"></div>
-</div>
+
     <div id="choice-container">
-        <h2>APPROACHING PLANETARY SYSTEM...</h2>
+        <h2>Charging Trivium Jump-Drive ...</h2>
         <div id="planet-options">
             </div>
     </div>
 
     <div id="trivia-box" class="hidden">
+        <div id="boss-sprite-transfer"></div> 
         <h3 id="category-label">CATEGORY</h3>
         <p id="question-text">Scanning for data...</p>
         <div id="answer-grid"></div>
@@ -160,17 +156,14 @@
 
     <div class="domain-header">
         <h3>SELECT YOUR DOMAIN</h3>
-        <div id="reroll-container"></div> </div>
+        <div id="reroll-container"></div> 
+    </div>
 
     <div id="boss-category-grid"></div>
 </section>
    
 </div>
-
     
-</section>
-</div>
-
     <script src="game.js"></script>
 </body>
 </html>
