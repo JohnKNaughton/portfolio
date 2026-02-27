@@ -756,7 +756,7 @@ const gameState = {
     // 2. Update the dialogue to show current AND entry credits
     const shopDialogue = document.querySelector('#shop-screen .shop-dialogue');
     if (shopDialogue) {
-        shopDialogue.innerHTML = `"Credits are good, but survival is better. You entered with ${entryCredits}C, and you've currently got <span class="credit-highlight">${this.player.credits}C</span>. What'll it be?"`;
+        shopDialogue.innerHTML = `"${this.player.name} you must know that credits are good, but survival is better. You've currently got <span class="credit-highlight">${this.player.credits} Credits</span>. What'll it be?"`;
     }
     
     const container = document.getElementById('shop-offers');
@@ -792,7 +792,7 @@ const gameState = {
             // Highlight update inside buyModule
             const shopDialogue = document.querySelector('#shop-screen .shop-dialogue');
             if (shopDialogue) {
-                shopDialogue.innerHTML = `"Credits are good, but survival is better. You've got <span class="credit-highlight">${this.player.credits}C</span>. What'll it be?"`;
+                shopDialogue.innerHTML = `"Thanks ${this.player.name}, you've got <span class="credit-highlight">${this.player.credits} Credits left</span>. Anything else?"`;
             }
             
             this.player.modules[emptySlot] = { ...mod }; 
@@ -971,39 +971,53 @@ rerollBossCategories: function() {
         this.renderBossCategories();
     }
 },
+startSuddenDeath: function(category) {
+    const bossIcon = document.getElementById('boss-icon');
+    const transferContainer = document.getElementById('boss-sprite-transfer');
+    const bossUI = document.getElementById('boss-ui');
+    const triviaBox = document.getElementById('trivia-box');
+    transferContainer.appendChild(bossIcon);
+    bossUI.classList.add('hidden');
+    triviaBox.classList.remove('hidden');
 
-    startSuddenDeath: function(category) {
-        const bossIcon = document.getElementById('boss-icon');
-        const transferContainer = document.getElementById('boss-sprite-transfer');
-        const bossUI = document.getElementById('boss-ui');
-        const triviaBox = document.getElementById('trivia-box');
-        transferContainer.appendChild(bossIcon);
-        bossUI.classList.add('hidden');
-        triviaBox.classList.remove('hidden');
-        const qData = questionBankHard[category][0];
-        document.getElementById('category-label').innerText = `CRITICAL: ${category.replace(/_/g, ' ')}`;
-        document.getElementById('question-text').innerText = qData.q;
-        const grid = document.getElementById('answer-grid');
-        grid.innerHTML = "";
-        qData.a.forEach((opt) => {
-            const btn = document.createElement('button');
-            btn.innerText = opt;
-            btn.onclick = () => {
-                if (opt === qData.correct) {
-                    this.currentStage++;
-                    document.getElementById('boss-sprite-container').appendChild(bossIcon);
-                    this.showFeedback(true, "Pluto has been defeated! Sector 1 Complete!", "BOSS DEFEATED");
-                } else {
-                    this.player.food = 0; 
-                    this.player.trivium = 0;
-                    this.updateHUD();
-                    this.showFeedback(false, "Too bad you didn't know more. Try again!", "Misson Failed");
-                }
-            };
-            grid.appendChild(btn);
-        });
-    },
+    // --- THE FIX: Randomize question selection ---
+    const questions = questionBankHard[category];
+    const qData = questions[Math.floor(Math.random() * questions.length)];
+    // ----------------------------------------------
 
+    document.getElementById('category-label').innerText = `CRITICAL: ${category.replace(/_/g, ' ')}`;
+    document.getElementById('question-text').innerText = qData.q;
+    const grid = document.getElementById('answer-grid');
+    grid.innerHTML = "";
+    qData.a.forEach((opt) => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.onclick = () => {
+            if (opt === qData.correct) {
+                this.currentStage++;
+                
+                // --- NEW REWARD LOGIC ---
+                const rewardAmount = Math.floor(Math.random() * (30 - 20 + 1) + 20);
+                this.player.trivium += rewardAmount;
+                this.updateHUD(); // Update the display
+                // ------------------------
+                
+                document.getElementById('boss-sprite-container').appendChild(bossIcon);
+                
+                // --- UPDATED FEEDBACK MESSAGE ---
+                this.showFeedback(true, `Pluto has been defeated! Sector 1 Complete! Earned +${rewardAmount} Trivium.`, "BOSS DEFEATED");
+                // --------------------------------
+            } else {
+                this.player.food = 0; 
+                this.player.trivium = 0;
+                this.updateHUD();
+                this.showFeedback(false, "Too bad you didn't know more. Try again!", "Misson Failed");
+            }
+        };
+        grid.appendChild(btn);
+    });
+},
+   
     startTrivia: function(category, reward) {
         document.getElementById('choice-container').classList.add('hidden');
         const tBox = document.getElementById('trivia-box');
@@ -1212,5 +1226,28 @@ rerollBossCategories: function() {
     this.menuScreen.classList.remove('hidden');
 }
 };
+const enableDraggableScreen = () => {
+    const slider = document.body;
+    let isDown = false;
+    let startY;
+    let scrollTop;
 
+    slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startY = e.pageY - slider.offsetTop;
+        scrollTop = slider.scrollTop;
+    });
+    slider.addEventListener('mouseleave', () => isDown = false);
+    slider.addEventListener('mouseup', () => isDown = false);
+    slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const y = e.pageY - slider.offsetTop;
+        const walk = (y - startY) * 2; // Scroll speed
+        slider.scrollTop = scrollTop - walk;
+    });
+};
+
+// Call this once
+enableDraggableScreen();
 window.onload = () => gameState.init();
