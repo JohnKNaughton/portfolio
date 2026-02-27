@@ -675,8 +675,8 @@ const gameState = {
 
     buddies: [
         { id: 'octopus', name: "Hydroponic Octopus", desc: "Grows 2 Food per Jump.", icon: "🐙", gif: "assets/octopus_idle.gif" },
-        { id: 'aardvark', name: "Arbitrage Aardvark", desc: "Arbitrages 1 Credit for you per Jump.", icon: "🐜", gif: "assets/aardvark_idle.gif" },
-        { id: 'trivia_toad', name: "Trivia Toad", desc: "-1 Food, +4 Trivium per Jump.", icon: "🐸", gif: "assets/toad_idle.gif" }
+        { id: 'aardvark', name: "Arbitrage Aardvark", desc: "Arbitrages 3 Credits for you per Jump.", icon: "🐜", gif: "assets/aardvark_idle.gif" },
+        { id: 'trivia_toad', name: "Trivia Toad", desc: "Consumes 1 Food to produce 4 Trivium per Jump.", icon: "🐸", gif: "assets/toad_idle.gif" }
     ],
 
     // 2. ELEMENT GETTERS
@@ -704,6 +704,7 @@ const gameState = {
         this.introTimer = setTimeout(() => {
             this.showMenu();
         }, 15000);
+        
     },
 
     skipIntro: function() {
@@ -858,6 +859,12 @@ const gameState = {
     closeFeedback: function() {
     document.getElementById('feedback-overlay').classList.add('hidden');
     
+    // 1. Hide the boss icon if it was visible
+    const bossIcon = document.getElementById('boss-icon');
+    if (bossIcon) {
+        bossIcon.classList.add('hidden');
+    }
+
     // Death check
     if (this.player.food <= 0 || this.player.trivium <= 0) return this.returnToMenu();
     
@@ -917,7 +924,11 @@ const gameState = {
 },
 
     triggerBossEncounter: function() {
+    const bossIcon = document.getElementById('boss-icon');
+    if (bossIcon) bossIcon.classList.remove('hidden'); // Make it visible again
+    
     document.getElementById('choice-container').classList.add('hidden');
+    // ... rest of the function
     document.getElementById('trivia-box').classList.add('hidden');
     const bossUI = document.getElementById('boss-ui');
     bossUI.classList.remove('hidden');
@@ -958,7 +969,7 @@ updateRerollButton: function() {
     container.innerHTML = `
         <button id="reroll-btn" ${canAfford ? '' : 'disabled'} 
             onclick="gameState.rerollBossCategories()">
-            RE-ROLL [${this.bossRerollCost}C]
+            RE-ROLL for new Categories [${this.bossRerollCost} Credits]
         </button>
     `;
 },
@@ -1005,13 +1016,13 @@ startSuddenDeath: function(category) {
                 document.getElementById('boss-sprite-container').appendChild(bossIcon);
                 
                 // --- UPDATED FEEDBACK MESSAGE ---
-                this.showFeedback(true, `Pluto has been defeated! Sector 1 Complete! Earned +${rewardAmount} Trivium.`, "BOSS DEFEATED");
+                this.showFeedback(true, `Pluto has been defeated! Sector 1 Complete! Plundered +${rewardAmount} Trivium.`, "CORRECT!");
                 // --------------------------------
             } else {
                 this.player.food = 0; 
                 this.player.trivium = 0;
                 this.updateHUD();
-                this.showFeedback(false, "Too bad you didn't know more. Try again!", "Misson Failed");
+                this.showFeedback(false, "That was incorrect, too bad you didn't know more. Resetting Simulation!", "Misson Failed");
             }
         };
         grid.appendChild(btn);
@@ -1073,7 +1084,7 @@ startSuddenDeath: function(category) {
                 this.player.modules.forEach(m => {
                     if (m?.id === 'biosphere') foodNet += 4;
                     if (m?.id === 'octopus') foodNet += 2;
-                    if (m?.id === 'aardvark') creditNet += 1;
+                    if (m?.id === 'aardvark') creditNet += 3;
                     // NEW PASSIVES
                     if (m?.id === 'content_farm') {
                         foodNet += 2;
@@ -1173,7 +1184,7 @@ startSuddenDeath: function(category) {
         if (m) {
             if (m.id === 'biosphere') foodNet += 4; 
             if (m.id === 'octopus') foodNet += 2;   // If you have both, foodNet becomes +1
-            if (m.id === 'aardvark') creditNet += 1;
+            if (m.id === 'aardvark') creditNet += 3;
             // NEW PASSIVES
             if (m.id === 'content_farm') {
                 foodNet += 2;
@@ -1226,28 +1237,5 @@ startSuddenDeath: function(category) {
     this.menuScreen.classList.remove('hidden');
 }
 };
-const enableDraggableScreen = () => {
-    const slider = document.body;
-    let isDown = false;
-    let startY;
-    let scrollTop;
 
-    slider.addEventListener('mousedown', (e) => {
-        isDown = true;
-        startY = e.pageY - slider.offsetTop;
-        scrollTop = slider.scrollTop;
-    });
-    slider.addEventListener('mouseleave', () => isDown = false);
-    slider.addEventListener('mouseup', () => isDown = false);
-    slider.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const y = e.pageY - slider.offsetTop;
-        const walk = (y - startY) * 2; // Scroll speed
-        slider.scrollTop = scrollTop - walk;
-    });
-};
-
-// Call this once
-enableDraggableScreen();
 window.onload = () => gameState.init();
