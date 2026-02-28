@@ -639,6 +639,23 @@ Gothic_Literature: [
     { q: "Which novel features the character Victor Frankenstein?", a: ["Dracula", "Frankenstein", "The Monk", "Melmoth the Wanderer"], correct: "Frankenstein" }
 ]
 }
+this.sectorData = {
+    1: {
+        background: "url('assets/bg-sector1.jpg')",
+        bossSprite: "url('assets/boss1-idle.gif')",
+        message: "Sector 1 Clear! Entering Sector 2: The Milky Way. Denser HARD Trivium asteroids are now availible for collection. Warning: Trivium consumption per jump has increased."
+    },
+    2: {
+        background: "url('assets/bg-sector2.jpg')",
+        bossSprite: "url('assets/boss2-idle.gif')",
+        message: "Sector 2 Clear! Entering Sector 3: The Galactic Core. Final challenge awaits. Trivium consumption is at maximum capacity."
+    },
+    3: {
+        background: "url('assets/bg-sector3.jpg')",
+        bossSprite: "url('assets/boss3_idle.gif')",
+        message: "Victory! You have navigated the dangers of the cosmos."
+    }
+};
 const gameState = {
     // 1. DATA TRACKING
     player: {
@@ -655,6 +672,12 @@ const gameState = {
     musicStarted: false,                      // 2. Track if music is playing
     // ... rest of your data ...
     currentStage: 1,
+    currentSector: 1, 
+    sectorBackgrounds: {
+        1: 'assets/Pismis24.png',
+        2: 'assets/background2.png',
+        3: 'assets/background3.jpg'
+    },
     categories: [
     "Ancient_History", "Biology", "World_Geography", "Literature", 
     "Art_History", "Music", "Chemistry", "Movies", "Mythology", 
@@ -725,6 +748,16 @@ const gameState = {
     },
 
     selectCharacter: function(choice) {
+        // --- RESET SECTOR HERE ---
+    this.currentSector = 1;
+    // Reset background to Sector 1
+    document.body.style.backgroundImage = `url('${this.sectorBackgrounds[1]}')`;
+    // Reset boss sprite to original
+    const bossIcon = document.getElementById('boss-icon');
+    if (bossIcon) {
+        bossIcon.style.backgroundImage = "url('assets/boss1-idle.gif')"; // Replace with your original boss file path
+    }
+    // -------------------------
         if (choice === 'latke') {
             this.player = { name: "Latke", food: 20, trivium: 12, credits: 0, type: "latke", modules: [null, null, null, null, null, null] };
         } else {
@@ -754,17 +787,28 @@ const gameState = {
     // 1. Store the entry balance
     const entryCredits = this.player.credits; 
 
-    // 2. Update the dialogue to show current AND entry credits
+    // --- NEW LOGIC: Filter out already owned modules ---
+    const availableModules = this.shopModules.filter(mod => 
+        !this.player.modules.some(equipped => equipped?.id === mod.id)
+    );
+    // ----------------------------------------------------
+
+    // 2. Update the dialogue
     const shopDialogue = document.querySelector('#shop-screen .shop-dialogue');
     if (shopDialogue) {
-        shopDialogue.innerHTML = `"${this.player.name} you must know that credits are good, but survival is better. You've currently got <span class="credit-highlight">${this.player.credits} Credits</span>. What'll it be?"`;
+        // Special dialogue if everything is sold out
+        if (availableModules.length === 0) {
+            shopDialogue.innerHTML = `"${this.player.name}, you've bought everything I have! Now get out there and survive."`;
+        } else {
+            shopDialogue.innerHTML = `"${this.player.name}, you must know that credits are good, but survival is better. You've currently got <span class="credit-highlight">${this.player.credits} Credits</span>. What'll it be?"`;
+        }
     }
     
     const container = document.getElementById('shop-offers');
     container.innerHTML = "";
     
-    // Pick 3 random modules for this visit
-    const shuffled = [...this.shopModules].sort(() => 0.5 - Math.random());
+    // Pick 3 random modules from available ones
+    const shuffled = [...availableModules].sort(() => 0.5 - Math.random());
     const selections = shuffled.slice(0, 3);
 
     selections.forEach((mod, index) => {
@@ -823,27 +867,48 @@ const gameState = {
             if (mod) {
                 slot.classList.add('equipped');
                 
-                // --- UPDATE HERE ---
+                // Set the image/icon
                 if (mod.gif) {
-                    // If it's a buddy, set the gif as background
                     slot.style.backgroundImage = `url('${mod.gif}')`;
-                    slot.innerText = ""; // Clear text icon
+                    slot.innerHTML = ""; 
                 } else {
-                    // If it's a module, use the text icon
                     slot.style.backgroundImage = "none";
-                    slot.innerText = mod.icon;
+                    slot.innerHTML = `<span>${mod.icon}</span>`;
                 }
-                // ------------------
+
+                // --- ADD SELL BUTTON ---
+                const sellBtn = document.createElement('button');
+                sellBtn.innerText = "SELL";
+                sellBtn.className = "sell-module-btn hidden"; // Hidden by default
+                sellBtn.onclick = (e) => {
+                    e.stopPropagation(); // Prevents triggering slot click again
+                    this.sellModule(index);
+                };
+                slot.appendChild(sellBtn);
+                // -------------------------
+
+                // --- SLOT CLICK LOGIC ---
+                slot.onclick = () => {
+                    // Toggle visibility of the sell button
+                    sellBtn.classList.toggle('hidden');
+                };
                 
                 slot.setAttribute('data-tooltip', mod.name);
             } else {
                 slot.classList.remove('equipped');
-                slot.style.backgroundImage = "none"; // Clear background
-                slot.innerText = "";
+                slot.style.backgroundImage = "none"; 
+                slot.innerHTML = "";
+                slot.onclick = null; // Remove click event if empty
                 slot.setAttribute('data-tooltip', "Empty Slot");
             }
         }
     });
+},
+discardModule: function(index) {
+    if (confirm(`Are you sure you want to discard ${this.player.modules[index].name}?`)) {
+        this.player.modules[index] = null;
+        this.renderModules();
+    }
 },
 
     showFeedback: function(isCorrect, message, title = "TRANSMISSION RECEIVED") {
@@ -865,27 +930,99 @@ const gameState = {
         bossIcon.classList.add('hidden');
     }
 
-    // Death check
-    if (this.player.food <= 0 || this.player.trivium <= 0) return this.returnToMenu();
-    
-    // Stage logic
+    // Death check - Moved up to ensure you die before winning if resources are 0
+    if (this.player.food <= 0 || this.player.trivium <= 0) {
+        this.returnToMenu();
+        return;
+    }
+
+    // --- STAGE LOGIC ---
     if (this.currentStage === 4) {
         this.openTavern();
+        return;
     } else if (this.currentStage === 8) {
         this.openShop();
+        return;
     } else if (this.currentStage === 10) {
         // FORCE HUD UPDATE TO SHOW 10/10
         document.getElementById('current-stage').innerText = "10";
         this.triggerBossEncounter();
+        return;
     } else if (this.currentStage > 10) {
-        this.showFeedback(true, "Sector Clear! You escaped the Sol System and beat the end of the Demo! Continue your journey or click Abandon for a fresh challenge");
-        this.currentStage = 1;
-        this.updateHUD(); // Reset counter for next sector
-    } else {
-        this.generatePlanets();
+        // --- SECTOR TRANSITION LOGIC ---
+        
+        // 1. Victory Check - THIS MUST COME FIRST
+        if (this.currentSector === 3) {
+            this.showVictoryScreen();
+            return; // STOP HERE so returnToMenu doesn't run
+        }
+
+        // 2. Not last sector, proceed to next
+        this.currentSector++;
+        this.currentStage = 1; // Reset stage counter for the new sector
+
+        // 3. Change background image based on the new sector
+        const newBg = this.sectorBackgrounds[this.currentSector];
+        document.body.style.backgroundImage = `url('${newBg}')`;
+        
+        // 4. Update boss sprite based on new sector
+        if (bossIcon) {
+            if (this.currentSector === 2) {
+                bossIcon.style.backgroundImage = "url('assets/boss2-idle.gif')";
+            } else if (this.currentSector === 3) {
+                bossIcon.style.backgroundImage = "url('assets/boss3-idle.gif')";
+            }
+        }
+
+        // 5. Feedback Message
+        let sectorName = this.currentSector === 2 ? "Milky Way" : "Galactic Core";
+        this.showFeedback(true, `Sector Clear! Entering Sector ${this.currentSector}: ${sectorName}. Denser HARD Trivium asteroids are now availible for collection. Warning: Trivium consumption per jump has increased.`, "WARP SUCCESSFUL");
+        
+        this.updateHUD(); 
+        return;
+    } 
+
+    // --- NORMAL STAGE PROGRESSION ---
+    this.updateHUD();
+
+    // 2. Death check
+    if (this.player.food <= 0 || this.player.trivium <= 0) {
+        this.returnToMenu();
+        return;
     }
+
+    // 3. Generate next set of planets
+    this.generatePlanets();
+},
+showVictoryScreen: function() {
+    this.gameScreen.classList.add('hidden');
+    
+    // Unhide overlay to show victory message
+    const overlay = document.getElementById('feedback-overlay');
+    overlay.classList.remove('hidden');
+    
+    const feedbackText = document.getElementById('feedback-text');
+    // Using innerHTML to inject the input field for initials
+    feedbackText.innerHTML = `
+        <h2>CONGRATULATIONS!</h2>
+        <p>You have reached the Galactic Core and saved the ship!</p>
+        <p>Final Trivium Score: <strong>${this.player.trivium}</strong></p>
+        <input type="text" id="player-initials" placeholder="AAA" maxlength="3">
+        <button onclick="gameState.submitScore()">SUBMIT SCORE</button>
+    `;
+    
+    // Hide the normal "OK" button so they must use SUBMIT
+    document.querySelector('#feedback-overlay button').style.display = 'none';
 },
 
+submitScore: function() {
+    const initials = document.getElementById('player-initials').value;
+    alert(`Score recorded for ${initials}: ${this.player.trivium} Trivium!`);
+    
+    // Reset button display for next game
+    document.querySelector('#feedback-overlay button').style.display = 'block';
+    this.returnToMenu();
+},
    generatePlanets: function() {
     document.getElementById('current-stage').innerText = this.currentStage;
     document.getElementById('choice-container').classList.remove('hidden');
@@ -895,15 +1032,18 @@ const gameState = {
     container.innerHTML = ""; 
     const resources = ["Food", "Trivium", "Credits"];
     
+    // Shuffle standard categories
     const shuffledCats = [...this.categories].sort(() => 0.5 - Math.random());
+
+    // --- GENERATE 3 STANDARD NODES ---
     for (let i = 0; i < 3; i++) {
         const cat = shuffledCats[i];
         const resType = resources[i]; 
         
-        // 1. Generate the amount first
+        // Generate amount (9-14)
         const amount = Math.floor(Math.random() * (14 - 9 + 1) + 9);
         
-        // 2. Map the amount to a name
+        // Map amount to name
         let nodeName = "";
         if (amount === 14) nodeName = "Planet";
         else if (amount === 13) nodeName = "Dwarf Planet";
@@ -912,15 +1052,35 @@ const gameState = {
         else if (amount === 10) nodeName = "Trading Beacon";
         else if (amount === 9) nodeName = "Research Habitat";
 
-        const card = document.createElement('div');
-        card.className = 'planet-card';
-        
-        // 3. Updated innerHTML to use the mapped nodeName
-        card.innerHTML = `<h3>${cat.replace(/_/g, ' ')} ${nodeName}</h3><span class="reward-tag">+${amount} ${resType}</span>`; 
-        
-        card.onclick = () => this.startTrivia(cat, {type: resType, val: amount});
-        container.appendChild(card);
+        this.createNodeCard(container, cat, resType, amount, nodeName, false);
     }
+
+    // --- SECTOR 2: ELITE 4TH NODE ---
+    if (this.currentSector >= 2) {
+        // Pick a hard category
+        const hardCats = Object.keys(questionBankHard);
+        const eliteCat = hardCats[Math.floor(Math.random() * hardCats.length)];
+        
+        // Double Trivium reward (18-28)
+        const eliteAmount = Math.floor(Math.random() * (28 - 18 + 1) + 18);
+        
+        // Elite node styling
+        this.createNodeCard(container, eliteCat, "Trivium", eliteAmount, "-HARD-", true);
+    }
+},
+
+// Helper function to generate cards
+createNodeCard: function(container, cat, resType, amount, nodeName, isHard) {
+    const card = document.createElement('div');
+    
+    // Add 'elite-node' class for CSS styling if it's hard
+    card.className = isHard ? 'planet-card elite-node' : 'planet-card';
+    
+    card.innerHTML = `<h3>${cat.replace(/_/g, ' ')} ${nodeName}</h3><span class="reward-tag">+${amount} ${resType}</span>`; 
+    
+    // Pass isHard flag to startTrivia to determine question source
+    card.onclick = () => this.startTrivia(cat, {type: resType, val: amount}, isHard);
+    container.appendChild(card);
 },
 
     triggerBossEncounter: function() {
@@ -1029,12 +1189,13 @@ startSuddenDeath: function(category) {
     });
 },
    
-    startTrivia: function(category, reward) {
+    startTrivia: function(category, reward, isHard = false) {
         document.getElementById('choice-container').classList.add('hidden');
         const tBox = document.getElementById('trivia-box');
         tBox.classList.remove('hidden');
-        const questions = questionBank[category];
-        const qData = questions[Math.floor(Math.random() * questions.length)];
+        const sourceBank = isHard ? questionBankHard : questionBank;
+    const questions = sourceBank[category];
+    const qData = questions[Math.floor(Math.random() * questions.length)];
         document.getElementById('category-label').innerText = category.replace(/_/g, ' ');
         document.getElementById('question-text').innerText = qData.q;
         const grid = document.getElementById('answer-grid');
@@ -1078,7 +1239,7 @@ startSuddenDeath: function(category) {
                 // MERGED DRAIN & GAIN LOGIC
                 // Calculate Net Changes
                 let foodNet = -5;
-                let triviumNet = -5;
+                let triviumNet = -(5 * (this.currentSector * (this.currentSector + 1)) / 2);
                 let creditNet = 0;
 
                 this.player.modules.forEach(m => {
@@ -1163,6 +1324,7 @@ startSuddenDeath: function(category) {
         this.gameScreen.classList.remove('hidden');
         this.generatePlanets();
     },
+// --- ADD THIS LOGIC TO YOUR JUMP FUNCTION ---
 
     updateHUD: function() {
     // 1. Cap resources at 999
@@ -1175,21 +1337,37 @@ startSuddenDeath: function(category) {
     document.getElementById('trivium-stat').innerText = this.player.trivium;
     document.getElementById('credits-stat').innerText = this.player.credits;
 
-    // 3. Calculate Net Change per Jump
-    let foodNet = -5;    // Base cost
-    let triviumNet = -5; // Base cost
-    let creditNet = 0;   // Base gain
+    // --- SECTOR LOGIC (Matches Stage Logic) ---
+    const sectorSpan = document.getElementById('current-sector');
+    if (sectorSpan) {
+        let sectorName = "";
+        if (this.currentSector === 1) sectorName = "SOL SYSTEM";
+        else if (this.currentSector === 2) sectorName = "MILKY WAY";
+        else if (this.currentSector === 3) sectorName = "GALACTIC CORE";
+        
+        sectorSpan.innerText = sectorName;
+    }
+    // ----------------------------------------------
 
+    // 3. Update Stage (Existing working logic)
+    document.getElementById('current-stage').innerText = this.currentStage;
+    
+    // 4. CALCULATE DYNAMIC JUMP COSTS BASED ON SECTOR
+    // Base cost is 5, multiplied by the sector number
+    let triviumNet = -(5 * (this.currentSector * (this.currentSector + 1)) / 2); 
+    let foodNet = -5;
+    let creditNet = 0;
+
+    // Apply module effects (Matches your existing logic)
     this.player.modules.forEach(m => { 
         if (m) {
             if (m.id === 'biosphere') foodNet += 4; 
-            if (m.id === 'octopus') foodNet += 2;   // If you have both, foodNet becomes +1
+            if (m.id === 'octopus') foodNet += 2;
             if (m.id === 'aardvark') creditNet += 3;
-            // NEW PASSIVES
             if (m.id === 'content_farm') {
                 foodNet += 2;
                 creditNet += 4;
-                triviumNet -= 1;
+                triviumNet -= 1; 
             }
             if (m.id === 'trivia_toad') {
                 foodNet -= 1;
@@ -1198,12 +1376,11 @@ startSuddenDeath: function(category) {
         }
     });
 
-    // 4. Update the Jump Cost Row with dynamic signs
+    // 5. Update the Jump Cost Row Display
     const fCostEl = document.getElementById('food-cost');
     const tCostEl = document.getElementById('trivium-cost');
     const cGainEl = document.getElementById('credit-gain');
 
-    // Helper to format the string (e.g., +1 or -3)
     const formatNet = (val) => (val >= 0 ? `+${val}` : `${val}`);
 
     if (fCostEl) {

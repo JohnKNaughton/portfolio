@@ -603,4 +603,24 @@ body {
     border-color: #444;
     color: #444;
     cursor: not-allowed;
+}.hidden {
+    display: none !important;
+}
+
+.module-slot {
+    position: relative;
+    /* ... existing styles ... */
+}
+
+.sell-module-btn {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    background-color: rgba(0, 100, 255, 0.8);
+    color: white;
+    border: 1px solid white;
+    border-radius: 4px;
+    font-size: 10px;
+    cursor: pointer;
+    padding: 2px 5px;
 }
