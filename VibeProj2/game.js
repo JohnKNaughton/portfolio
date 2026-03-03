@@ -639,6 +639,24 @@ Gothic_Literature: [
     { q: "Which novel features the character Victor Frankenstein?", a: ["Dracula", "Frankenstein", "The Monk", "Melmoth the Wanderer"], correct: "Frankenstein" }
 ]
 }
+if (typeof supabase === 'undefined') {
+    var supabase = null; 
+}
+
+// Initialize the client only if the library loaded correctly
+const supabaseUrl = 'https://mvmtkpwyefyccbobvjbl.supabase.co';
+const supabaseKey = 'sb_publishable_z8OrgyDbemt-wgAgfpLV0A_fj0vhd5Y';
+
+if (window.supabase && window.supabase.createClient) {
+    supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+    console.log("🚀 Supabase Engine: ONLINE");
+} else {
+    console.error("⚠️ Supabase Library not found or blocked by browser.");
+}
+
+
+
+
 const gameState = {
     // Moved sectorData inside so "this.sectorData" works
     sectorData: {
@@ -982,13 +1000,12 @@ const gameState = {
         .map(b => `<img src="${b.gif}" style="width:50px; height:50px; border:1px solid #00f2ff; margin:5px; background: rgba(0,0,0,0.5);" title="${b.name}">`)
         .join('');
 
-    // 4. Inject Content
+    // 4. Inject Content (Updated with container padding)
     msgEl.innerHTML = `
-        <div style="text-align: center; font-family: 'Courier New', monospace;">
+        <div style="text-align: center; font-family: 'Courier New', monospace; padding-bottom: 20px;">
             <div style="margin-bottom: 15px;">
-            <p>PILOT: ${this.player.name.toUpperCase()}</p>
+                <p>PILOT: ${this.player.name.toUpperCase()}</p>
                 <img src="${pilotImg}" style="width: 80px; height: 80px; image-rendering: pixelated;">
-                
             </div>
 
             <div style="display: flex; justify-content: space-around; background: rgba(0,242,255,0.1); padding: 10px; border: 1px solid #00f2ff;">
@@ -1004,30 +1021,128 @@ const gameState = {
                 </div>
             </div>
 
-            <div style="border-top: 1px solid #444; padding-top: 15px;">
+            <div style="border-top: 1px solid #444; padding-top: 15px; margin-bottom: 20px;">
                 <p>Final Trivium Score: <span style="color: #00f2ff; font-size: 1.5em;">${this.player.trivium}</span></p>
-                <p> A Prize to the Highest Trivium Score at end of Demo </span></p>
+                <p>A Prize to the Highest Trivium Score at end of Demo</p>
                 <input type="text" id="player-initials" placeholder="AAA" maxlength="3" 
                        style="text-transform: uppercase; width: 60px; text-align: center; background: #000; color: #00f2ff; border: 1px solid #00f2ff; padding: 5px;">
                 <button onclick="gameState.submitScore()" style="background: #00f2ff; color: #000; border: none; padding: 6px 12px; font-weight: bold; cursor: pointer; font-family: 'Courier New', monospace;">SUBMIT</button>
             </div>
 
-            <button onclick="location.reload()" style="margin-top: 20px; background: none; border: 1px solid #333; color: rgb(194, 86, 86); cursor: pointer; font-size: 0.8em;">RETURN TO TITLE SCREEN</button>
+            <button onclick="location.reload()" style="display: block; width: 100%; margin-top: 20px; background: rgba(194, 86, 86, 0.2); border: 1px solid rgb(194, 86, 86); color: rgb(194, 86, 86); cursor: pointer; font-size: 0.9em; padding: 10px;">RETURN TO TITLE SCREEN</button>
         </div>
     `;
 
     // 5. Show the Overlay and hide the default "Continue" button
     if (closeBtn) closeBtn.style.display = 'none'; 
     overlay.classList.remove('hidden');
-    overlay.style.display = "flex"; // Force layout
+    overlay.style.display = "flex"; 
 },
 
-    submitScore: function() {
-        const initials = document.getElementById('player-initials').value;
-        alert(`Score recorded for ${initials}: ${this.player.trivium} Trivium!`);
-        document.querySelector('#feedback-overlay button').style.display = 'block';
-        this.returnToMenu();
-    },
+   submitScore: async function() {
+    const initials = document.getElementById('player-initials').value.toUpperCase() || "AAA";
+    const finalScore = this.player.trivium;
+    
+    const btn = document.querySelector('button[onclick="gameState.submitScore()"]');
+    btn.innerText = "UPLOADING...";
+    btn.disabled = true;
+
+    try {
+        // 1. Insert the new score
+        const { error: insertError } = await supabase
+            .from('leaderboard')
+            .insert([{ name: initials, score: finalScore }]);
+
+        if (insertError) throw insertError;
+
+        // 2. Fetch the top 10 scores
+        const { data: scores, error: fetchError } = await supabase
+            .from('leaderboard')
+            .select('name, score')
+            .order('score', { ascending: false })
+            .limit(10);
+
+        if (fetchError) throw fetchError;
+
+        // 3. Show the high score table
+        this.showHighScores(scores);
+    } catch (err) {
+        console.error("Supabase Error:", err.message);
+        alert("Transmission failed. Using local emergency backup.");
+    }
+},
+
+showHighScores: function(scores) {
+    const msgEl = document.getElementById('feedback-msg');
+    let tableHtml = `
+        <h3 style="color:#00f2ff; text-shadow: 0 0 10px #00f2ff;"></h3>
+        <table style="width:100%; border-collapse: collapse; font-family: 'Courier New', monospace; font-size: 0.9em; margin-top:10px;">
+            <tr style="border-bottom: 1px solid #00f2ff; color: #888;">
+                <th style="text-align:left; padding: 5px;">PILOT</th>
+                <th style="text-align:right; padding: 5px;">TRIVIUM</th>
+            </tr>
+    `;
+
+
+    scores.forEach((s, index) => {
+        const color = index === 0 ? "#ffd700" : "#00f2ff"; // Gold for #1
+        tableHtml += `
+            <tr style="border-bottom: 1px solid #222;">
+                <td style="text-align:left; padding: 8px 5px;">${index + 1}. ${s.name}</td>
+                <td style="text-align:right; color: ${color}; font-weight:bold;">${s.score.toLocaleString()}</td>
+            </tr>
+        `;
+    });
+
+    
+    
+    msgEl.innerHTML = tableHtml;
+},
+viewLeaderboard: async function() {
+    // 1. Show the overlay immediately so the user knows something is happening
+    const overlay = document.getElementById('feedback-overlay');
+    const msgEl = document.getElementById('feedback-msg');
+    const titleEl = document.getElementById('feedback-title');
+    const closeBtn = document.getElementById('feedback-close-btn');
+
+    titleEl.innerText = "Galactic Hall of Fame";
+    msgEl.innerHTML = "<p style='text-align:center;'>Accessing Galactic Archives...</p>";
+    overlay.classList.remove('hidden');
+    overlay.style.display = "flex";
+
+    if (!supabase) {
+        msgEl.innerHTML = "<p style='color:#ff4444;'>Connection Error: Database blocked by browser tracking prevention.</p>";
+        return;
+    }
+
+    try {
+        // 2. Fetch top 10 from Supabase
+        const { data: scores, error } = await supabase
+            .from('leaderboard')
+            .select('name, score')
+            .order('score', { ascending: false })
+            .limit(10);
+
+        if (error) throw error;
+
+        // 3. Reuse your existing table display logic
+        this.showHighScores(scores);
+        
+        // 4. Update the button to say "BACK TO MENU" instead of "NEW MISSION"
+        // This ensures they don't accidentally reload the page if they just wanted to peek
+        const menuBtn = msgEl.querySelector('button');
+        if (menuBtn) {
+            
+            menuBtn.onclick = () => {
+                overlay.classList.add('hidden');
+                overlay.style.display = "none";
+            };
+        }
+    } catch (err) {
+        console.error("Fetch Error:", err);
+        msgEl.innerHTML = "<p style='color:#ff4444;'>Failed to sync with Hall of Fame.</p>";
+    }
+},
 
     generatePlanets: function() {
         document.getElementById('current-stage').innerText = this.currentStage;
@@ -1269,8 +1384,8 @@ const gameState = {
         // Corrected to jump to Sector 3 Boss
         this.currentSector = 3;
         this.currentStage = 10;
-        this.player.food = 100;
-        this.player.trivium = 100;
+        this.player.food = 10;
+        this.player.trivium = 10;
 
         const data = this.sectorData[3];
         document.body.style.backgroundImage = data.background;
