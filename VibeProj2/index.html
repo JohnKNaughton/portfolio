@@ -43,6 +43,11 @@
                 Each jump forward consumes 5 trivium and 5 food, running out of either results in systems faliure and ends the game. Choose categories to harvest their corresponding resources. If you cheat, you have to learn what you looked up! Photos from NASA Webb telescope
             </p>
         </div>
+        <div id="debug-controls" style="position: absolute; bottom: 20px; left: 20px; z-index: 100;">
+    <button onclick="gameState.debugJumpToBoss()" style="background: #ff4444; color: white; padding: 10px; border: none; cursor: pointer; font-family: 'Courier New', Courier, monospace;">
+        DEBUG: JUMP TO BOSS 3
+    </button>
+</div>
     </div>
 </section>
 
@@ -115,13 +120,7 @@
 </div>
         <button id="quit-btn" onclick="gameState.returnToMenu()">ABANDON</button>
     </div>
-    <div id="feedback-overlay" class="hidden">
-        <div id="feedback-content">
-            <h2 id="feedback-title">Correct!</h2>
-            <p id="feedback-msg">Resources secured.</p>
-            <button onclick="gameState.closeFeedback()">CONTINUE JOURNEY</button>
-        </div>
-    </div>
+    
 
     <div id="choice-container">
         <h2>Charging Trivium Jump-Drive ...</h2>
@@ -168,5 +167,11 @@
 </div>
     
     <script src="game.js"></script>
+    <div id="feedback-overlay" class="hidden">
+    <div id="feedback-content">
+        <h2 id="feedback-title"></h2>
+        <div id="feedback-msg"></div> <button id="feedback-close-btn" onclick="gameState.closeFeedback()">CONTINUE</button>
+    </div>
+</div>
 </body>
 </html>

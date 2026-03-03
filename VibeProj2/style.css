@@ -1,12 +1,10 @@
 body {
     margin: 0;
-    /* Add this line: */
     background-image: url('assets/Pismis24.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    /* --- */
     color: #00f2ff;
     font-family: 'Courier New', Courier, monospace;
     display: flex;
@@ -16,23 +14,20 @@ body {
     overflow: hidden;
 }
 
-/* Add this to style.css */
 @media (max-width: 768px) {
     #game-screen {
-        flex-direction: column; /* Stacks ship above questions */
+        flex-direction: column;
         justify-content: flex-start;
-        overflow-y: auto; /* Allows vertical scrolling/dragging */
+        overflow-y: auto;
         height: 100vh;
         padding-top: 20px;
     }
-
     #spaceship-area {
-        position: relative; /* Removes absolute centering/overlapping */
+        position: relative;
         width: 100%;
-        height: 30vh; /* Takes up top 30% of screen */
+        height: 30vh;
         margin-bottom: 20px;
     }
-
     #trivia-box, #choice-container {
         width: 90%;
         margin: 0 auto;
@@ -50,7 +45,7 @@ body {
     padding: 20px;
     text-align: center;
     background: rgba(10, 20, 30, 0.9);
-    position: relative; /* Added to keep absolute children contained */
+    position: relative;
 }
 
 .glow-text {
@@ -84,7 +79,7 @@ body {
     padding-bottom: 10px;
     margin-bottom: 50px;
 }
-/* 1. The Full Screen Overlay */
+
 #intro-terminal {
     position: fixed;
     top: 0;
@@ -98,33 +93,32 @@ body {
     justify-content: center;
 }
 
-/* 2. The "Window" */
 .crawl-container {
     width: 70%;      
     height: 50vh;    
-    overflow: hidden; /* This clips the text */
+    overflow: hidden;
     position: relative;
     border: 2px solid #00f2ff; 
     padding: 20px;
 }
 
-/* 3. The Text itself */
 #intro-terminal p {
     position: absolute;
-    top: 100%;       /* Start at the bottom of the CONTAINER */
+    top: 100%;       
     left: 0;
     width: 100%;
     margin: 0;
     text-align: center;
     line-height: 4;
-    font-size: 24px;        
+    font-size: 24px;         
     animation: crawl 25s linear forwards;
 }
 
 @keyframes crawl {
     0% { top: 100%; }
-    100% { top: -150%; } /* Moves up until it's above the top edge */
+    100% { top: -150%; }
 }
+
 .character-container {
     display: flex;
     justify-content: center;
@@ -145,17 +139,13 @@ body {
     transform: translateY(-10px);
 }
 
-/* The Pilot in the Ship */
 #spaceship-floor {
     position: fixed;
-    bottom: 0; /* Anchors it to the very bottom */
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
-    
-    /* FIX: Corrected lch() syntax */
     background-color: lch(51.34% 9.62 71.02); 
     border-top: 2px solid #00f2ff;
-    
     display: flex;
     justify-content: center;
     align-items: center;
@@ -178,7 +168,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: relative; /* Needed for tooltip positioning */
+    position: relative;
 }
 
 .slot:hover {
@@ -186,7 +176,6 @@ body {
     background: rgba(0, 242, 255, 0.1);
 }
 
-/* Tooltip on hover */
 .slot:hover::after {
     content: attr(data-tooltip);
     position: absolute;
@@ -202,7 +191,6 @@ body {
     z-index: 10;
 }
 
-/* Style for when a module is actually equipped */
 .slot.equipped {
     border: 1px solid #00f2ff;
     box-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
@@ -216,15 +204,13 @@ body {
     background-size: contain;
     background-repeat: no-repeat;
     background-position: bottom center;
-    image-rendering: pixelated; /* Keeps 8-bit art crisp */
+    image-rendering: pixelated;
     image-rendering: crisp-edges;
 }
 
-/* Character Specific Classes */
 .latke-active { background-image: url('assets/latke_idle.gif'); }
 .glenn-active { background-image: url('assets/glenn_idle.gif'); }
 
-/* Character select cards */
 .latke-sprite {
     width: 64px;
     height: 64px;
@@ -244,6 +230,7 @@ body {
     image-rendering: pixelated;
     background-repeat: no-repeat;
 }
+
 .fade-in {
     animation: fadeIn 2s forwards;
 }
@@ -252,6 +239,7 @@ body {
     from { opacity: 0; }
     to { opacity: 1; }
 }
+
 #info-panel {
     display: flex;
     justify-content: space-between;
@@ -279,6 +267,7 @@ body {
     border-bottom: 1px solid #00f2ff;
     display: inline-block;
 }
+
 #planet-options {
     display: flex;
     justify-content: center;
@@ -322,6 +311,7 @@ body {
     cursor: pointer;
     font-family: 'Courier New', monospace;
 }
+
 @keyframes pulse-red {
     0% { color: #00f2ff; text-shadow: none; }
     50% { color: #ff4444; text-shadow: 0 0 10px #ff0000; }
@@ -332,17 +322,18 @@ body {
     animation: pulse-red 1s infinite;
     font-weight: bold;
 }
+
 #feedback-overlay {
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.85);
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.9);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 100;
+    z-index: 5000;
 }
 
 #feedback-content {
@@ -351,6 +342,9 @@ body {
     background: #050a10;
     text-align: center;
     box-shadow: 0 0 30px rgba(0, 242, 255, 0.4);
+    max-width: 90%;
+    max-height: 90%;
+    overflow-y: auto;
 }
 
 #feedback-title {
@@ -370,6 +364,7 @@ body {
     cursor: pointer;
     font-family: 'Courier New', monospace;
 }
+
 #shopkeeper-gif {
     width: 120px;
     height: 120px;
@@ -422,6 +417,7 @@ body {
     width: 100%;
     font-family: 'Courier New', monospace;
 }
+
 .sold-out {
     color: #ff4444;
     font-weight: bold;
@@ -430,6 +426,7 @@ body {
     text-transform: uppercase;
     letter-spacing: 2px;
 }
+
 #boss-ui {
     text-align: center;
     background: rgba(255, 0, 0, 0.05);
@@ -495,7 +492,6 @@ body {
     animation-play-state: running;
 }
 
-/* FIX: Added missing animation keyframes */
 @keyframes boss-shake {
     0% { transform: translate(1px, 1px) rotate(0deg); }
     10% { transform: translate(-1px, -2px) rotate(-1deg); }
@@ -522,13 +518,16 @@ body {
     color: #ff4444;
     font-weight: bold;
 }
+
 #tavern-screen { text-align: center; }
+
 #buddy-offers {
     display: flex;
     justify-content: center;
     gap: 20px;
     margin: 20px 0;
 }
+
 #tavern-keeper-gif {
     width: 100px;
     height: 100px;
@@ -540,6 +539,7 @@ body {
     image-rendering: pixelated;
     filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.4));
 }
+
 #stage-counter {
     font-family: 'Courier New', monospace;
     letter-spacing: 1px;
@@ -565,6 +565,7 @@ body {
     50% { opacity: 0.7; }
     100% { opacity: 1; }
 }
+
 .domain-header {
     display: flex;
     justify-content: space-between;
@@ -603,13 +604,10 @@ body {
     border-color: #444;
     color: #444;
     cursor: not-allowed;
-}.hidden {
-    display: none !important;
 }
 
 .module-slot {
     position: relative;
-    /* ... existing styles ... */
 }
 
 .sell-module-btn {
