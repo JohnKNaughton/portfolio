@@ -105,7 +105,7 @@ const questionBank = {
         { q: "What was the only thing left in Pandora's box after she opened it?", a: ["Fear", "Death", "Hope", "Greed"], correct: "Hope" },
         { q: "In Greek mythology, who flew too close to the sun and melted his wax wings?", a: ["Daedalus", "Perseus", "Icarus", "Phaethon"], correct: "Icarus" },
         { q: "Who is the Hindu god known as the 'Remover of Obstacles', depicted with an elephant head?", a: ["Ganesha", "Shiva", "Vishnu", "Brahma"], correct: "Ganesha" },
-        { q: "Medusa was one of three sisters known as what?", a: ["Gorgons", "Furies", "Graces", "Fates"], correct: "Gorgons" }
+        { q: "Medusa belonged to what group?", a: ["Gorgons", "Furies", "Graces", "Fates"], correct: "Gorgons" }
     ],
     Technology: [
         { q: "Who is often called the 'Father of the Computer'?", a: ["Alan Turing", "Charles Babbage", "Bill Gates", "Steve Jobs"], correct: "Charles Babbage" },
@@ -129,7 +129,7 @@ const questionBank = {
         { q: "What is the distance of a standard marathon in miles?", a: ["13.1", "24.5", "26.2", "30"], correct: "26.2" },
         { q: "Who is known as 'The Greatest' in boxing?", a: ["Muhammad Ali", "Mike Tyson", "Joe Louis", "Sugar Ray Robinson"], correct: "Muhammad Ali" },
         { q: "In the NBA, how many points is a shot worth if taken from beyond the arc?", a: ["2", "1", "3", "4"], correct: "3" },
-        { q: "Which city is hosting the 2024 Summer Olympics?", a: ["Tokyo", "Paris", "Los Angeles", "London"], correct: "Paris" }
+        { q: "Which city hosted the 2024 Summer Olympics?", a: ["Tokyo", "Paris", "Los Angeles", "London"], correct: "Paris" }
     ],
     Philosophy: [
         { q: "Who famously stated, 'I think, therefore I am'?", a: ["John Locke", "Immanuel Kant", "René Descartes", "Socrates"], correct: "René Descartes" },
@@ -147,7 +147,7 @@ const questionBank = {
         { q: "What is the main ingredient in traditional hummus?", a: ["Lentils", "Black Beans", "Chickpeas", "Fava Beans"], correct: "Chickpeas" },
         { q: "Which country is the origin of the 'Espresso' coffee machine?", a: ["France", "Spain", "Italy", "Germany"], correct: "Italy" },
         { q: "What type of pastry is used to make a Baklava?", a: ["Puff", "Choux", "Phyllo", "Shortcrust"], correct: "Phyllo" },
-        { q: "Scoville units are used to measure the heat of what?", a: ["Hot Sauces", "Chili Peppers", "Curry", "Ginger"], correct: "Chili Peppers" },
+        { q: "Scoville units are used to measure the heat of what?", a: ["Interviews", "Chili Peppers", "Curry", "Jerky"], correct: "Chili Peppers" },
         { q: "What is the world's most expensive spice by weight?", a: ["Vanilla", "Saffron", "Cardamom", "Cinnamon"], correct: "Saffron" },
         { q: "Which alcohol is traditionally distilled from agave?", a: ["Rum", "Gin", "Vodka", "Tequila"], correct: "Tequila" },
         { q: "What is the primary leavening agent used in bread?", a: ["Baking Soda", "Baking Powder", "Yeast", "Eggs"], correct: "Yeast" },
@@ -1553,7 +1553,7 @@ viewLeaderboard: async function() {
                 this.updateHUD();
 
                 if (this.player.food <= 0 || this.player.trivium <= 0) {
-                    this.showFeedback(false, `You ran out of Resources, and your ship drifts helplessly waiting for rescue.`, "Mission Failed");
+                    this.showFeedback(false, `You ran out of Resources, and your ship drifts helplessly waiting for rescue. The correct answer was ${qData.correct}. `, "Mission Failed");
                 } else {
                     this.currentStage++;
                     let msg = isCorrect ? `Correct! +${finalVal} ${reward.type}${bonusText}` : `Incorrect. The correct answer was ${qData.correct}.`;
