@@ -367,9 +367,135 @@ const questionBank = {
         { q: "What is intellectual property?", a: ["Land ownership", "Creative works protection", "Corporate shares", "Physical goods"], correct: "Creative works protection" },
         { q: "What is extradition?", a: ["Appeal process", "Transfer of suspect between jurisdictions", "Jury selection", "Sentencing reduction"], correct: "Transfer of suspect between jurisdictions" },
         { q: "What is precedent in common law?", a: ["New legislation", "Executive order", "Prior judicial decision guiding future cases", "International treaty"], correct: "Prior judicial decision guiding future cases" }
+    ], 
+    Common_Sense: [
+        { q: "What should you do first if you smell smoke in your house?", a: ["Go back to sleep", "Investigate alone", "Leave and call emergency services", "Open all windows"], correct: "Leave and call emergency services" },
+        { q: "If a traffic light is red, what must drivers do?", a: ["Slow down", "Stop", "Speed up", "Honk"], correct: "Stop" },
+        { q: "What is the safest way to cross a busy street?", a: ["Run quickly", "Cross anywhere", "Use a crosswalk", "Follow another pedestrian blindly"], correct: "Use a crosswalk" },
+        { q: "If food smells spoiled, you should:", a: ["Taste it anyway", "Cook it longer", "Throw it away", "Freeze it"], correct: "Throw it away" },
+        { q: "What should you wear when riding a bicycle for safety?", a: ["Sandals", "Helmet", "Scarf", "Watch"], correct: "Helmet" },
+        { q: "If your phone battery is at 1% and you need it later, you should:", a: ["Stream video", "Turn on airplane mode", "Increase brightness", "Play games"], correct: "Turn on airplane mode" },
+        { q: "If someone is choking and cannot speak, you should perform:", a: ["CPR immediately", "The Heimlich maneuver", "Give water", "Lay them flat"], correct: "The Heimlich maneuver" },
+        { q: "What is the best way to avoid dehydration on a hot day?", a: ["Drink water regularly", "Avoid shade", "Wear dark clothing", "Skip meals"], correct: "Drink water regularly" },
+        { q: "If you drop glass on the floor, you should:", a: ["Pick it up barefoot", "Sweep it carefully", "Ignore it", "Kick it aside"], correct: "Sweep it carefully" },
+        { q: "If you forget a password, the safest action is to:", a: ["Guess repeatedly", "Share account", "Use password recovery", "Create a new identity"], correct: "Use password recovery" }
+    ],
+
+    NBA: [
+        { q: "Which team has won the most NBA championships?", a: ["Chicago Bulls", "Los Angeles Lakers", "Boston Celtics", "Golden State Warriors"], correct: "Boston Celtics" },
+        { q: "How many players from one team are on the court at a time in an NBA game?", a: ["4", "5", "6", "7"], correct: "5" },
+        { q: "Which player is known as 'King James'?", a: ["Kevin Durant", "LeBron James", "Stephen Curry", "Kawhi Leonard"], correct: "LeBron James" },
+        { q: "What is the length of a standard NBA game?", a: ["40 minutes", "48 minutes", "60 minutes", "52 minutes"], correct: "48 minutes" },
+        { q: "Which team drafted Michael Jordan in 1984?", a: ["Los Angeles Lakers", "Chicago Bulls", "Houston Rockets", "Boston Celtics"], correct: "Chicago Bulls" },
+        { q: "How many fouls result in a player fouling out of an NBA game?", a: ["5", "6", "7", "4"], correct: "6" },
+        { q: "Which NBA award is given to the league's best regular-season player?", a: ["Finals MVP", "Sixth Man", "Rookie of the Year", "MVP"], correct: "MVP" },
+        { q: "What is the distance of the NBA three-point line at the top of the key (approx.)?", a: ["20 feet", "23 feet 9 inches", "25 feet", "22 feet"], correct: "23 feet 9 inches" },
+        { q: "Which team plays its home games at Madison Square Garden?", a: ["Brooklyn Nets", "New York Knicks", "Philadelphia 76ers", "Toronto Raptors"], correct: "New York Knicks" },
+        { q: "Who holds the record for most career points in NBA history?", a: ["Kareem Abdul-Jabbar", "LeBron James", "Karl Malone", "Kobe Bryant"], correct: "LeBron James" }
+    ],
+
+    Video_Games: [
+        { q: "Which company created the character Mario?", a: ["Sega", "Sony", "Nintendo", "Microsoft"], correct: "Nintendo" },
+        { q: "What is the highest-selling video game of all time?", a: ["Tetris", "Minecraft", "GTA V", "Wii Sports"], correct: "Minecraft" },
+        { q: "In which game do players compete in a battle royale on an island?", a: ["Call of Duty", "Fortnite", "Halo", "Overwatch"], correct: "Fortnite" },
+        { q: "What console is developed by Sony?", a: ["Xbox", "PlayStation", "Switch", "Dreamcast"], correct: "PlayStation" },
+        { q: "Which game features the character Master Chief?", a: ["Halo", "Destiny", "Mass Effect", "Gears of War"], correct: "Halo" },
+        { q: "What is the name of the princess in the main Super Mario series?", a: ["Zelda", "Daisy", "Peach", "Rosalina"], correct: "Peach" },
+        { q: "Which company publishes the 'Call of Duty' franchise?", a: ["EA", "Ubisoft", "Activision", "Valve"], correct: "Activision" },
+        { q: "In Minecraft, which material is required to build a Nether Portal frame?", a: ["Diamond", "Obsidian", "Iron", "Stone"], correct: "Obsidian" },
+        { q: "What genre is 'The Legend of Zelda' primarily considered?", a: ["Sports", "RPG/Action-Adventure", "Racing", "Simulation"], correct: "RPG/Action-Adventure" },
+        { q: "Which handheld console was developed by Nintendo in 1989?", a: ["PSP", "Game Boy", "DS", "Switch"], correct: "Game Boy" }
+    ],
+
+    Animals: [
+        { q: "What is the largest land animal?", a: ["Rhinoceros", "Elephant", "Hippopotamus", "Giraffe"], correct: "Elephant" },
+        { q: "Which mammal is capable of true flight?", a: ["Flying squirrel", "Bat", "Ostrich", "Penguin"], correct: "Bat" },
+        { q: "What is a group of lions called?", a: ["Pack", "Herd", "Pride", "Flock"], correct: "Pride" },
+        { q: "Which animal is known as the fastest land animal?", a: ["Cheetah", "Horse", "Lion", "Leopard"], correct: "Cheetah" },
+        { q: "What do pandas primarily eat?", a: ["Fish", "Insects", "Bamboo", "Fruit"], correct: "Bamboo" },
+        { q: "Which bird is a universal symbol of peace?", a: ["Eagle", "Dove", "Crow", "Falcon"], correct: "Dove" },
+        { q: "How many legs does a spider have?", a: ["6", "8", "10", "12"], correct: "8" },
+        { q: "Which marine mammal is known for its intelligence and echolocation?", a: ["Whale", "Seal", "Dolphin", "Shark"], correct: "Dolphin" },
+        { q: "What is the largest species of shark?", a: ["Great White", "Hammerhead", "Whale Shark", "Tiger Shark"], correct: "Whale Shark" },
+        { q: "Which animal is known for changing its color to blend with surroundings?", a: ["Frog", "Chameleon", "Lizard", "Gecko"], correct: "Chameleon" }
+    ],
+
+    Weather: [
+        { q: "What instrument measures temperature?", a: ["Barometer", "Thermometer", "Hygrometer", "Anemometer"], correct: "Thermometer" },
+        { q: "What scale is commonly used to measure hurricane intensity?", a: ["Richter Scale", "Saffir-Simpson Scale", "Beaufort Scale", "Kelvin Scale"], correct: "Saffir-Simpson Scale" },
+        { q: "What type of cloud is associated with thunderstorms?", a: ["Cirrus", "Stratus", "Cumulonimbus", "Altocumulus"], correct: "Cumulonimbus" },
+        { q: "What does a barometer measure?", a: ["Humidity", "Wind speed", "Air pressure", "Temperature"], correct: "Air pressure" },
+        { q: "What is frozen rain called?", a: ["Hail", "Sleet", "Snow", "Frost"], correct: "Sleet" },
+        { q: "Which direction does the sun rise?", a: ["North", "South", "East", "West"], correct: "East" },
+        { q: "What phenomenon causes a rainbow?", a: ["Reflection only", "Refraction and dispersion", "Gravity", "Magnetism"], correct: "Refraction and dispersion" },
+        { q: "What is a prolonged period of little rainfall called?", a: ["Monsoon", "Cyclone", "Drought", "Blizzard"], correct: "Drought" },
+        { q: "What measures wind speed?", a: ["Thermometer", "Anemometer", "Barometer", "Radar"], correct: "Anemometer" },
+        { q: "What type of storm rotates around a low-pressure center?", a: ["Tornado", "Cyclone", "Blizzard", "Heatwave"], correct: "Cyclone" }
+    ],
+    US_History: [
+        { q: "Who was the first President of the United States?", a: ["Thomas Jefferson", "George Washington", "John Adams", "James Madison"], correct: "George Washington" },
+        { q: "In what year was the Declaration of Independence signed?", a: ["1776", "1783", "1789", "1775"], correct: "1776" },
+        { q: "Which war was fought between the North and South regions of the United States?", a: ["Revolutionary War", "War of 1812", "Civil War", "Spanish-American War"], correct: "Civil War" },
+        { q: "Who was president during the Great Depression and most of World War II?", a: ["Herbert Hoover", "Harry Truman", "Franklin D. Roosevelt", "Dwight D. Eisenhower"], correct: "Franklin D. Roosevelt" },
+        { q: "What purchase in 1803 doubled the size of the United States?", a: ["Gadsden Purchase", "Alaska Purchase", "Louisiana Purchase", "Florida Purchase"], correct: "Louisiana Purchase" },
+        { q: "Which amendment abolished slavery?", a: ["13th", "14th", "15th", "12th"], correct: "13th" },
+        { q: "Who delivered the Gettysburg Address?", a: ["Ulysses S. Grant", "Abraham Lincoln", "Andrew Johnson", "Theodore Roosevelt"], correct: "Abraham Lincoln" },
+        { q: "What was the name of the ship that brought the Pilgrims to America in 1620?", a: ["Santa Maria", "Mayflower", "Endeavour", "Beagle"], correct: "Mayflower" },
+        { q: "Which U.S. state was the last to join the Union?", a: ["Alaska", "Hawaii", "Arizona", "New Mexico"], correct: "Hawaii" },
+        { q: "What movement sought to end racial segregation in the United States?", a: ["Progressive Movement", "Civil Rights Movement", "Abolitionist Movement", "Temperance Movement"], correct: "Civil Rights Movement" }
+    ],
+
+    World_Capitals: [
+        { q: "What is the capital of France?", a: ["Lyon", "Marseille", "Paris", "Nice"], correct: "Paris" },
+        { q: "What is the capital of Japan?", a: ["Osaka", "Kyoto", "Tokyo", "Nagoya"], correct: "Tokyo" },
+        { q: "What is the capital of Canada?", a: ["Toronto", "Ottawa", "Vancouver", "Montreal"], correct: "Ottawa" },
+        { q: "What is the capital of Brazil?", a: ["Rio de Janeiro", "São Paulo", "Brasília", "Salvador"], correct: "Brasília" },
+        { q: "What is the capital of Italy?", a: ["Milan", "Venice", "Rome", "Naples"], correct: "Rome" },
+        { q: "What is the capital of Egypt?", a: ["Alexandria", "Cairo", "Giza", "Luxor"], correct: "Cairo" },
+        { q: "What is the capital of Australia?", a: ["Sydney", "Melbourne", "Canberra", "Perth"], correct: "Canberra" },
+        { q: "What is the capital of Germany?", a: ["Munich", "Frankfurt", "Berlin", "Hamburg"], correct: "Berlin" },
+        { q: "What is the capital of Argentina?", a: ["Santiago", "Buenos Aires", "Lima", "Montevideo"], correct: "Buenos Aires" },
+        { q: "What is the capital of South Korea?", a: ["Busan", "Seoul", "Incheon", "Daegu"], correct: "Seoul" }
+    ],
+
+    Inventions: [
+        { q: "Who invented the telephone?", a: ["Thomas Edison", "Nikola Tesla", "Alexander Graham Bell", "Guglielmo Marconi"], correct: "Alexander Graham Bell" },
+        { q: "Who is credited with inventing the light bulb?", a: ["Albert Einstein", "Thomas Edison", "Benjamin Franklin", "James Watt"], correct: "Thomas Edison" },
+        { q: "Who invented the World Wide Web?", a: ["Bill Gates", "Steve Jobs", "Tim Berners-Lee", "Mark Zuckerberg"], correct: "Tim Berners-Lee" },
+        { q: "Who invented the airplane?", a: ["Charles Lindbergh", "Wright Brothers", "Howard Hughes", "Amelia Earhart"], correct: "Wright Brothers" },
+        { q: "Who developed the theory of relativity?", a: ["Isaac Newton", "Albert Einstein", "Galileo Galilei", "Niels Bohr"], correct: "Albert Einstein" },
+        { q: "Who invented the printing press?", a: ["Johannes Gutenberg", "Leonardo da Vinci", "Martin Luther", "Henry Ford"], correct: "Johannes Gutenberg" },
+        { q: "Who invented the steam engine?", a: ["James Watt", "George Stephenson", "Thomas Newcomen", "Henry Ford"], correct: "James Watt" },
+        { q: "Who invented dynamite?", a: ["Alfred Nobel", "Marie Curie", "Louis Pasteur", "Michael Faraday"], correct: "Alfred Nobel" },
+        { q: "Who invented the first practical automobile?", a: ["Henry Ford", "Karl Benz", "Enzo Ferrari", "Ferdinand Porsche"], correct: "Karl Benz" },
+        { q: "Who invented the polio vaccine?", a: ["Louis Pasteur", "Alexander Fleming", "Jonas Salk", "Edward Jenner"], correct: "Jonas Salk" }
+    ],
+
+    Board_Games: [
+        { q: "How many squares are on a standard chessboard?", a: ["64", "72", "81", "100"], correct: "64" },
+        { q: "In Monopoly, what is the name of the jail space?", a: ["Detention", "Go to Jail", "Prison", "Penalty"], correct: "Go to Jail" },
+        { q: "Which board game features the countries Kamchatka and Ukraine?", a: ["Risk", "Catan", "Stratego", "Axis & Allies"], correct: "Risk" },
+        { q: "How many tiles does each player start with in Scrabble?", a: ["5", "6", "7", "8"], correct: "7" },
+        { q: "Which game involves connecting four discs in a row?", a: ["Checkers", "Connect Four", "Othello", "Battleship"], correct: "Connect Four" },
+        { q: "What is the highest-ranking piece in chess?", a: ["Queen", "King", "Rook", "Bishop"], correct: "King" },
+        { q: "In Clue, what is the name of the mansion owner who is murdered?", a: ["Mr. Green", "Colonel Mustard", "Mr. Boddy", "Professor Plum"], correct: "Mr. Boddy" },
+        { q: "Which game popularized the resource 'sheep' alongside brick and wood?", a: ["Carcassonne", "Risk", "Catan", "Ticket to Ride"], correct: "Catan" },
+        { q: "In Battleship, how many ships does each player start with (standard rules)?", a: ["3", "4", "5", "6"], correct: "5" },
+        { q: "Which board game’s objective is to reach 100 spaces first using ladders and avoiding snakes?", a: ["Life", "Candy Land", "Snakes and Ladders", "Chutes and Ladders"], correct: "Snakes and Ladders" }
+    ],
+
+    Human_Anatomy: [
+        { q: "How many bones are in the adult human body?", a: ["198", "206", "210", "212"], correct: "206" },
+        { q: "What organ pumps blood throughout the body?", a: ["Liver", "Brain", "Heart", "Lungs"], correct: "Heart" },
+        { q: "What is the largest organ inside the human body?", a: ["Brain", "Liver", "Lungs", "Kidney"], correct: "Liver" },
+        { q: "Which part of the eye controls the amount of light entering?", a: ["Retina", "Cornea", "Iris", "Lens"], correct: "Iris" },
+        { q: "What is the longest bone in the human body?", a: ["Humerus", "Femur", "Tibia", "Fibula"], correct: "Femur" },
+        { q: "Which blood cells help fight infection?", a: ["Red blood cells", "Platelets", "White blood cells", "Plasma"], correct: "White blood cells" },
+        { q: "What part of the brain controls voluntary movement?", a: ["Cerebellum", "Brainstem", "Cerebrum", "Medulla"], correct: "Cerebrum" },
+        { q: "What muscle is primarily responsible for breathing?", a: ["Biceps", "Trapezius", "Diaphragm", "Quadriceps"], correct: "Diaphragm" },
+        { q: "What structure connects muscles to bones?", a: ["Ligament", "Cartilage", "Tendon", "Joint"], correct: "Tendon" },
+        { q: "Which organ filters blood to produce urine?", a: ["Bladder", "Kidney", "Pancreas", "Spleen"], correct: "Kidney" }
     ]
-
-
 };
 const questionBankHard = {
     Particle_Physics: [
@@ -637,6 +763,86 @@ Gothic_Literature: [
     { q: "Who wrote 'The Castle of Otranto'?", a: ["Mary Shelley", "Horace Walpole", "Bram Stoker", "Ann Radcliffe"], correct: "Horace Walpole" },
     { q: "What creature is central to Bram Stoker's 'Dracula'?", a: ["Werewolf", "Ghost", "Vampire", "Demon"], correct: "Vampire" },
     { q: "Which novel features the character Victor Frankenstein?", a: ["Dracula", "Frankenstein", "The Monk", "Melmoth the Wanderer"], correct: "Frankenstein" }
+],
+Retrocomputing: [
+    { q: "What processor powered the original IBM PC?", a: ["Z80", "Motorola 68000", "Intel 8088", "MOS 6502"], correct: "Intel 8088" },
+    { q: "Which storage medium preceded the 3.5-inch floppy?", a: ["Zip disk", "8-inch floppy", "Magneto-optical", "DAT tape"], correct: "8-inch floppy" },
+    { q: "What does BASIC stand for?", a: ["Binary Arithmetic System Integrated Code", "Beginner's All-purpose Symbolic Instruction Code", "Base Algorithmic Syntax Interface Compiler", "Basic Automated Systemic Input Code"], correct: "Beginner's All-purpose Symbolic Instruction Code" }
+],
+Railway_Signaling: [
+    { q: "What does a semaphore signal use to convey information?", a: ["Lights only", "Mechanical arms", "Sound horns", "Colored smoke"], correct: "Mechanical arms" },
+    { q: "What system prevents trains from entering occupied blocks?", a: ["Dead reckoning", "Block signaling", "Open track", "Manual dispatch"], correct: "Block signaling" },
+    { q: "What does ETCS stand for?", a: ["European Train Control System", "Electronic Track Circuit Standard", "Engineered Transit Coordination Scheme", "Express Train Command Structure"], correct: "European Train Control System" }
+],
+Mechanical_Keyboards: [
+    { q: "Which switch type is known for tactile feedback without an audible click?", a: ["Linear", "Clicky", "Tactile", "Membrane"], correct: "Tactile" },
+    { q: "What does 'NKRO' stand for?", a: ["New Key Roll Output", "N-Key Rollover", "Neutral Key Response Option", "Node Key Relay Operation"], correct: "N-Key Rollover" },
+    { q: "Which company manufactures Cherry MX switches?", a: ["Logitech", "Cherry", "Kailh", "Topre"], correct: "Cherry" }
+],
+
+Fountain_Pens: [
+    { q: "What metal is commonly used for flexible nibs?", a: ["Steel", "Titanium", "Gold", "Aluminum"], correct: "Gold" },
+    { q: "What filling system uses a vacuum plunger mechanism?", a: ["Cartridge", "Eyedropper", "Vacumatic", "Piston"], correct: "Vacumatic" },
+    { q: "What does 'eBonite' refer to?", a: ["A nib coating", "Hard rubber material", "Ink additive", "Feed design"], correct: "Hard rubber material" }
+],
+Electric_Vehicles: [
+    { q: "What does regenerative braking recover?", a: ["Heat", "Battery casing", "Kinetic energy", "Tire friction"], correct: "Kinetic energy" },
+    { q: "What connector standard is widely used for DC fast charging in North America?", a: ["CHAdeMO", "CCS", "Type 2", "GB/T"], correct: "CCS" },
+    { q: "What unit measures battery capacity in EVs?", a: ["kWh", "Nm", "PSI", "RPM"], correct: "kWh" }
+],
+
+Biohacking: [
+    { q: "What device continuously monitors blood glucose levels in real time?", a: ["ECG patch", "CGM", "VO2 strap", "Oura ring"], correct: "CGM" },
+    { q: "What practice involves exposure to very cold temperatures for recovery claims?", a: ["Cryotherapy", "Hyperbarics", "Red light therapy", "Floatation"], correct: "Cryotherapy" },
+    { q: "What does HRV stand for in recovery tracking?", a: ["Heart Rate Variance", "Hormonal Response Value", "Heart Rate Variability", "Hemoglobin Regulation Vector"], correct: "Heart Rate Variability" }
+],
+Fantasy_Sports_Analytics: [
+    { q: "What does ADP stand for?", a: ["Average Draft Position", "Adjusted Defensive Percentage", "Automated Data Projection", "Advanced Draft Probability"], correct: "Average Draft Position" },
+    { q: "What metric estimates player performance relative to replacement level?", a: ["PER", "WAR", "RPM", "EPA"], correct: "WAR" },
+    { q: "What format drafts players in a serpentine order?", a: ["Auction draft", "Snake draft", "Dynasty draft", "Keeper draft"], correct: "Snake draft" }
+],
+// --- 7 Focused Modern Categories (3 Questions Each) ---
+
+NBA: [
+    { q: "Which player is the NBA's all-time leading scorer?", a: ["Michael Jordan", "Kareem Abdul-Jabbar", "LeBron James", "Kobe Bryant"], correct: "LeBron James" },
+    { q: "What does a 'triple-double' require?", a: ["Three steals in a game", "Double-digit stats in three categories", "30 points exactly", "Three consecutive dunks"], correct: "Double-digit stats in three categories" },
+    { q: "Which team won the 73-9 regular season record?", a: ["Chicago Bulls", "Golden State Warriors", "Miami Heat", "San Antonio Spurs"], correct: "Golden State Warriors" }
+],
+
+National_Parks: [
+    { q: "What was the first designated U.S. National Park?", a: ["Yosemite", "Yellowstone", "Grand Canyon", "Zion"], correct: "Yellowstone" },
+    { q: "Which national park is home to Half Dome?", a: ["Zion", "Rocky Mountain", "Yosemite", "Glacier"], correct: "Yosemite" },
+    { q: "Which park is known for Old Faithful geyser?", a: ["Yellowstone", "Olympic", "Arches", "Sequoia"], correct: "Yellowstone" }
+],
+
+Tarot_Cards: [
+    { q: "How many cards are in a traditional tarot deck?", a: ["52", "64", "78", "88"], correct: "78" },
+    { q: "Which card represents sudden upheaval or revelation?", a: ["The Star", "The Tower", "Death", "The Moon"], correct: "The Tower" },
+    { q: "What suit is associated with intellect and air?", a: ["Cups", "Wands", "Swords", "Pentacles"], correct: "Swords" }
+],
+
+Beach_Volleyball: [
+    { q: "How many players are on a beach volleyball team?", a: ["6", "4", "3", "2"], correct: "2" },
+    { q: "What is the standard match format in professional beach volleyball?", a: ["Best of 3 sets", "Best of 5 sets", "Single 30-point set", "Timed match"], correct: "Best of 3 sets" },
+    { q: "Who replaced Taylor Crabb at the 2021 Tokyo Olympics?", a: ["Tri Bourne", "Trevor Crabb", "Miles Partain", "Jake Gibb"], correct: "Tri Bourne" }
+],
+
+Elden_Ring: [
+    { q: "Who wrote much of the worldbuilding lore for Elden Ring?", a: ["Hidetaka Miyazaki", "George R.R. Martin", "Hideo Kojima", "Kentaro Miura"], correct: "George R.R. Martin" },
+    { q: "What is the name of the world in Elden Ring?", a: ["Lordran", "The Lands Between", "Boletaria", "Drangleic"], correct: "The Lands Between" },
+    { q: "What item is used to restore health?", a: ["Estus Flask", "Crimson Flask", "Divine Blessing", "Rune Arc"], correct: "Crimson Flask" }
+],
+
+Zelda_Games: [
+    { q: "What is the name of Link's primary weapon?", a: ["Master Blade", "Hylian Sword", "Master Sword", "Blade of Time"], correct: "Master Sword" },
+    { q: "Which Zelda game introduced an open-world format on Nintendo Switch?", a: ["Twilight Princess", "Skyward Sword", "Breath of the Wild", "Wind Waker"], correct: "Breath of the Wild" },
+    { q: "What is the name of the kingdom where most Zelda games take place?", a: ["Termina", "Hyrule", "Lorule", "Holodrum"], correct: "Hyrule" }
+],
+
+Astrology: [
+    { q: "How many zodiac signs are in Western astrology?", a: ["10", "11", "12", "13"], correct: "12" },
+    { q: "Which planet rules Leo?", a: ["Mars", "Venus", "Sun", "Mercury"], correct: "Sun" },
+    { q: "What is a natal chart based on?", a: ["Current planetary alignment", "Moon phases only", "Birth date, time, and location", "Season of birth"], correct: "Birth date, time, and location" }
 ]
 }
 if (typeof supabase === 'undefined') {
@@ -717,7 +923,8 @@ const gameState = {
     buddies: [
         { id: 'octopus', name: "Hydroponic Octopus", desc: "Grows 2 Food per Jump.", icon: "🐙", gif: "assets/octopus_idle.gif" },
         { id: 'aardvark', name: "Arbitrage Aardvark", desc: "Arbitrages 3 Credits for you per Jump.", icon: "🐜", gif: "assets/aardvark_idle.gif" },
-        { id: 'trivia_toad', name: "Trivia Toad", desc: "Consumes 1 Food to produce 4 Trivium per Jump.", icon: "🐸", gif: "assets/toad_idle.gif" }
+        { id: 'trivia_toad', name: "Trivia Toad", desc: "Consumes 1 Food to produce 4 Trivium per Jump.", icon: "🐸", gif: "assets/toad_idle.gif" },
+        { id: 'bear_bot', name: "Bear Bot", desc: "1 Food, 1 Trivium, 1 Credit per Jump.", icon: "🧸", gif: "assets/bear_idle.gif" }
     ],
 
     // 2. ELEMENT GETTERS
@@ -1093,6 +1300,16 @@ showHighScores: function(scores) {
             </tr>
         `;
     });
+    // ADD THE BUTTONS HERE
+    tableHtml += `
+        <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+            <button onclick="location.reload()" 
+                style="background:#00f2ff; color:#000; border:none; padding:12px; cursor:pointer; font-weight:bold; font-family: inherit;">
+                START NEW MISSION
+            </button>
+            
+            
+    `;
 
     
     
@@ -1326,7 +1543,8 @@ viewLeaderboard: async function() {
                     if (m?.id === 'octopus') foodNet += 2;
                     if (m?.id === 'aardvark') creditNet += 3;
                     if (m?.id === 'content_farm') { foodNet += 2; creditNet += 4; triviumNet -= 1; }
-                    if (m?.id === 'trivia_toad') { foodNet -= 1; triviumNet += 4; }
+                    if (m?.id === 'trivia_toad') { foodNet -= 1; triviumNet += 4;}
+                    if (m?.id === 'bear_bot') { foodNet += 1; triviumNet += 1; creditNet += 1;}
                 });
 
                 this.player.food += foodNet;
@@ -1423,6 +1641,7 @@ viewLeaderboard: async function() {
                 if (m.id === 'octopus') foodNet += 2;
                 if (m.id === 'aardvark') creditNet += 3;
                 if (m.id === 'content_farm') { foodNet += 2; creditNet += 4; triviumNet -= 1; }
+                if (m.id === 'bear_bot') { foodNet += 1; triviumNet += 1; creditNet += 1;}
                 if (m.id === 'trivia_toad') { foodNet -= 1; triviumNet += 4; }
             }
         });
