@@ -3,7 +3,7 @@ const questionBank = {
         { q: "Which Pharaoh's tomb was discovered nearly intact by Howard Carter in 1922?", a: ["Ramses II", "Tutankhamun", "Akhenaten", "Thutmose III"], correct: "Tutankhamun" },
         { q: "The Punic Wars were fought between Rome and which other Mediterranean power?", a: ["Persia", "Greece", "Carthage", "Egypt"], correct: "Carthage" },
         { q: "Which Mesopotamian king is credited with one of the earliest written legal codes?", a: ["Nebuchadnezzar", "Hammurabi", "Gilgamesh", "Sargon"], correct: "Hammurabi" },
-        { q: "What was the primary language spoken in the Roman Empire?", a: ["Greek", "Aramaic", "Latin", "Etruscan"], correct: "Latin" },
+        { q: "What was the primary language spoken in the Western Roman Empire?", a: ["Greek", "Aramaic", "Latin", "Etruscan"], correct: "Latin" },
         { q: "The 'Hanging Gardens' were a wonder of which ancient city?", a: ["Nineveh", "Babylon", "Thebes", "Petra"], correct: "Babylon" },
         { q: "Which Greek city-state was known for its rigorous military training?", a: ["Sparta", "Athens", "Corinth", "Thebes"], correct: "Sparta" },
         { q: "The Great Pyramid of Giza was built for which Pharaoh?", a: ["Khafre", "Menkaure", "Khufu", "Djoser"], correct: "Khufu" },
@@ -78,7 +78,7 @@ const questionBank = {
         { q: "Which element is the primary component of a diamond?", a: ["Carbon", "Silicon", "Coal", "Nitrogen"], correct: "Carbon" },
         { q: "What is the most abundant metal in the Earth's crust?", a: ["Iron", "Aluminum", "Magnesium", "Copper"], correct: "Aluminum" },
         { q: "Who is credited with creating the first Periodic Table of Elements?", a: ["Marie Curie", "Dmitri Mendeleev", "Antoine Lavoisier", "Niels Bohr"], correct: "Dmitri Mendeleev" },
-        { q: "What is the common name for Sodium Chloride?", a: ["Salt", "Sugar", "Baking Soda", "Bleach"], correct: "Salt" },
+        { q: "What is the common name for Sodium Chloride?", a: ["Table Salt", "Sugar", "Baking Soda", "Bleach"], correct: "Table Salt" },
         { q: "A molecule of water (H2O) contains how many atoms in total?", a: ["2", "4", "3", "1"], correct: "3" },
         { q: "Which type of bond involves the sharing of electron pairs between atoms?", a: ["Ionic", "Covalent", "Hydrogen", "Metallic"], correct: "Covalent" },
         { q: "What is the lightest chemical element?", a: ["Helium", "Hydrogen", "Lithium", "Oxygen"], correct: "Hydrogen" }
@@ -90,7 +90,7 @@ const questionBank = {
         { q: "What is the name of the kingdom in the movie 'Frozen'?", a: ["Genovia", "Westeros", "Arendelle", "Middle-earth"], correct: "Arendelle" },
         { q: "Which 1975 film is often cited as the first 'summer blockbuster'?", a: ["Jaws", "Star Wars", "The Godfather", "The Exorcist"], correct: "Jaws" },
         { q: "Who voiced the character of Genie in the 1992 Disney film 'Aladdin'?", a: ["Tom Hanks", "Eddie Murphy", "Robin Williams", "Billy Crystal"], correct: "Robin Williams" },
-        { q: "What is the highest-grossing film of all time (not adjusted for inflation)?", a: ["Avengers: Endgame", "Titanic", "Avatar", "Star Wars: The Force Awakens"], correct: "Avatar" },
+       
         { q: "In 'The Matrix', what color pill does Neo take?", a: ["Blue", "Green", "Red", "Yellow"], correct: "Red" },
         { q: "Who is the only actor to win three Academy Awards for Best Actor?", a: ["Jack Nicholson", "Daniel Day-Lewis", "Tom Hanks", "Marlon Brando"], correct: "Daniel Day-Lewis" },
         { q: "What is the name of the fictional city in 'Batman'?", a: ["Gotham City", "Metropolis", "Central City", "Star City"], correct: "Gotham City" }
@@ -114,10 +114,10 @@ const questionBank = {
         { q: "Which company developed the Android operating system?", a: ["Apple", "Google", "Microsoft", "Samsung"], correct: "Google" },
         { q: "What is the main language used for styling web pages?", a: ["HTML", "CSS", "JavaScript", "Python"], correct: "CSS" },
         { q: "Which computer part is considered the 'brains' of the system?", a: ["CPU", "RAM", "GPU", "Hard Drive"], correct: "CPU" },
-        { q: "What does 'Wi-Fi' stand for?", a: ["Wide Field", "Wire-Free", "Wireless Fidelity", "Wireless Fiber"], correct: "Wireless Fidelity" },
+        
         { q: "Who co-founded Microsoft alongside Bill Gates?", a: ["Steve Wozniak", "Paul Allen", "Larry Page", "Jeff Bezos"], correct: "Paul Allen" },
-        { q: "What is the most popular programming language as of recent industry surveys?", a: ["C++", "JavaScript", "COBOL", "Ruby"], correct: "JavaScript" },
-        { q: "What was the first social media site to reach one million monthly active users?", a: ["Facebook", "Friendster", "MySpace", "LinkedIn"], correct: "MySpace" }
+        { q: "What is the most popular programming language as of recent industry surveys(2025)?", a: ["C++", "JavaScript", "COBOL", "Ruby"], correct: "JavaScript" }
+        
     ],
     Sports: [
         { q: "How many players are on a standard soccer team on the field?", a: ["9", "10", "11", "12"], correct: "11" },
@@ -197,8 +197,8 @@ const questionBank = {
         { q: "Which company has the ticker symbol 'AAPL'?", a: ["Alphabet", "Amazon", "Apple", "American Airlines"], correct: "Apple" },
         { q: "In economics, what is the term for a market dominated by a single seller?", a: ["Oligopoly", "Monopoly", "Cartel", "Free Market"], correct: "Monopoly" },
         { q: "Which city is home to the New York Stock Exchange?", a: ["Chicago", "New York City", "London", "Hong Kong"], correct: "New York City" },
-        { q: "What is the currency of the European Union?", a: ["Pound", "Franc", "Euro", "Mark"], correct: "Euro" },
-        { q: "Who is the CEO of Berkshire Hathaway?", a: ["Warren Buffett", "Charlie Munger", "Tim Cook", "Ray Dalio"], correct: "Warren Buffett" },
+        { q: "What is the official currency of the Eurozone?", a: ["Pound", "Franc", "Euro", "Mark"], correct: "Euro" },
+        { q: "Who is the CEO of Berkshire Hathaway (2025)?", a: ["Warren Buffett", "Charlie Munger", "Tim Cook", "Ray Dalio"], correct: "Warren Buffett" },
         { q: "A 'Bear Market' indicates that stock prices are doing what?", a: ["Falling", "Rising", "Staying Flat", "Volatile"], correct: "Falling" },
         { q: "Which company owns the brands Oreo, Ritz, and Toblerone?", a: ["Nestlé", "PepsiCo", "Mondelez", "Mars"], correct: "Mondelez" },
         { q: "What is the term for the first time a company offers its stock to the public?", a: ["IPO", "SEO", "LLC", "GDP"], correct: "IPO" }
@@ -308,7 +308,7 @@ const questionBank = {
         { q: "Which architectural style is characterized by pointed arches and flying buttresses?", a: ["Baroque", "Romanesque", "Gothic", "Neoclassical"], correct: "Gothic" },
         { q: "Who designed the Guggenheim Museum in Bilbao?", a: ["Frank Lloyd Wright", "Zaha Hadid", "Frank Gehry", "I. M. Pei"], correct: "Frank Gehry" },
         { q: "The Parthenon is located in which city?", a: ["Rome", "Athens", "Istanbul", "Alexandria"], correct: "Athens" },
-        { q: "What is a dome-shaped Islamic shrine called?", a: ["Minaret", "Mausoleum", "Ziggurat", "Stupa"], correct: "Mausoleum" },
+        
         { q: "Which ancient civilization built Machu Picchu?", a: ["Maya", "Aztec", "Inca", "Olmec"], correct: "Inca" },
         { q: "What is the primary structural advantage of an arch?", a: ["Decoration", "Lightness", "Compression distribution", "Flexibility"], correct: "Compression distribution" },
         { q: "Which city is known for Antoni Gaudí’s architectural works?", a: ["Madrid", "Lisbon", "Barcelona", "Seville"], correct: "Barcelona" },
