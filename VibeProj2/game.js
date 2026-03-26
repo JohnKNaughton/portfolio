@@ -922,7 +922,7 @@ const gameState = {
 
     buddies: [
         { id: 'octopus', name: "Hydroponic Octopus", desc: "Grows 2 Food per Jump.", icon: "🐙", gif: "assets/octopus_idle.gif" },
-        { id: 'aardvark', name: "Arbitrage Aardvark", desc: "Arbitrages 3 Credits for you per Jump.", icon: "🐜", gif: "assets/aardvark_idle.gif" },
+        { id: 'aardvark', name: "Arbitrage Aardvark", desc: "Generates 3 Credits for you per Jump.", icon: "🐜", gif: "assets/aardvark_idle.gif" },
         { id: 'trivia_toad', name: "Trivia Toad", desc: "Consumes 1 Food to produce 4 Trivium per Jump.", icon: "🐸", gif: "assets/toad_idle.gif" },
         { id: 'bear_bot', name: "Bear Bot", desc: "1 Food, 1 Trivium, 1 Credit per Jump.", icon: "🧸", gif: "assets/bear_idle.gif" }
     ],
