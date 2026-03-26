@@ -1,0 +1,1033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rob's Bachelor Bash 🎉</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0a1628;
+            color: white;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .confetti-piece {
+            position: fixed;
+            top: -10px;
+            animation: confettiFall linear forwards;
+            z-index: 1000;
+            pointer-events: none;
+        }
+        @keyframes confettiFall {
+            to { transform: translateY(110vh) rotate(720deg); }
+        }
+
+        /* ── FLOATING ROB HEADS ── */
+        .rob-head {
+            position: fixed;
+            border-radius: 50%;
+            object-fit: cover;
+            object-position: center top;
+            pointer-events: none;
+            z-index: 5;
+            border: 4px solid rgba(245, 132, 38, 0.85);
+            box-shadow: 0 0 25px rgba(245, 132, 38, 0.7), 0 0 60px rgba(245, 132, 38, 0.3);
+        }
+        @keyframes robDrift1 {
+            0%   { transform: translate(0px, 0px)     rotate(0deg)   scale(1); }
+            20%  { transform: translate(60px, -80px)  rotate(25deg)  scale(1.1); }
+            40%  { transform: translate(-40px, -140px) rotate(-15deg) scale(0.9); }
+            60%  { transform: translate(90px, -60px)  rotate(40deg)  scale(1.15); }
+            80%  { transform: translate(-70px, -100px) rotate(-30deg) scale(0.95); }
+            100% { transform: translate(0px, 0px)     rotate(0deg)   scale(1); }
+        }
+        @keyframes robDrift2 {
+            0%   { transform: translate(0px, 0px)      rotate(0deg)   scale(1); }
+            15%  { transform: translate(-80px, 60px)   rotate(-35deg) scale(1.2); }
+            35%  { transform: translate(70px, 110px)   rotate(20deg)  scale(0.85); }
+            55%  { transform: translate(-100px, 40px)  rotate(-50deg) scale(1.1); }
+            75%  { transform: translate(50px, 90px)    rotate(30deg)  scale(0.92); }
+            100% { transform: translate(0px, 0px)      rotate(0deg)   scale(1); }
+        }
+        @keyframes robDrift3 {
+            0%   { transform: translate(0px, 0px)      rotate(0deg)   scale(1); }
+            25%  { transform: translate(100px, 50px)   rotate(60deg)  scale(1.3); }
+            50%  { transform: translate(-60px, 120px)  rotate(-20deg) scale(0.8); }
+            75%  { transform: translate(80px, -70px)   rotate(45deg)  scale(1.1); }
+            100% { transform: translate(0px, 0px)      rotate(0deg)   scale(1); }
+        }
+
+        /* ── SPLASH ── */
+        #splash {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            text-align: center;
+            padding: 20px;
+            background: radial-gradient(ellipse at center, #1a3a6b 0%, #0a1628 70%);
+        }
+        .splash-emojis { font-size: 3.5rem; margin-bottom: 20px; animation: bounce 1s infinite alternate; }
+        @keyframes bounce { from { transform: translateY(0); } to { transform: translateY(-12px); } }
+
+        .splash-title {
+            font-size: clamp(2.5rem, 9vw, 6rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #F58426, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: pulse 2s infinite;
+            line-height: 1.1;
+        }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.03); } }
+
+        .splash-sub {
+            font-size: clamp(0.9rem, 2.5vw, 1.4rem);
+            color: #a0c4ff;
+            margin: 12px 0 40px;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #F58426, #d05010);
+            color: white;
+            border: none;
+            padding: 18px 55px;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 4px 25px rgba(245,132,38,0.45);
+            transition: all 0.2s;
+        }
+        .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 8px 35px rgba(245,132,38,0.65); }
+        .btn-primary:active { transform: translateY(0); }
+
+        /* ── HUB ── */
+        #hub { display: none; padding: 20px; max-width: 1100px; margin: 0 auto; }
+
+        .hub-header { text-align: center; padding: 20px 0 25px; }
+        .hub-title { font-size: clamp(1.4rem, 5vw, 2.8rem); font-weight: 900; color: #F58426; }
+
+        .score-bar {
+            display: flex;
+            justify-content: center;
+            gap: 35px;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(245,132,38,0.3);
+            border-radius: 15px;
+            padding: 12px 30px;
+            margin: 14px auto;
+            max-width: 480px;
+        }
+        .score-label { font-size: 0.72rem; color: #a0c4ff; text-transform: uppercase; letter-spacing: 1px; }
+        .score-value { font-size: 1.55rem; font-weight: 700; color: #ffd700; }
+
+        .stations-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+            gap: 18px;
+            padding: 6px 0;
+        }
+
+        .station-card {
+            background: linear-gradient(135deg, rgba(26,58,107,0.85), rgba(12,30,65,0.95));
+            border: 2px solid rgba(245,132,38,0.18);
+            border-radius: 22px;
+            padding: 28px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.28s;
+            position: relative;
+            overflow: hidden;
+        }
+        .station-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(245,132,38,0.07), transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .station-card:hover::before { opacity: 1; }
+        .station-card:hover { border-color: #F58426; transform: translateY(-5px); box-shadow: 0 12px 35px rgba(245,132,38,0.2); }
+        .station-card.completed { border-color: #4CAF50; }
+        .station-card.completed::after {
+            content: '✓ DONE';
+            position: absolute;
+            top: 12px; right: 12px;
+            background: #4CAF50;
+            color: white;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 3px 9px;
+            border-radius: 10px;
+        }
+        .station-icon { font-size: 4rem; margin-bottom: 12px; display: block; }
+        .station-name { font-size: 1.25rem; font-weight: 700; margin-bottom: 7px; }
+        .station-desc { font-size: 0.82rem; color: #8aa5cc; margin-bottom: 18px; line-height: 1.45; }
+        .station-btn {
+            background: linear-gradient(135deg, #F58426, #d05010);
+            color: white;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 30px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 0.88rem;
+            transition: transform 0.15s;
+        }
+        .station-btn:hover { transform: scale(1.06); }
+
+        /* ── MODAL ── */
+        #modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.88);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+        #modal.active { display: flex; }
+        .modal-box {
+            background: linear-gradient(135deg, #0e1f45, #192e5e);
+            border: 2px solid #F58426;
+            border-radius: 26px;
+            padding: 30px 28px;
+            max-width: 600px;
+            width: 100%;
+            max-height: 92vh;
+            overflow-y: auto;
+            position: relative;
+        }
+        .modal-close {
+            position: absolute;
+            top: 14px; right: 14px;
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: white;
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.15rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-title { font-size: 1.75rem; font-weight: 700; color: #F58426; margin-bottom: 18px; text-align: center; }
+
+        /* ── POWER BAR ── */
+        .power-bar-wrap {
+            width: 100%; height: 42px;
+            background: rgba(255,255,255,0.08);
+            border-radius: 21px;
+            overflow: hidden;
+            margin: 16px 0;
+            cursor: pointer;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .power-bar-fill { height: 100%; width: 0%; background: linear-gradient(90deg, #4CAF50 0%, #F58426 55%, #f44336 100%); border-radius: 21px; }
+        .bar-labels { display: flex; justify-content: space-between; font-size: 0.73rem; color: #8aa5cc; margin-top: -8px; margin-bottom: 8px; }
+        .bar-labels span.good { color: #F58426; }
+
+        /* ── SHOT RESULT ── */
+        .shot-result { font-size: 1.45rem; font-weight: 700; height: 42px; display: flex; align-items: center; justify-content: center; }
+        .shot-good { color: #4CAF50; }
+        .shot-miss { color: #f44336; }
+
+        /* ── OPTIONS ── */
+        .options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
+        .option-btn {
+            background: rgba(255,255,255,0.07);
+            border: 2px solid rgba(255,255,255,0.18);
+            color: white;
+            padding: 13px 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.84rem;
+            transition: all 0.18s;
+            text-align: left;
+        }
+        .option-btn:hover { border-color: #F58426; background: rgba(245,132,38,0.1); }
+        .option-btn.correct { border-color: #4CAF50 !important; background: rgba(76,175,80,0.22) !important; }
+        .option-btn.wrong   { border-color: #f44336 !important; background: rgba(244,67,54,0.18) !important; }
+
+        /* ── VOLLEYBALL ── */
+        #v-court {
+            position: relative;
+            height: 210px;
+            background: linear-gradient(180deg, #5db8e8 0%, #4aaddc 50%, #c4a86b 50%, #b89b5c 100%);
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+        #v-net { position: absolute; left: 50%; top: 0; width: 5px; height: 100%; background: rgba(255,255,255,0.9); transform: translateX(-50%); }
+        #v-ball { position: absolute; width: 34px; height: 34px; font-size: 28px; line-height: 34px; text-align: center; transition: none; user-select: none; }
+        .hit-btn {
+            background: linear-gradient(135deg, #006BB6, #00508a);
+            color: white; border: none;
+            padding: 20px 0; font-size: 1.6rem; font-weight: 700;
+            border-radius: 16px; cursor: pointer; width: 100%; margin-top: 8px;
+            transition: transform 0.08s;
+        }
+        .hit-btn:active { transform: scale(0.95); }
+
+        /* ── GOLF ── */
+        #g-course {
+            position: relative;
+            height: 155px;
+            background: linear-gradient(180deg, #3a9c3a, #2d7d2d);
+            border-radius: 16px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+        #g-ball {
+            position: absolute;
+            left: 30px; top: 50%;
+            transform: translateY(-50%);
+            width: 22px; height: 22px;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+            transition: left 0.5s ease-out;
+        }
+        #g-hole {
+            position: absolute;
+            right: 35px; top: 50%;
+            transform: translateY(-50%);
+            width: 22px; height: 22px;
+            background: #111;
+            border-radius: 50%;
+        }
+        #g-flag { position: absolute; right: 35px; top: 18%; font-size: 1.4rem; }
+
+        /* ── WHEEL ── */
+        .wheel-wrap { display: flex; flex-direction: column; align-items: center; }
+        .spin-btn {
+            background: linear-gradient(135deg, #F58426, #d05010);
+            color: white; border: none;
+            padding: 14px 42px; font-size: 1.15rem; font-weight: 700;
+            border-radius: 30px; cursor: pointer; margin-top: 18px;
+            transition: transform 0.15s;
+        }
+        .spin-btn:hover { transform: scale(1.05); }
+        .wheel-result { margin-top: 14px; font-size: 1.1rem; color: #ffd700; font-weight: 700; text-align: center; min-height: 52px; }
+
+        /* ── BEER PONG ── */
+        .cups-area { display: flex; flex-direction: column; align-items: center; gap: 6px; margin: 14px 0; }
+        .cup-row { display: flex; gap: 10px; }
+        .cup {
+            width: 42px; height: 48px;
+            background: linear-gradient(180deg, rgba(245,132,38,0.85), rgba(180,60,0,0.9));
+            border-radius: 0 0 14px 14px;
+            border: 2px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.3rem;
+            transition: all 0.2s;
+        }
+        .cup:hover { transform: scale(1.1); }
+        .cup.hit { background: rgba(255,255,255,0.06); border-color: rgba(255,255,255,0.1); cursor: default; }
+        .cup.hit::before { content: '✗'; color: rgba(255,255,255,0.25); font-size: 1.2rem; }
+        .throw-area {
+            width: 100%; height: 64px;
+            background: rgba(0,107,182,0.15);
+            border: 2px dashed rgba(0,107,182,0.45);
+            border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
+            cursor: crosshair;
+            margin-top: 18px;
+            font-size: 0.88rem; color: #8aa5cc;
+            position: relative;
+        }
+
+        /* ── RESULT ── */
+        .game-result { text-align: center; padding: 20px 10px; }
+        .result-score { font-size: 3rem; font-weight: 900; color: #ffd700; }
+        .result-msg { font-size: 0.95rem; color: #c0d4f0; margin: 10px 0 18px; line-height: 1.55; }
+        .result-next-btn {
+            background: linear-gradient(135deg, #4CAF50, #388E3C);
+            color: white; border: none;
+            padding: 12px 38px; border-radius: 30px;
+            font-weight: 700; cursor: pointer; font-size: 0.95rem;
+            transition: transform 0.15s;
+        }
+        .result-next-btn:hover { transform: scale(1.05); }
+
+        /* ── VICTORY ── */
+        #victory {
+            display: none; text-align: center;
+            padding: 40px 20px; min-height: 100vh;
+            align-items: center; justify-content: center; flex-direction: column;
+            background: radial-gradient(ellipse at center, #1a3a6b 0%, #0a1628 70%);
+        }
+        #victory.active { display: flex; }
+        .victory-title {
+            font-size: clamp(2rem, 8vw, 5rem);
+            font-weight: 900;
+            background: linear-gradient(135deg, #ffd700, #F58426);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin: 10px 0;
+        }
+        .final-score { font-size: clamp(3.5rem, 12vw, 8rem); font-weight: 900; color: #ffd700; text-shadow: 0 0 40px rgba(255,215,0,0.5); }
+        .final-msg { font-size: 1.1rem; color: #c0d4f0; max-width: 500px; margin: 18px auto; line-height: 1.65; }
+        .stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin: 18px 0; max-width: 420px; }
+        .stat-box { background: rgba(255,255,255,0.05); border: 1px solid rgba(245,132,38,0.28); border-radius: 14px; padding: 14px; }
+        .stat-name { font-size: 0.7rem; color: #8aa5cc; text-transform: uppercase; }
+        .stat-val { font-size: 1.5rem; font-weight: 700; color: #ffd700; }
+
+        /* misc */
+        .trivia-count { text-align: center; color: #a0c4ff; font-size: 0.92rem; margin-bottom: 12px; }
+        .wine-emo { text-align: center; font-size: 5rem; margin: 8px 0; }
+        .wine-q { font-size: 0.98rem; color: #c0d4f0; text-align: center; margin: 12px 0; line-height: 1.5; }
+        .hidden { display: none !important; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(16px); } to { opacity:1; transform:translateY(0); } }
+        .fade-in { animation: fadeIn 0.4s ease forwards; }
+        @media (max-width: 520px) { .options-grid { grid-template-columns: 1fr; } .stations-grid { grid-template-columns: 1fr; } }
+    </style>
+</head>
+<body>
+
+<!-- ══ SPLASH ══ -->
+<div id="splash">
+    <div class="splash-emojis">🎉🏀🍷⛳🏐💍</div>
+    <div class="splash-title">ROB'S BACHELOR BASH</div>
+    <div class="splash-sub">The Last Ride Before Diane</div>
+    <button class="btn-primary" onclick="startGame()">LET'S PARTY →</button>
+</div>
+
+<!-- ══ HUB ══ -->
+<div id="hub">
+    <div class="hub-header">
+        <div class="hub-title">🎊 BACHELOR PARTY HQ 🎊</div>
+        <div style="color:#8aa5cc;font-size:0.88rem;margin-top:5px;">Complete all 6 stations to unlock Rob's final score!</div>
+        <div class="score-bar">
+            <div>
+                <div class="score-label">Total Points</div>
+                <div class="score-value" id="total-score">0</div>
+            </div>
+            <div>
+                <div class="score-label">Stations Done</div>
+                <div class="score-value"><span id="stations-done">0</span> / 6</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="stations-grid">
+        <div class="station-card" id="card-freethrow" onclick="openGame('freethrow')">
+            <span class="station-icon">🏀</span>
+            <div class="station-name">Knicks Free Throw</div>
+            <div class="station-desc">Rob's a die-hard Knicks fan — time your shot and drain it from the charity stripe!</div>
+            <button class="station-btn">PLAY</button>
+        </div>
+        <div class="station-card" id="card-wine" onclick="openGame('wine')">
+            <span class="station-icon">🍷</span>
+            <div class="station-name">Wine Sommelier</div>
+            <div class="station-desc">Think you know wine like Rob? Match the tasting notes to the bottle!</div>
+            <button class="station-btn">PLAY</button>
+        </div>
+        <div class="station-card" id="card-golf" onclick="openGame('golf')">
+            <span class="station-icon">⛳</span>
+            <div class="station-name">Putt Putt Pro</div>
+            <div class="station-desc">Sink the putt across 3 holes and prove you can hang with Rob on the course!</div>
+            <button class="station-btn">PLAY</button>
+        </div>
+        <div class="station-card" id="card-volleyball" onclick="openGame('volleyball')">
+            <span class="station-icon">🏐</span>
+            <div class="station-name">Volleyball Rally</div>
+            <div class="station-desc">Keep the rally alive — click HIT before the ball hits the sand!</div>
+            <button class="station-btn">PLAY</button>
+        </div>
+        <div class="station-card" id="card-trivia" onclick="openGame('trivia')">
+            <span class="station-icon">💍</span>
+            <div class="station-name">Rob & Diane Trivia</div>
+            <div class="station-desc">How well do you actually know the groom-to-be? Put your knowledge to the test!</div>
+            <button class="station-btn">PLAY</button>
+        </div>
+        <div class="station-card" id="card-wheel" onclick="openGame('wheel')">
+            <span class="station-icon">🎰</span>
+            <div class="station-name">Bachelor Dare Wheel</div>
+            <div class="station-desc">Spin the wheel of fate for wild, hilarious bachelor party challenges!</div>
+            <button class="station-btn">SPIN IT</button>
+        </div>
+    </div>
+
+    <div class="hidden" id="finish-btn" style="text-align:center;margin:30px 0;">
+        <button class="btn-primary" onclick="showVictory()">🏆 SEE ROB'S FINAL SCORE 🏆</button>
+    </div>
+</div>
+
+<!-- ══ MODAL ══ -->
+<div id="modal">
+    <div class="modal-box">
+        <button class="modal-close" onclick="closeModal()">✕</button>
+        <div id="game-content"></div>
+    </div>
+</div>
+
+<!-- ══ VICTORY ══ -->
+<div id="victory">
+    <div style="font-size:3.5rem">🎊🏆🎊</div>
+    <div class="victory-title">BACHELOR LEGEND!</div>
+    <div style="color:#a0c4ff;font-size:0.95rem;margin-bottom:6px;">ROB'S PARTY SCORE</div>
+    <div class="final-score" id="final-score-display">0</div>
+    <div class="final-msg">
+        Rob's about to marry Diane and you gave him one unforgettable last night of freedom.<br><br>
+        <strong style="color:#ffd700;">To Rob & Diane — may your life together be as legendary as this party! 💍❤️</strong>
+    </div>
+    <div class="stat-grid" id="stat-grid"></div>
+    <button class="btn-primary" onclick="location.reload()">PLAY AGAIN</button>
+</div>
+
+<script>
+// ════════════════════════════════
+//  GLOBAL STATE
+// ════════════════════════════════
+const state = {
+    totalScore: 0,
+    stationsDone: new Set(),
+    stationScores: {}
+};
+
+function $(id) { return document.getElementById(id); }
+
+function updateHUD() {
+    $('total-score').textContent = state.totalScore;
+    $('stations-done').textContent = state.stationsDone.size;
+    if (state.stationsDone.size === 6) $('finish-btn').classList.remove('hidden');
+}
+
+function addScore(pts, id) {
+    state.totalScore += pts;
+    state.stationScores[id] = pts;
+    state.stationsDone.add(id);
+    $('card-' + id).classList.add('completed');
+    updateHUD();
+}
+
+function openGame(id) {
+    $('modal').classList.add('active');
+    const c = $('game-content');
+    c.innerHTML = '';
+    ({ freethrow: buildFreeThrow, wine: buildWine, golf: buildGolf, volleyball: buildVolleyball, trivia: buildTrivia, wheel: buildWheel })[id](c);
+}
+
+function closeModal() { $('modal').classList.remove('active'); }
+
+function showResult(container, pts, id, msg) {
+    container.innerHTML = `
+        <div class="game-result fade-in">
+            <div style="font-size:3rem">🏆</div>
+            <div class="result-score">+${pts} pts</div>
+            <div class="result-msg">${msg}</div>
+            <button class="result-next-btn" onclick="closeModal()">Back to Party HQ</button>
+        </div>`;
+    addScore(pts, id);
+}
+
+function startGame() {
+    $('splash').style.display = 'none';
+    $('hub').style.display = 'block';
+    spawnConfetti(35);
+    spawnRobHeads();
+}
+
+function spawnRobHeads() {
+    const drifts = ['robDrift1', 'robDrift2', 'robDrift3'];
+    const count = 18;
+    for (let i = 0; i < count; i++) {
+        const head = document.createElement('img');
+        head.src = 'RobPic.jpeg';
+        head.className = 'rob-head';
+        const size = 80 + Math.random() * 110;
+        const anim = drifts[i % drifts.length];
+        const dur  = 3 + Math.random() * 5;
+        head.style.cssText = `
+            width: ${size}px;
+            height: ${size}px;
+            left: ${Math.random() * 88}vw;
+            top: ${Math.random() * 88}vh;
+            opacity: ${0.7 + Math.random() * 0.3};
+            animation: ${anim} ${dur}s ease-in-out infinite;
+            animation-delay: ${-Math.random() * dur}s;
+        `;
+        document.body.appendChild(head);
+    }
+}
+
+function showVictory() {
+    $('hub').style.display = 'none';
+    $('victory').classList.add('active');
+    $('final-score-display').textContent = state.totalScore;
+    spawnConfetti(90);
+    const names = { freethrow:'🏀 Free Throw', wine:'🍷 Wine', golf:'⛳ Golf', volleyball:'🏐 Volleyball', trivia:'💍 Trivia', wheel:'🎰 Dare Wheel' };
+    $('stat-grid').innerHTML = Object.entries(state.stationScores)
+        .map(([id,pts]) => `<div class="stat-box"><div class="stat-name">${names[id]}</div><div class="stat-val">${pts}</div></div>`)
+        .join('');
+}
+
+function spawnConfetti(n) {
+    const colors = ['#F58426','#006BB6','#ffd700','#ffffff','#ff69b4','#4CAF50','#e91e63'];
+    for (let i = 0; i < n; i++) {
+        setTimeout(() => {
+            const el = document.createElement('div');
+            el.className = 'confetti-piece';
+            el.style.cssText = `left:${Math.random()*100}vw;background:${colors[Math.random()*colors.length|0]};
+                width:${6+Math.random()*9}px;height:${6+Math.random()*9}px;
+                border-radius:${Math.random()>.5?'50%':'3px'};
+                animation-duration:${2+Math.random()*2.5}s;`;
+            document.body.appendChild(el);
+            setTimeout(() => el.remove(), 5000);
+        }, i * 55);
+    }
+}
+
+// ════════════════════════════════
+//  GAME 1 — FREE THROW
+// ════════════════════════════════
+let ftAnim, ftData;
+
+function buildFreeThrow(c) {
+    c.innerHTML = `
+        <div class="modal-title">🏀 Knicks Free Throw</div>
+        <div style="text-align:center">
+            <div style="font-size:0.88rem;color:#8aa5cc;margin-bottom:6px">Shot <span id="ft-shot">1</span> of 10 &nbsp;|&nbsp; Makes: <span id="ft-makes" style="color:#ffd700;font-weight:700">0</span></div>
+            <div style="font-size:3.5rem;margin:4px 0">🏀</div>
+            <div style="font-size:2rem">🏗️</div>
+            <div style="font-size:0.82rem;color:#8aa5cc;margin:8px 0">Click the bar when the marker is in the <span style="color:#F58426">orange zone</span>!</div>
+            <div class="power-bar-wrap" id="ft-bar" onclick="ftShoot()">
+                <div class="power-bar-fill" id="ft-fill"></div>
+            </div>
+            <div class="bar-labels"><span>MISS LEFT</span><span class="good">SWEET SPOT</span><span>MISS RIGHT</span></div>
+            <div class="shot-result" id="ft-result"></div>
+        </div>`;
+
+    ftData = { shot: 1, makes: 0, pos: 0, dir: 1, speed: 1.6, locked: false };
+    ftTick();
+}
+
+function ftTick() {
+    ftData.pos += ftData.dir * ftData.speed;
+    if (ftData.pos >= 100) { ftData.pos = 100; ftData.dir = -1; }
+    if (ftData.pos <= 0)   { ftData.pos = 0;   ftData.dir = 1; }
+    const fill = $('ft-fill');
+    if (fill) { fill.style.width = ftData.pos + '%'; ftAnim = requestAnimationFrame(ftTick); }
+}
+
+window.ftShoot = function () {
+    if (ftData.locked) return;
+    ftData.locked = true;
+    cancelAnimationFrame(ftAnim);
+
+    const hit = ftData.pos >= 42 && ftData.pos <= 68;
+    const resEl = $('ft-result');
+    if (hit) {
+        ftData.makes++;
+        $('ft-makes').textContent = ftData.makes;
+        resEl.textContent = ['SWISH! 🏀','NICE SHOT! 💪','BUCKETS! 🔥','AND ONE! ✨'][Math.random()*4|0];
+        resEl.className = 'shot-result shot-good';
+    } else {
+        resEl.textContent = ['BRICK! 😬','AIR BALL! 💨','OFF THE RIM! 😅','MISSED! 🤦'][Math.random()*4|0];
+        resEl.className = 'shot-result shot-miss';
+    }
+
+    setTimeout(() => {
+        ftData.shot++;
+        if (ftData.shot > 10) {
+            const pts = ftData.makes * 30;
+            const msg = ftData.makes >= 8 ? '🔥 Steph Curry who? Rob is impressed!'
+                      : ftData.makes >= 5 ? 'Solid! The Knicks would give you a tryout.'
+                      : "Stick to golf, champ. The Knicks aren't calling.";
+            showResult($('game-content'), pts, 'freethrow', `${ftData.makes}/10 makes. ${msg}`);
+        } else {
+            $('ft-shot').textContent = ftData.shot;
+            resEl.textContent = '';
+            ftData.speed = 1.6 + ftData.shot * 0.28;
+            ftData.locked = false;
+            ftTick();
+        }
+    }, 850);
+};
+
+// ════════════════════════════════
+//  GAME 2 — WINE TASTING
+// ════════════════════════════════
+const WINE_QS = [
+    { emo:'🍷', name:'Cabernet Sauvignon', q:'This bold red is Rob\'s dinner-party staple. It\'s known for…', correct:'Dark cherry, cedar & firm tannins', opts:['Crisp citrus & floral notes','Dark cherry, cedar & firm tannins','Light & fruity, low tannins','Sweet honey & tropical fruit'] },
+    { emo:'🥂', name:'Champagne', q:'Bachelor party must-have! Champagne is best described as…', correct:'Bubbly, toasty, apple & brioche', opts:['Rich & oaky with vanilla','Bubbly, toasty, apple & brioche','Sweet stone fruit aromas','Bold tannins & dark cherry'] },
+    { emo:'🍾', name:'Pinot Noir', q:'The sophisticated pick. Pinot Noir typically features…', correct:'Elegant red fruit, earthy & silky', opts:['Heavy oak & vanilla','Elegant red fruit, earthy & silky','Sweet residual sugar & peach','Tobacco & high tannin'] },
+    { emo:'🌸', name:'Dry Rosé', q:'Perfect for a warm night out. A dry Rosé is known for…', correct:'Fresh strawberry, melon & crisp finish', opts:['Heavy & tannic like red wine','Sweet & syrupy dessert wine','Fresh strawberry, melon & crisp finish','Buttery chardonnay notes'] },
+    { emo:'🍸', name:'Sauvignon Blanc', q:'A crisp white that pairs with oysters. It\'s famous for…', correct:'Grapefruit, green herbs & zesty acidity', opts:['Grapefruit, green herbs & zesty acidity','Rich, creamy & buttery','Deep plum & chocolate notes','Honeysuckle & residual sugar'] },
+];
+
+function buildWine(c) {
+    let qs = [...WINE_QS].sort(() => Math.random() - .5).slice(0, 4);
+    let idx = 0, score = 0;
+
+    function render() {
+        if (idx >= qs.length) {
+            const pts = score * 70;
+            const msg = score === qs.length ? '🍷 Perfect! Rob is handing you the wine list tonight!'
+                      : score >= 3 ? 'Nicely done! You can order the wine at dinner.'
+                      : 'Stick to beer tonight — Rob\'s got the wine covered.';
+            showResult(c, pts, 'wine', `${score}/${qs.length} correct. ${msg}`);
+            return;
+        }
+        const q = qs[idx];
+        const opts = [...q.opts].sort(() => Math.random() - .5);
+        c.innerHTML = `
+            <div class="modal-title">🍷 Wine Sommelier</div>
+            <div class="trivia-count">Q${idx+1} of ${qs.length} &nbsp;|&nbsp; Score: ${score}</div>
+            <div class="wine-emo">${q.emo}</div>
+            <div style="text-align:center;font-weight:700;color:#F58426;margin-bottom:4px">${q.name}</div>
+            <div class="wine-q">${q.q}</div>
+            <div class="options-grid">
+                ${opts.map(o => `<button class="option-btn" data-val="${o}" onclick="wineAns(this,'${q.correct.replace(/'/g,"\\'")}',${idx},${score})">${o}</button>`).join('')}
+            </div>`;
+    }
+
+    window.wineAns = function(btn, correct, i, sc) {
+        document.querySelectorAll('.option-btn').forEach(b => {
+            b.disabled = true;
+            if (b.dataset.val === correct) b.classList.add('correct');
+        });
+        if (btn.dataset.val === correct) { btn.classList.add('correct'); score = sc + 1; }
+        else btn.classList.add('wrong');
+        idx = i + 1;
+        setTimeout(render, 1250);
+    };
+
+    render();
+}
+
+// ════════════════════════════════
+//  GAME 3 — GOLF
+// ════════════════════════════════
+let gAnim, gData;
+
+function buildGolf(c) {
+    const holes = [
+        { name:'Par 3 — Easy Green',       goodRange:[38,62] },
+        { name:'Par 4 — Dog Leg Right',    goodRange:[42,58] },
+        { name:'Par 5 — Championship Hole',goodRange:[44,56] },
+    ];
+    gData = { hole: 0, score: 0, phase: 'aim', aimPos: 0, pos: 0, dir: 1, speed: 1.8, locked: false };
+
+    function render() {
+        const h = holes[gData.hole];
+        c.innerHTML = `
+            <div class="modal-title">⛳ Putt Putt Pro</div>
+            <div class="trivia-count">Hole ${gData.hole+1} / 3 — ${h.name}</div>
+            <div id="g-course">
+                <div id="g-flag">🚩</div>
+                <div id="g-hole"></div>
+                <div id="g-ball"></div>
+            </div>
+            <div style="font-size:0.82rem;color:#8aa5cc;text-align:center;margin-bottom:6px">
+                ${gData.phase === 'aim' ? '① Click to lock <b>AIM</b>' : '② Click to set <b>POWER</b>'}
+            </div>
+            <div class="power-bar-wrap" id="g-bar" onclick="gClick()">
+                <div class="power-bar-fill" id="g-fill"></div>
+            </div>
+            <div class="bar-labels">
+                <span>${gData.phase==='aim'?'LEFT':'SHORT'}</span>
+                <span class="good">${gData.phase==='aim'?'CENTER':'JUST RIGHT'}</span>
+                <span>${gData.phase==='aim'?'RIGHT':'LONG'}</span>
+            </div>
+            <div class="shot-result" id="g-result"></div>
+            <div style="text-align:center;font-size:0.88rem;color:#a0c4ff">
+                Cumulative: <span style="color:#ffd700;font-weight:700" id="g-score-disp">${gData.score > 0 ? '+'+gData.score : gData.score < 0 ? gData.score : 'E'}</span> par
+            </div>`;
+        gData.locked = false;
+        gTick();
+    }
+
+    function gTick() {
+        gData.pos += gData.dir * gData.speed;
+        if (gData.pos >= 100) { gData.pos = 100; gData.dir = -1; }
+        if (gData.pos <= 0)   { gData.pos = 0;   gData.dir = 1; }
+        const fill = $('g-fill');
+        if (fill) { fill.style.width = gData.pos + '%'; gAnim = requestAnimationFrame(gTick); }
+    }
+
+    window.gClick = function() {
+        if (gData.locked) return;
+        gData.locked = true;
+        cancelAnimationFrame(gAnim);
+
+        if (gData.phase === 'aim') {
+            gData.aimPos = gData.pos;
+            gData.phase = 'power';
+            gData.pos = 0; gData.dir = 1;
+            setTimeout(() => { gData.locked = false; gTick(); }, 200);
+            // update label only
+            const lbl = document.querySelectorAll('.bar-labels span');
+            if (lbl.length) { lbl[0].textContent='SHORT'; lbl[1].textContent='JUST RIGHT'; lbl[1].className='good'; lbl[2].textContent='LONG'; }
+            document.querySelector('#g-bar + .bar-labels') && null;
+            render(); // re-render in power phase
+        } else {
+            // evaluate both
+            const aimErr  = Math.abs(gData.aimPos - 50);
+            const pwrErr  = Math.abs(gData.pos - 50);
+            const total   = aimErr + pwrErr;
+            const h       = holes[gData.hole];
+            let label, bonus;
+            if (total < 12)      { label = '🎯 Hole-in-One! EAGLE!'; bonus = 3; }
+            else if (total < 22) { label = '🌟 BIRDIE!';             bonus = 2; }
+            else if (total < 38) { label = '✅ Par — solid putt!';   bonus = 0; }
+            else if (total < 55) { label = '😬 Bogey…';              bonus = -1; }
+            else                 { label = '😂 Double Bogey — yikes'; bonus = -2; }
+
+            gData.score += bonus;
+            const resEl = $('g-result');
+            if (resEl) resEl.textContent = label;
+
+            gData.hole++;
+            gData.phase = 'aim';
+            gData.speed = 1.8;
+            setTimeout(() => {
+                if (gData.hole >= holes.length) {
+                    const pts = Math.max(0, 150 + gData.score * 40);
+                    const sc = gData.score;
+                    const msg = sc >= 5 ? '🏌️ Rob will caddy for YOU next time!'
+                              : sc >= 0 ? 'Not bad! You earned a cold one at the 19th hole.'
+                              : 'Rough round… good thing there\'s an open bar!';
+                    showResult(c, pts, 'golf', `Finished ${sc > 0?'+'+sc:sc===0?'E':sc} par. ${msg}`);
+                } else {
+                    render();
+                }
+            }, 1300);
+        }
+    };
+
+    render();
+}
+
+// ════════════════════════════════
+//  GAME 4 — VOLLEYBALL
+// ════════════════════════════════
+function buildVolleyball(c) {
+    c.innerHTML = `
+        <div class="modal-title">🏐 Volleyball Rally</div>
+        <div style="font-size:0.82rem;color:#8aa5cc;text-align:center;margin-bottom:6px">Hit the ball before it hits the sand! 3 misses = game over.</div>
+        <div id="v-court">
+            <div id="v-net"></div>
+            <div id="v-ball">🏐</div>
+        </div>
+        <div style="display:flex;justify-content:space-between;font-size:0.88rem;margin-bottom:8px">
+            <span>Rally: <strong id="v-score" style="color:#ffd700">0</strong></span>
+            <span>Misses: <strong id="v-miss" style="color:#f44336">0</strong> / 3</span>
+        </div>
+        <button class="hit-btn" id="v-btn" onclick="vHit()">🏐 HIT!</button>`;
+
+    let bx = 25, by = 20, vx = 2.2, vy = 2.5, rally = 0, misses = 0, alive = true, vAnimId;
+
+    function loop() {
+        if (!alive) return;
+        const ball = $('v-ball');
+        if (!ball) return;
+        bx += vx; by += vy;
+        if (bx <= 0)  { bx = 0;  vx =  Math.abs(vx); }
+        if (bx >= 90) { bx = 90; vx = -Math.abs(vx); }
+        if (by <= 0)  { by = 0;  vy =  Math.abs(vy); }
+        if (by >= 82) {
+            misses++;
+            $('v-miss').textContent = misses;
+            bx = 20 + Math.random() * 60; by = 18;
+            vx = (Math.random() - .5) * 4;
+            vy = 2.5 + rally * 0.08;
+            if (misses >= 3) {
+                alive = false;
+                cancelAnimationFrame(vAnimId);
+                const pts = Math.min(300, rally * 18);
+                const msg = rally >= 18 ? '🏐 Rob just found his new beach partner!'
+                          : rally >= 9  ? 'Great rally! You\'d hold your own on Rob\'s team.'
+                          : 'Keep practicing — Rob\'s leaving you on the bench!';
+                setTimeout(() => showResult($('game-content'), pts, 'volleyball', `Rally of ${rally}! ${msg}`), 500);
+                return;
+            }
+        }
+        ball.style.left = bx + '%';
+        ball.style.top  = by + '%';
+        vAnimId = requestAnimationFrame(loop);
+    }
+
+    window.vHit = function() {
+        if (by >= 52 && by <= 82) {
+            rally++;
+            $('v-score').textContent = rally;
+            by = 18; vx = (Math.random() - .5) * 3.5; vy = 2.5 + rally * 0.08;
+            const btn = $('v-btn');
+            if (btn) { btn.style.background = 'linear-gradient(135deg,#4CAF50,#388E3C)'; setTimeout(() => { if($('v-btn')) $('v-btn').style.background=''; }, 180); }
+        }
+    };
+
+    loop();
+}
+
+// ════════════════════════════════
+//  GAME 5 — TRIVIA
+// ════════════════════════════════
+const TRIVIA = [
+    { q:"What's the name of the lucky woman Rob is marrying?",               correct:"Diane",           opts:["Diane","Diana","Dianne","Dyana"] },
+    { q:"Which NBA team does Rob bleed for?",                                correct:"New York Knicks",  opts:["Brooklyn Nets","Chicago Bulls","New York Knicks","Boston Celtics"] },
+    { q:"What court sport is Rob passionate about beyond basketball?",        correct:"Volleyball",       opts:["Tennis","Pickleball","Volleyball","Badminton"] },
+    { q:"What outdoor sport does Rob love to hit the links for?",             correct:"Golf",             opts:["Disc Golf","Golf","Croquet","Field Hockey"] },
+    { q:"What sophisticated drink does Rob love to sip & swirl?",            correct:"Wine",             opts:["Beer","Whiskey","Wine","Tequila"] },
+    { q:"Bachelor party rule #1: What happens here…",                        correct:"…stays here!",     opts:["…gets Tweeted","…stays here!","…gets told to Diane","…goes on Yelp"] },
+    { q:"What does the groom traditionally wear at a bachelor party?",        correct:"A sash and veil",  opts:["A crown","A sash and veil","A tuxedo","A cape"] },
+    { q:"Knicks home court is located in…",                                   correct:"Madison Square Garden", opts:["Barclays Center","United Center","Madison Square Garden","TD Garden"] },
+    { q:"A proper bachelor party toast always ends with…",                    correct:"To Rob! 🥂",       opts:["Cheers mate!","Good luck!","To Rob! 🥂","Whatever, let's drink"] },
+    { q:"What should the best man's speech always include?",                  correct:"An embarrassing story about the groom", opts:["Stock tips","An embarrassing story about the groom","Weather forecast","Tax advice"] },
+];
+
+function buildTrivia(c) {
+    let qs = [...TRIVIA].sort(() => Math.random() - .5).slice(0, 7);
+    let idx = 0, score = 0;
+
+    function render() {
+        if (idx >= qs.length) {
+            const pts = score * 45;
+            const msg = score === qs.length ? '💍 Perfect score! You know Rob better than Diane does!'
+                      : score >= 5 ? 'Solid! Rob\'s glad you came tonight.'
+                      : 'Yikes… have you actually MET Rob? 😅';
+            showResult(c, pts, 'trivia', `${score}/${qs.length} correct. ${msg}`);
+            return;
+        }
+        const q = qs[idx];
+        const opts = [...q.opts].sort(() => Math.random() - .5);
+        c.innerHTML = `
+            <div class="modal-title">💍 Rob & Diane Trivia</div>
+            <div class="trivia-count">Q${idx+1} of ${qs.length} &nbsp;|&nbsp; ⭐ ${score} correct</div>
+            <div style="font-size:1.05rem;font-weight:600;color:white;margin:18px 0;line-height:1.5">${q.q}</div>
+            <div class="options-grid">
+                ${opts.map(o => `<button class="option-btn" data-val="${o}" onclick="trivAns(this,'${q.correct.replace(/'/g,"\\'")}',${idx},${score})">${o}</button>`).join('')}
+            </div>`;
+    }
+
+    window.trivAns = function(btn, correct, i, sc) {
+        document.querySelectorAll('.option-btn').forEach(b => {
+            b.disabled = true;
+            if (b.dataset.val === correct) b.classList.add('correct');
+        });
+        if (btn.dataset.val === correct) { score = sc + 1; }
+        else btn.classList.add('wrong');
+        idx = i + 1;
+        setTimeout(render, 1250);
+    };
+
+    render();
+}
+
+// ════════════════════════════════
+//  GAME 6 — DARE WHEEL
+// ════════════════════════════════
+const DARES = [
+    { text: 'DRINK!', color: '#F58426' },
+    { text: 'Call Rob & sing Happy Birthday!', color: '#006BB6' },
+    { text: 'Best Diane impression — winner gets a toast!', color: '#9c27b0' },
+    { text: '10 push-ups. GO.', color: '#4CAF50' },
+    { text: 'SHOTS FOR THE TABLE!', color: '#f44336' },
+    { text: 'Tell an embarrassing Rob story', color: '#ff9800' },
+    { text: '30-second dance off. No excuses.', color: '#e91e63' },
+    { text: 'ROB takes a drink!', color: '#ffd700' },
+    { text: 'Group photo — tag Rob!', color: '#00bcd4' },
+    { text: 'Imitate Rob on the golf course 🏌️', color: '#8bc34a' },
+    { text: 'Everyone calls Rob by his full name for the next 5 min', color: '#795548' },
+    { text: 'Serenade the table with a Knicks chant!', color: '#006BB6' },
+];
+
+let wAngle = 0, wSpinning = false;
+
+function buildWheel(c) {
+    c.innerHTML = `
+        <div class="modal-title">🎰 Bachelor Dare Wheel</div>
+        <div class="wheel-wrap">
+            <div style="position:relative;display:inline-block">
+                <canvas id="wcanvas" width="290" height="290"></canvas>
+                <div style="position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:2rem;filter:drop-shadow(0 2px 4px #000)">▼</div>
+            </div>
+            <button class="spin-btn" id="wspin" onclick="spinWheel()">SPIN IT! 🎲</button>
+            <div class="wheel-result" id="wresult"></div>
+            <div style="margin-top:14px;text-align:center">
+                <button class="result-next-btn" onclick="addScore(100,'wheel');closeModal()">Collect 100 pts & Leave</button>
+            </div>
+        </div>`;
+    drawWheel(wAngle);
+}
+
+function drawWheel(angle) {
+    const cv = $('wcanvas');
+    if (!cv) return;
+    const ctx = cv.getContext('2d');
+    const cx = 145, cy = 145, r = 132, n = DARES.length, slice = 2 * Math.PI / n;
+    ctx.clearRect(0, 0, 290, 290);
+    DARES.forEach((d, i) => {
+        const a0 = angle + i * slice - Math.PI / 2;
+        const a1 = a0 + slice;
+        ctx.beginPath(); ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, r, a0, a1); ctx.closePath();
+        ctx.fillStyle = d.color; ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,0.35)'; ctx.lineWidth = 1.5; ctx.stroke();
+        ctx.save();
+        ctx.translate(cx, cy); ctx.rotate(a0 + slice / 2);
+        ctx.textAlign = 'right'; ctx.fillStyle = 'white';
+        ctx.font = 'bold 8px Segoe UI';
+        ctx.shadowColor = 'rgba(0,0,0,0.6)'; ctx.shadowBlur = 4;
+        const words = d.text.split(' ');
+        let lines = [], cur = '';
+        words.forEach(w => { const t = cur ? cur + ' ' + w : w; if (t.length > 18) { lines.push(cur); cur = w; } else cur = t; });
+        lines.push(cur);
+        lines.forEach((ln, li) => ctx.fillText(ln, r - 8, (li - (lines.length - 1) / 2) * 11));
+        ctx.restore();
+    });
+    ctx.beginPath(); ctx.arc(cx, cy, 22, 0, 2 * Math.PI);
+    ctx.fillStyle = '#0a1628'; ctx.fill();
+    ctx.strokeStyle = '#F58426'; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = '#F58426'; ctx.font = 'bold 11px Segoe UI';
+    ctx.textAlign = 'center'; ctx.shadowBlur = 0; ctx.fillText('ROB', cx, cy + 4);
+}
+
+window.spinWheel = function() {
+    if (wSpinning) return;
+    wSpinning = true;
+    const btn = $('wspin');
+    if (btn) btn.disabled = true;
+    $('wresult').textContent = '🎲 Spinning…';
+
+    const totalRot = Math.PI * 2 * (6 + Math.random() * 6);
+    const dur = 3200 + Math.random() * 1200;
+    const t0 = performance.now(), a0 = wAngle;
+
+    function frame(now) {
+        const p = Math.min((now - t0) / dur, 1);
+        const ease = 1 - Math.pow(1 - p, 4);
+        wAngle = a0 + totalRot * ease;
+        drawWheel(wAngle);
+        if (p < 1) { requestAnimationFrame(frame); return; }
+        const slice = 2 * Math.PI / DARES.length;
+        const norm = ((-wAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+        const dare = DARES[Math.floor(norm / slice) % DARES.length];
+        $('wresult').innerHTML = `<div style="color:${dare.color};font-size:1.25rem;line-height:1.5">🎯 ${dare.text}</div>`;
+        wSpinning = false;
+        if (btn) btn.disabled = false;
+    }
+    requestAnimationFrame(frame);
+};
+</script>
+</body>
+</html>
