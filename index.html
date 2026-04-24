@@ -3,144 +3,349 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>John Kieran Naughton: Personal site and portfolio</title>
-    <link rel="stylesheet" href="style.css">
+    <title>John Kieran Naughton</title>
     <style>
-        /* This section styles the "White Box" around your content */
-        .container {
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+        }
+
+        /* ── PARTICLE BACKGROUND ── */
+        #canvas-container {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+        }
+        #networkCanvas { display: block; }
+
+        /* ── LAYOUT ── */
+        .page {
             position: relative;
-            max-width: 900px;
-            margin: 50px auto;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.95); /* White with slight transparency */
-            border-radius: 15px; /* Rounded corners */
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); /* Subtle depth shadow */
-            z-index: 1; /* Ensures content stays above the background */
+            z-index: 1;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 40px 24px 60px;
         }
 
-        /* Adjusting link colors for better visibility on white */
-        nav ul li a {
-            color: #0f172a;
-            font-weight: bold;
-            text-decoration: none;
+        /* ── HEADER ── */
+        .site-header {
+            text-align: center;
+            margin-bottom: 48px;
         }
-        nav ul li a:hover {
+        .site-header h1 {
+            font-size: clamp(2rem, 5vw, 3.2rem);
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
+        }
+        .site-header .subtitle {
+            margin-top: 8px;
+            font-size: 1rem;
             color: #64ffda;
-            text-decoration: underline;
+            letter-spacing: 2px;
+            text-transform: uppercase;
         }
-        
-        /* Ensuring images don't overflow the white box */
-        .image-gallery img {
-            max-width: 100%;
-            border-radius: 8px;
-            margin: 10px 0;
+        .header-divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #64ffda, #7c3aed);
+            border-radius: 2px;
+            margin: 16px auto 0;
         }
-        #game-over-overlay {
-    box-shadow: 10px 10px 0px #457b9d; /* Retro blocky shadow */
-    image-rendering: pixelated;
-}
 
-#game-over-overlay h2 {
-    color: #1d3557;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-}
+        /* ── COLUMNS ── */
+        .columns {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+            align-items: start;
+        }
+
+        @media (max-width: 900px) {
+            .columns { grid-template-columns: 1fr; }
+        }
+
+        /* ── COLUMN CARD ── */
+        .col {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 18px;
+            padding: 28px 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            color: #0f172a;
+        }
+
+        .col-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: #7c3aed;
+            margin-bottom: 22px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(124, 58, 237, 0.15);
+        }
+
+        /* ── PROJECT CARDS ── */
+        .proj-card {
+            display: block;
+            text-decoration: none;
+            background: rgba(15, 23, 42, 0.04);
+            border: 1px solid rgba(15, 23, 42, 0.1);
+            border-radius: 12px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+            transition: all 0.22s;
+            color: inherit;
+        }
+        .proj-card:hover {
+            background: rgba(124, 58, 237, 0.06);
+            border-color: rgba(124, 58, 237, 0.35);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        }
+        .proj-card:last-child { margin-bottom: 0; }
+
+        .proj-tag {
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #7c3aed;
+            margin-bottom: 5px;
+        }
+        .proj-card.headliner .proj-tag { color: #f59e0b; }
+        .proj-card.fun .proj-tag       { color: #ec4899; }
+
+        .proj-name {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 4px;
+            line-height: 1.3;
+        }
+        .proj-card.headliner .proj-name { font-size: 1.1rem; color: #0f172a; }
+
+        .proj-desc {
+            font-size: 0.8rem;
+            color: #475569;
+            line-height: 1.5;
+        }
+
+        .proj-arrow {
+            float: right;
+            color: #64ffda;
+            opacity: 0;
+            transition: opacity 0.2s;
+            font-size: 1rem;
+            margin-top: -20px;
+        }
+        .proj-card:hover .proj-arrow { opacity: 1; }
+
+        /* ── HEADLINER BADGE ── */
+        .proj-card.headliner {
+            border-color: rgba(245, 158, 11, 0.4);
+            background: rgba(245, 158, 11, 0.07);
+        }
+        .proj-card.headliner:hover {
+            border-color: rgba(245, 158, 11, 0.65);
+            background: rgba(245, 158, 11, 0.13);
+        }
+
+        /* ── ABOUT COL ── */
+        .photos {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .photos img {
+            width: 50%;
+            height: 160px;
+            object-fit: cover;
+            object-position: center top;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .about-bio {
+            font-size: 0.85rem;
+            color: #475569;
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+
+        .contact-links { display: flex; flex-direction: column; gap: 10px; }
+
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #0f172a;
+            background: rgba(15, 23, 42, 0.04);
+            border: 1px solid rgba(15, 23, 42, 0.12);
+            border-radius: 10px;
+            padding: 11px 14px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .contact-link:hover {
+            background: rgba(124, 58, 237, 0.08);
+            border-color: rgba(124, 58, 237, 0.35);
+            color: #7c3aed;
+        }
     </style>
 </head>
 <body>
-    <div id="canvas-container" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: #0f172a;">
-        <canvas id="networkCanvas"></canvas>
-    </div>
 
-    <div class="container">
-        <header>
-            <h1>John Kieran Naughton</h1>
-            <p class="subtitle">Burgeoning Data Scientist | Statistics & Real World Problem Solving</p>
-        </header>
+<div id="canvas-container">
+    <canvas id="networkCanvas"></canvas>
+</div>
 
-        <nav>
-            <ul> 
-                <li><a href="https://johnknaughton.github.io/TrivialAdventure2GalacticCoreGame/">A Trivial Adventure to the Galactic Core, Roguelike game made by me. Play Full Game here now!!!</a></li> <br>
-                <li><a href="VibeProj1/index.html">Deploy the Buoys! Vibe Game</a></li>
-                <li><a href="project4/index.html">Project 4: Interactive UN Population Growth Projections</a></li>
-                <li><a href="./projects/index.html">UCSD MS DS and CSULB Statistics Projects</a></li>
-                <li><a href="./cv/index.html">CV/Resume</a></li>
-                <li><a href="https://github.com/JohnKNaughton" target="_blank">GitHub</a></li>
+<div class="page">
+
+    <header class="site-header">
+        <h1>John Kieran Naughton</h1>
+        <p class="subtitle">Data Science and Statistics with real world applications</p>
+        <div class="header-divider"></div>
+    </header>
+
+    <div class="columns">
+
+        <!-- ══ COL 1: ACADEMIC ══ -->
+        <div class="col">
+            <div class="col-title">UCSD MS Data Science &amp; CSULB BS Applied Statistics</div>
+
+            <a class="proj-card headliner" href="project4/index.html">
+                <div class="proj-tag">Interactive Data Visualization</div>
+                <div class="proj-name">UN Population Projections</div>
+                <div class="proj-desc">Explore global population records and projections from 1950 to 2100 with interactive controls. Built for UCSD MS Data Visualization.</div>
+                <span class="proj-arrow">→</span>
+            </a>
+
+            <a class="proj-card" href="projects/index.html">
+                <div class="proj-tag">Archive</div>
+                <div class="proj-name">More Academic Projects →</div>
+                <div class="proj-desc">Full index of coursework, reports, and statistical analyses from MS and BS programs.</div>
+                <span class="proj-arrow">→</span>
+            </a>
+        </div>
+
+        <!-- ══ COL 2: PERSONAL PROJECTS ══ -->
+        <div class="col">
+            <div class="col-title">Personal Projects</div>
+
+            <a class="proj-card headliner" href="https://johnknaughton.github.io/TrivialAdventure2GalacticCoreGame/" target="_blank">
+                <div class="proj-tag">Playable Game</div>
+                <div class="proj-name">A Trivial Adventure to the Galactic Core</div>
+                <div class="proj-desc">A fully playable roguelike trivia game, built from scratch by me in JS/HTML. Play it now here! Get your initials on the Hall of Fame Leaderboard.</div>
+                <span class="proj-arrow">↗</span>
+            </a>
+
+            <a class="proj-card" href="https://github.com/JohnKNaughton/Kessler-Syndrome-Factorio-Mod" target="_blank">
+                <div class="proj-tag">Public Factorio Mod</div>
+                <div class="proj-name">Kessler Syndrome for Factorio Space Age</div>
+                <div class="proj-desc">Factorio is a popular video game where you build a complex factory. I built this mod to simulate Kessler Syndrome above one of the game's planets, where a cascade of orbital collisions and scrap asteroids makes orbit very hostile, adding a doubled-edged sword of gameplay restrictions and opportunities.</div>
+                <span class="proj-arrow">↗</span>
+            </a>
+
+            <a class="proj-card" href="AllPersonalProjects/index.html">
+                <div class="proj-tag">Archive</div>
+                <div class="proj-name">More Personal Projects →</div>
+                <div class="proj-desc">More games and experiments built for fun.</div>
+                <span class="proj-arrow">→</span>
+            </a>
+        </div>
+
+        <!-- ══ COL 3: ABOUT ME ══ -->
+        <div class="col">
+            <div class="col-title">About Me</div>
+
+            <div class="photos">
+                <img src="images/Screenshot 2025-01-08 144625.png" alt="John Naughton">
+                <img src="images/IMG_9856.jpg" alt="Pondering with Newton">
+            </div>
+
+            <p class="about-bio">
+                San Diego based MS Data Science candidate at UCSD, with a 4.0 BS in Applied Statistics from CSULB.
+                Exploring the intersection of grounded Bayesian analysis and rigorous real-world problem solving.
+                I take pride in harnessing the most up-to-date ML techniques and AI tools to produce deliverables and creative personal projects alike. 
+            </p>
+
+            <div class="contact-links">
+                <a class="contact-link" href="mailto:jknaughtonpro@gmail.com">Contact me at: jknaughtonpro@gmail.com</a>
+                <a class="contact-link" href="https://github.com/JohnKNaughton" target="_blank">My GitHub</a>
                 
-            </ul>
-        </nav>
+            </div>
+        </div>
 
-        <main>
-            <section class="image-gallery">
-                <img src="images/Screenshot 2025-01-08 144625.png" alt="John Naughton smiling" style="height: 400px;">
-                <img src="images/IMG_9856.jpg" alt="Pondering with Newton" style="height: 400px;">
-            </section>
-        </main>
     </div>
+</div>
 
-    <script>
-        const canvas = document.getElementById('networkCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        const particleCount = 100;
-        const connectionDistance = 150;
-        const mouse = { x: null, y: null, radius: 150 };
+<script>
+    const canvas = document.getElementById('networkCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    const particleCount = 100;
+    const connectionDistance = 150;
+    const mouse = { x: null, y: null };
 
-        window.addEventListener('mousemove', (e) => { mouse.x = e.x; mouse.y = e.y; });
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+    window.addEventListener('mousemove', e => { mouse.x = e.x; mouse.y = e.y; });
+
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+        constructor() { this.reset(); }
+        reset() {
+            this.x  = Math.random() * canvas.width;
+            this.y  = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 0.5;
+            this.vy = (Math.random() - 0.5) * 0.5;
+            this.r  = Math.random() * 2 + 1;
         }
-        window.addEventListener('resize', resize);
-        resize();
-
-        class Particle {
-            constructor() { this.reset(); }
-            reset() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5;
-                this.radius = Math.random() * 2 + 1;
-            }
-            update() {
-                this.x += this.vx; this.y += this.vy;
-                if (this.x < 0 || this.x > canvas.width) this.vx *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
-            }
-            draw() {
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(100, 255, 218, 0.8)';
-                ctx.fill();
-            }
+        update() {
+            this.x += this.vx; this.y += this.vy;
+            if (this.x < 0 || this.x > canvas.width)  this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height)  this.vy *= -1;
         }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(100,255,218,0.8)';
+            ctx.fill();
+        }
+    }
 
-        function init() { for (let i = 0; i < particleCount; i++) { particles.push(new Particle()); } }
+    for (let i = 0; i < particleCount; i++) particles.push(new Particle());
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < particles.length; i++) {
-                particles[i].update();
-                particles[i].draw();
-                for (let j = i; j < particles.length; j++) {
-                    const dx = particles[i].x - particles[j].x;
-                    const dy = particles[i].y - particles[j].y;
-                    const distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < connectionDistance) {
-                        ctx.beginPath();
-                        ctx.strokeStyle = `rgba(100, 255, 218, ${1 - distance / connectionDistance})`;
-                        ctx.lineWidth = 0.5;
-                        ctx.moveTo(particles[i].x, particles[i].y);
-                        ctx.lineTo(particles[j].x, particles[j].y);
-                        ctx.stroke();
-                    }
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const d  = Math.sqrt(dx * dx + dy * dy);
+                if (d < connectionDistance) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(100,255,218,${1 - d / connectionDistance})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
                 }
             }
-            requestAnimationFrame(animate);
         }
-        init();
-        animate();
-    </script>
+        requestAnimationFrame(animate);
+    }
+    animate();
+</script>
 </body>
 </html>
