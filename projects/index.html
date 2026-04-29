@@ -9,41 +9,53 @@
         body {
             font-family: 'Segoe UI', sans-serif;
             background: #0f172a;
-            color: #0f172a;
             min-height: 100vh;
             display: flex;
             align-items: flex-start;
             justify-content: center;
             padding: 50px 20px;
         }
-        .card {
-            background: rgba(255,255,255,0.95);
-            border-radius: 18px;
-            padding: 40px;
-            max-width: 680px;
+        .outer {
+            max-width: 960px;
             width: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         .back {
             display: inline-block;
             font-size: 0.8rem;
             font-weight: 600;
-            color: #7c3aed;
+            color: #64ffda;
             text-decoration: none;
             letter-spacing: 1px;
             text-transform: uppercase;
             margin-bottom: 28px;
         }
         .back:hover { text-decoration: underline; }
-        h1 {
-            font-size: 1.5rem;
-            font-weight: 800;
-            margin-bottom: 6px;
+        .columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            align-items: start;
         }
-        .subtitle {
-            font-size: 0.85rem;
-            color: #64748b;
-            margin-bottom: 32px;
+        @media (max-width: 640px) {
+            .columns { grid-template-columns: 1fr; }
+        }
+        .col {
+            background: rgba(255,255,255,0.95);
+            border-radius: 18px;
+            padding: 28px 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            color: #0f172a;
+        }
+        .col-title {
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #7c3aed;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(124,58,237,0.15);
+            line-height: 1.5;
         }
         .proj-link {
             display: block;
@@ -52,8 +64,8 @@
             background: rgba(15,23,42,0.03);
             border: 1px solid rgba(15,23,42,0.1);
             border-radius: 12px;
-            padding: 18px 20px;
-            margin-bottom: 14px;
+            padding: 16px 18px;
+            margin-bottom: 12px;
             transition: all 0.2s;
         }
         .proj-link:hover {
@@ -62,6 +74,16 @@
             transform: translateY(-2px);
         }
         .proj-link:last-child { margin-bottom: 0; }
+        .proj-link.placeholder {
+            border-style: dashed;
+            opacity: 0.6;
+            cursor: default;
+        }
+        .proj-link.placeholder:hover {
+            transform: none;
+            background: rgba(15,23,42,0.03);
+            border-color: rgba(15,23,42,0.1);
+        }
         .tag {
             font-size: 0.65rem;
             font-weight: 700;
@@ -71,40 +93,77 @@
             margin-bottom: 4px;
         }
         .proj-name {
-            font-size: 1rem;
+            font-size: 0.95rem;
             font-weight: 700;
             margin-bottom: 3px;
         }
         .proj-desc {
-            font-size: 0.8rem;
+            font-size: 0.78rem;
             color: #475569;
             line-height: 1.5;
         }
     </style>
 </head>
 <body>
-    <div class="card">
+    <div class="outer">
         <a class="back" href="../index.html">← Back to Portfolio</a>
-        <h1>Academic Projects</h1>
-        <p class="subtitle">Coursework, analyses, and reports from UCSD MS Data Science & CSULB BS Applied Statistics</p>
 
-        <a class="proj-link" href="../project4/index.html">
-            <div class="tag">Interactive Data Visualization</div>
-            <div class="proj-name">UN Population Projections</div>
-            <div class="proj-desc">UCSD MS Data Science. Forward-looking global population projections with interactive controls across countries and time horizons.</div>
-        </a>
+        <div class="columns">
 
-        <a class="proj-link" href="../project3/index.html">
-            <div class="tag">Visualization</div>
-            <div class="proj-name">UN Population Growth Rates</div>
-            <div class="proj-desc">UCSD MS Data Science. Exploration of global demographic growth rate data sourced from the United Nations.</div>
-        </a>
+            <!-- LEFT: UCSD -->
+            <div class="col">
+                <div class="col-title">MS in Halıcıoğlu Data Science Institute, UCSD</div>
 
-        <a class="proj-link" href="../Project2/index.html">
-            <div class="tag">Analysis</div>
-            <div class="proj-name">NYPD Complaint Data Analysis</div>
-            <div class="proj-desc">UCSD MS Data Science. Exploratory analysis of New York City police complaint records — patterns, trends, and statistical insights.</div>
-        </a>
+                <a class="proj-link" href="../project4/index.html">
+                    <div class="proj-name">UN Population Projections</div>
+                    <div class="proj-desc">Data Vis Project 4: Forward-looking global population projections with interactive controls across countries and time horizons.</div>
+                </a>
+
+                <a class="proj-link" href="../project3/index.html">
+                    <div class="proj-name">UN Population Growth Rates</div>
+                    <div class="proj-desc">Data Vis Project 3: Exploration of global demographic growth rate data sourced from the United Nations.</div>
+                </a>
+
+                <a class="proj-link" href="../Project2/index.html">
+                    <div class="proj-name">NYPD Complaint Data Analysis</div>
+                    <div class="proj-desc">Data Vis Project 2: Exploratory analysis of New York City police complaint records — patterns, trends, and statistical insights.</div>
+                </a>
+
+                <a class="proj-link" href="nlp.html">
+                    <div class="proj-name">Discussing Inference-Time 
+Selective Debiasing to 
+Enhance Fairness in Text 
+Classification Models Paper Analysis </div>
+                    <div class="proj-desc">Slides of Analysis Presentation for DSC 258 Natural Language Processing.</div>
+                </a>
+            </div>
+
+            <!-- RIGHT: CSULB -->
+            <div class="col">
+                <div class="col-title">BS in Applied Statistics, CSULB</div>
+
+                <a class="proj-link" href="stat410.html">
+                    <div class="proj-name">STAT 410 Applied Regression: ZIP Basketball Project</div>
+                    <div class="proj-desc">Report and Slides in R and SAS.</div>
+                </a>
+
+                <a class="proj-link" href="stat482.html">
+                    <div class="proj-name">STAT 482 Random Processes: Black-Scholes & Brownian Motion</div>
+                    <div class="proj-desc">Report and Slides in R.</div>
+                </a>
+
+                <a class="proj-link" href="stat483.html">
+                    <div class="proj-name">STAT 483 Survey Sampling: Nonresponse Analysis in R</div>
+                    <div class="proj-desc">Slides.</div>
+                </a>
+
+                <a class="proj-link" href="stat495.html">
+                    <div class="proj-name">STAT 495 Statistical Models in Epidemiology: Incidence Rate Ratio Analysis and Poisson Regression Model</div>
+                    <div class="proj-desc">Report in R and SAS.</div>
+                </a>
+            </div>
+
+        </div>
     </div>
 </body>
 </html>
