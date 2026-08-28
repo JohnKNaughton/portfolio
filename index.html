@@ -155,6 +155,42 @@
             background: rgba(245, 158, 11, 0.13);
         }
 
+        /* ── LINK BUTTONS (multi-link cards) ── */
+        .card-btns {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .card-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            text-decoration: none;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #7c3aed;
+            background: rgba(124, 58, 237, 0.08);
+            border: 1px solid rgba(124, 58, 237, 0.3);
+            border-radius: 8px;
+            padding: 9px 12px;
+            transition: all 0.2s;
+        }
+        .card-btn:hover {
+            background: rgba(124, 58, 237, 0.16);
+            border-color: rgba(124, 58, 237, 0.6);
+            transform: translateY(-1px);
+        }
+        .card-btn .btn-cta {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            opacity: 0.85;
+        }
+
         /* ── ABOUT COL ── */
         .photos {
             display: flex;
@@ -302,12 +338,21 @@
                 <span class="proj-arrow">↗</span>
             </a>
 
-            <a class="proj-card" href="https://johnknaughton.github.io/InteractiveAnimations/ambientsolarsystem.html" target="_blank">
+            <div class="proj-card">
                 <div class="proj-tag">Passive Wallpaper</div>
-                <div class="proj-name">Ambient Kardashev-2 Solar System Simulation</div>
-                <div class="proj-desc">Ambient simulation of a civilization expanding from the information age to a Dyson Swarm over 1 hour of exponential growth. Put it on full screen with the music on as a chill screensaver or to help sleep.</div>
-                <span class="proj-arrow">↗</span>
-            </a>
+                <div class="proj-name">Ambient Wallpapers</div>
+                <div class="proj-desc">Two ambient simulations built to run full screen as a chill screensaver or to help sleep.</div>
+                <div class="card-btns">
+                    <a class="card-btn" href="https://johnknaughton.github.io/InteractiveAnimations/ambientsolarsystem.html" target="_blank">
+                        <span>Kardashev-2 Solar System</span>
+                        <span class="btn-cta">Click here &#8599;</span>
+                    </a>
+                    <a class="card-btn" href="https://johnknaughton.github.io/InteractiveAnimations/ambientpixelciv.html" target="_blank">
+                        <span>Pixel Civilization on Earth</span>
+                        <span class="btn-cta">Click here &#8599;</span>
+                    </a>
+                </div>
+            </div>
 
             <a class="proj-card" href="AllPersonalProjects/index.html">
                 
