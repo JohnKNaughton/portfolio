@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Polyreme &mdash; Godot Demo | John Naughton</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #0f172a;
+            min-height: 100vh;
+        }
+        .top {
+            display: flex;
+            justify-content: center;
+            padding: 50px 20px 40px;
+        }
+        .card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 18px;
+            padding: 40px;
+            max-width: 680px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            color: #0f172a;
+        }
+        .back {
+            display: inline-block;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #7c3aed;
+            text-decoration: none;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 28px;
+        }
+        .back:hover { text-decoration: underline; }
+        h1 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+        }
+        .blurb {
+            font-size: 0.88rem;
+            color: #475569;
+            line-height: 1.7;
+            margin-bottom: 26px;
+        }
+
+        /* ── DOWNLOAD ── */
+        .dl-btn {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: #64748b;
+            background: rgba(15,23,42,0.03);
+            border: 1px dashed rgba(15,23,42,0.25);
+            border-radius: 10px;
+            padding: 16px 18px;
+            transition: all 0.2s;
+        }
+        .dl-cta {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        /* ── SCREENSHOTS: full-bleed, edge to edge ── */
+        .shots { width: 100%; }
+        .shots img {
+            display: block;
+            width: 100%;
+            height: auto;
+            image-rendering: pixelated;
+        }
+    </style>
+</head>
+<body>
+    <div class="top">
+        <div class="card">
+            <a class="back" href="../index.html">&#8592; Back to Portfolio</a>
+
+            <h1>Polyreme &mdash; Godot Demo</h1>
+            <p class="blurb">
+                An ancient Greek commerce and seafaring game: run trade routes between city-states,
+                buy low, sell high, and decide how to handle what the Aegean throws at you.
+            </p>
+
+            <!-- Swap href for the build .zip when it's ready -->
+            <a class="dl-btn" href="#">
+                <span>Download the Godot demo</span>
+                <span class="dl-cta">Coming soon</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="shots">
+        <img src="screenshot2.png" alt="The Port of Gytheion in Laconia, showing the market, temple, barracks and dock">
+        <img src="screenshot1.png" alt="Docked at the Port of Syracuse, with crew, cargo and station panels visible">
+        <img src="screenshot3.png" alt="Sailing the open sea from Gytheion to Knossos as a sail appears on the horizon">
+    </div>
+</body>
+</html>

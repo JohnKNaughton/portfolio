@@ -190,6 +190,15 @@
             white-space: nowrap;
             opacity: 0.85;
         }
+        .proj-card.headliner .card-btn {
+            color: #b45309;
+            background: rgba(245, 158, 11, 0.1);
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+        .proj-card.headliner .card-btn:hover {
+            background: rgba(245, 158, 11, 0.2);
+            border-color: rgba(245, 158, 11, 0.7);
+        }
 
         /* ── ABOUT COL ── */
         .photos {
@@ -296,12 +305,21 @@
                 <span class="proj-arrow">↗</span>
             </a>
 
-            <a class="proj-card headliner" href="https://johnknaughton.github.io/greekshipgame/" target="_blank">
+            <div class="proj-card headliner">
                 <div class="proj-tag">Playable Game</div>
                 <div class="proj-name">Polyreme</div>
                 <div class="proj-desc">Buy Low, Sell High. Sail, Recruit, Decide, Avenge. A fully playable ancient greek commerce ship game, play it right here!</div>
-                <span class="proj-arrow">↗</span>
-            </a>
+                <div class="card-btns">
+                    <a class="card-btn" href="https://johnknaughton.github.io/greekshipgame/" target="_blank">
+                        <span>Play the HTML Demo</span>
+                        <span class="btn-cta">Click here &#8599;</span>
+                    </a>
+                    <a class="card-btn" href="PolyremeDemo/index.html">
+                        <span>Download the Godot Demo</span>
+                        <span class="btn-cta">Click here &#8594;</span>
+                    </a>
+                </div>
+            </div>
 
             <a class="proj-card" href="https://johnknaughton.github.io/InteractiveAnimations/monopolyMCViz.html" target="_blank">
                 <div class="proj-tag">Interactive Data Visualization</div>
