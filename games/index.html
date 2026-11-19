@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POLYREME and other games by Kieran</title>
+    <meta name="description" content="Polyreme, an ancient Greek trading and seafaring game, plus other games by Kieran.">
+
+    <!-- Link previews (Instagram, iMessage, Discord, etc.) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="POLYREME and other games by Kieran">
+    <meta property="og:description" content="Trade and fight on the wine-dark sea. Play Polyreme and more.">
+    <meta property="og:url" content="https://johnknaughton.github.io/portfolio/games/">
+    <meta property="og:image" content="https://johnknaughton.github.io/portfolio/games/media/og-image.jpg">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta name="twitter:card" content="summary_large_image">
+
+    <!--
+        Page content (text, links, images, videos) lives in content.json.
+        To edit with drag and drop: run `python games/editor.py` and open
+        http://127.0.0.1:8765/games/?edit
+    -->
+
+    <style>
+        /* Same look as the portfolio homepage: navy page, particle network, white columns */
+        :root {
+            --ink: #0f172a;
+            --muted: #475569;
+            --line: rgba(15, 23, 42, 0.1);
+            --purple: #7c3aed;
+            --amber: #b45309;
+            --edit: #0ea5e9;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #0f172a;
+            color: #e2e8f0;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        a { color: var(--purple); }
+        img, video { display: block; max-width: 100%; }
+
+        #canvas-container { position: fixed; inset: 0; z-index: 0; }
+        #networkCanvas { display: block; }
+
+        .page {
+            position: relative;
+            z-index: 1;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 40px 24px 60px;
+        }
+
+        /* Header */
+        .site-header { text-align: center; margin-bottom: 48px; }
+        .site-header h1 {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-weight: 800;
+            color: #fff;
+            letter-spacing: -0.5px;
+            line-height: 1.2;
+        }
+        .header-divider {
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #64ffda, #7c3aed);
+            border-radius: 2px;
+            margin: 16px auto 0;
+        }
+
+        /* White boxes side by side: Polyreme widest, then one box per other game */
+        .layout {
+            display: grid;
+            grid-template-columns: minmax(0, 1.6fr) repeat(var(--games, 2), minmax(0, 1fr));
+            gap: 24px;
+            align-items: start;
+        }
+        @media (max-width: 1100px) {
+            .layout { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+            .layout > section.col { grid-column: 1 / -1; }
+        }
+        @media (max-width: 700px) { .layout { grid-template-columns: minmax(0, 1fr); } }
+        .add-game { grid-column: 1 / -1; justify-self: center; padding: 10px 18px; }
+
+        .col {
+            position: relative;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 18px;
+            padding: 28px 24px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            color: var(--ink);
+        }
+        .col-title {
+            font-size: 0.72rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2.5px;
+            color: var(--purple);
+            margin-bottom: 22px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid rgba(124, 58, 237, 0.15);
+        }
+
+        /* Polyreme column */
+
+        .feature-title { font-size: 1.5rem; font-weight: 800; line-height: 1.25; margin-bottom: 10px; }
+        .pitch { color: var(--muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 18px; }
+
+        /* itch.io widgets are a fixed 552x167; fitWidgets() scales them down to fit their box */
+        .itch-embed { width: 100%; max-width: 552px; height: 167px; overflow: hidden; border-radius: 8px; }
+        .itch-embed iframe { display: block; width: 552px; height: 167px; border: 0; transform-origin: top left; }
+
+        .gallery { margin-top: 24px; }
+        .gallery-main { position: relative; aspect-ratio: 16 / 9; background: #000; border-radius: 10px; overflow: hidden; }
+        .gallery-main .zoom { display: block; width: 100%; height: 100%; border: 0; padding: 0; background: none; cursor: zoom-in; }
+        .gallery-main .zoom img, .gallery-main .zoom video { width: 100%; height: 100%; object-fit: cover; }
+        .nav-arrow {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            width: 36px; height: 36px; border: 0; border-radius: 50%;
+            background: rgba(15,23,42,0.6); color: #fff; font-size: 1.2rem; cursor: pointer;
+        }
+        .nav-arrow:hover { background: var(--purple); }
+        .nav-arrow.prev { left: 8px; }
+        .nav-arrow.next { right: 8px; }
+        .thumbs { display: grid; grid-template-columns: repeat(6, 1fr); gap: 6px; margin-top: 10px; }
+        @media (max-width: 560px) { .thumbs { grid-template-columns: repeat(3, 1fr); } }
+        .thumb-wrap { position: relative; }
+        .thumb {
+            display: block; width: 100%; aspect-ratio: 16 / 9; padding: 0;
+            border: 2px solid transparent; border-radius: 6px; overflow: hidden;
+            background: #000; cursor: pointer; opacity: 0.6;
+        }
+        .thumb img, .thumb video { width: 100%; height: 100%; object-fit: cover; }
+        .thumb:hover { opacity: 0.9; }
+        .thumb[aria-current="true"] { opacity: 1; border-color: var(--purple); }
+
+        /* Version line */
+        .version { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 10px; margin: 2px 0 10px; font-size: 0.88rem; }
+        .version .ver { font-weight: 700; color: var(--purple); }
+        .version .date { color: var(--muted); }
+        .version .new {
+            font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;
+            color: #065f46; background: #d1fae5; padding: 1px 8px; border-radius: 999px;
+        }
+
+        /* Each other game is its own white box */
+        .game-card h3 { font-size: 1.15rem; font-weight: 700; line-height: 1.3; margin-bottom: 4px; }
+        .game-card p { font-size: 0.85rem; color: var(--muted); line-height: 1.6; margin-bottom: 14px; }
+        /* PLAY NOW: identical in every box */
+        .play-now { margin: 6px 0 14px; }
+        .play-btn {
+            display: inline-block;
+            padding: 8px 22px;
+            border: 0;
+            border-radius: 8px;
+            background: var(--purple);
+            color: #fff;
+            font: 700 0.85rem 'Segoe UI', system-ui, sans-serif;
+            letter-spacing: 1.5px;
+            text-align: center;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+            transition: transform 0.15s, background 0.15s, box-shadow 0.15s;
+        }
+        .play-btn:hover { background: #6d28d9; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(124, 58, 237, 0.45); }
+        .play-btn:active { transform: translateY(0); }
+
+        /* Slideshows in the narrower game boxes show the whole screenshot (no cropping) */
+        .game-card .gallery { margin-top: 18px; }
+        .game-card .gallery-main { aspect-ratio: 4 / 3; background: #0f172a; }
+        .game-card .gallery-main .zoom img, .game-card .gallery-main .zoom video { object-fit: contain; }
+        .game-card .thumbs { grid-template-columns: repeat(5, 1fr); }
+
+        /* YouTube trailer at the bottom of a game box */
+        .yt { margin-top: 18px; aspect-ratio: 16 / 9; border-radius: 10px; overflow: hidden; background: #000; }
+        .yt iframe { display: block; width: 100%; height: 100%; border: 0; }
+
+        /* Leaderboards */
+        .lb { margin: 0 0 12px; font-size: 0.82rem; }
+        .lb h4 { font-size: 0.65rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: var(--purple); margin-bottom: 4px; }
+        .lb table { width: 100%; border-collapse: collapse; }
+        .lb td { padding: 3px 0; border-top: 1px solid var(--line); }
+        .lb td.rank { width: 2em; color: var(--muted); }
+        .lb td.score { text-align: right; font-variant-numeric: tabular-nums; font-weight: 700; }
+        .lb tr:first-child td.score { color: var(--amber); }
+        .lb .lb-note { color: var(--muted); margin: 0; }
+
+
+        .lightbox {
+            position: fixed; inset: 0; z-index: 20; display: none;
+            align-items: center; justify-content: center; padding: 16px;
+            background: rgba(15,23,42,0.94); cursor: zoom-out;
+        }
+        .lightbox.open { display: flex; }
+        .lightbox img, .lightbox video { max-width: 100%; max-height: 100%; border-radius: 8px; }
+
+        .load-error { text-align: center; padding: 60px 20px; color: #94a3b8; }
+
+        /* ── Edit mode (only on the local editor) ── */
+        body.editing { padding-bottom: 70px; }
+        .editing [data-edit] { outline: 1px dashed rgba(14,165,233,0.7); outline-offset: 2px; cursor: text; }
+        .editing [data-edit]:focus { outline: 2px solid var(--edit); }
+        .editing [data-edit]:empty::before { content: "(empty, click to write)"; color: #94a3b8; }
+        .editing [data-drop] { outline: 2px dashed rgba(14,165,233,0.7); outline-offset: -2px; }
+        .editing [data-drop].drop-hover { outline: 3px solid var(--edit); box-shadow: inset 0 0 0 9999px rgba(14,165,233,0.2); }
+        .ed-tools { position: absolute; top: 6px; right: 6px; display: flex; gap: 4px; z-index: 5; }
+        .ed-tools.left { right: auto; left: 6px; }
+        .ed-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 10px; }
+        .ed-btn {
+            font: 600 0.75rem 'Segoe UI', system-ui, sans-serif; color: #fff; background: var(--edit);
+            border: 0; border-radius: 4px; padding: 4px 8px; cursor: pointer; white-space: nowrap;
+        }
+        .ed-btn:hover { background: #0284c7; }
+        .ed-btn.danger { background: #ef4444; }
+        .ed-btn.small { padding: 2px 6px; font-size: 0.7rem; }
+        .thumb-wrap .ed-tools { top: 3px; right: 3px; gap: 2px; }
+        .ed-add {
+            display: flex; align-items: center; justify-content: center; aspect-ratio: 16 / 9;
+            border: 2px dashed var(--edit); border-radius: 6px; color: var(--edit);
+            font: 600 0.8rem 'Segoe UI', system-ui, sans-serif; cursor: pointer; text-align: center;
+        }
+        .ed-bar {
+            position: fixed; left: 0; right: 0; bottom: 0; z-index: 30;
+            display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px;
+            padding: 12px 16px; background: #0b2530; border-top: 2px solid var(--edit);
+            font-size: 0.88rem; color: #d8f3fb;
+        }
+        .ed-bar strong { color: #7dd3fc; }
+        .ed-bar a { color: #7dd3fc; }
+        .ed-status { margin-left: auto; font-weight: 600; }
+        .ed-status.warn { color: #ffd166; }
+        .ed-status.err { color: #ff6b6b; }
+    </style>
+</head>
+<body>
+
+<div id="canvas-container">
+    <canvas id="networkCanvas"></canvas>
+</div>
+
+<div class="page">
+    <header class="site-header">
+        <h1>POLYREME and other games by Kieran</h1>
+        <div class="header-divider"></div>
+    </header>
+    <main class="layout" id="app"></main>
+</div>
+
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Screenshot"></div>
+
+<script>
+(() => {
+    const wantsEdit = new URLSearchParams(location.search).has('edit');
+    const HEAVY_BYTES = 8 * 1024 * 1024;   // warn above this: slow on phone data
+
+    let content = null;
+    let editing = false;
+    const pos = {};                        // gallery path -> index of the screenshot showing
+
+    const $ = sel => document.querySelector(sel);
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const isVideo = src => /\.(mp4|webm)$/i.test(src || '');
+
+    function media(src, alt = '', extra = '') {
+        if (!src) return '';
+        return isVideo(src)
+            ? `<video src="${esc(src)}" muted autoplay playsinline preload="metadata" ${extra}></video>`
+            : `<img src="${esc(src)}" alt="${esc(alt)}" ${extra}>`;
+    }
+
+    // Plain text normally; editable in edit mode
+    function txt(tag, path, value, cls = '') {
+        const attrs = editing ? ` data-edit="${path}" contenteditable="true"` : '';
+        return `<${tag}${cls ? ` class="${cls}"` : ''}${attrs}>${esc(value)}</${tag}>`;
+    }
+
+    const getPath = path => path.split('.').reduce((o, k) => o?.[k], content);
+    function setPath(path, value) {
+        const keys = path.split('.'), last = keys.pop();
+        keys.reduce((o, k) => o[k], content)[last] = value;
+    }
+
+    // ── Render ──
+    function itchWidget(id, url, name) {
+        if (!id) return '';
+        return `<div class="itch-embed">
+            <iframe src="https://itch.io/embed/${esc(id)}" title="${esc(name)} on itch.io" loading="lazy">
+                <a href="${esc(url)}">${esc(name)} on itch.io</a>
+            </iframe>
+        </div>`;
+    }
+
+    // "v1.1 · Updated Nov 9, 2026" plus a NEW UPDATE tag for two weeks after release.
+    // In edit mode the date shows as YYYY-MM-DD so it can be typed in directly.
+    const NEW_FOR_DAYS = 14;
+    function versionLine(path, obj) {
+        if (!obj.version && !obj.updated && !editing) return '';
+        const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(obj.updated || '');
+        const date = m ? new Date(+m[1], +m[2] - 1, +m[3]) : null;
+        const isNew = date && (Date.now() - date) / 86400000 < NEW_FOR_DAYS;
+        const pretty = date ? date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '';
+        return `<div class="version">
+            ${txt('span', `${path}.version`, obj.version, 'ver')}
+            ${editing
+                ? `<span class="date">Updated ${txt('span', `${path}.updated`, obj.updated)} <small>(YYYY-MM-DD)</small></span>`
+                : pretty ? `<span class="date">Updated ${pretty}</span>` : ''}
+            ${isNew && !editing ? `<span class="new">New update</span>` : ''}
+        </div>`;
+    }
+
+    // The same PLAY NOW button at the top of every box
+    function playButton(path, url, urlKey) {
+        if (!url && !editing) return '';
+        return `<div class="play-now">
+            ${editing
+                ? `<button class="play-btn" type="button" data-link="${path}.${urlKey}" title="${esc(url)}">PLAY NOW &mdash; click to change link</button>`
+                : `<a class="play-btn" href="${esc(url)}" target="_blank" rel="noopener">PLAY NOW</a>`}
+        </div>`;
+    }
+
+    // Optional "zoom" on a slideshow item (e.g. 1.3) crops in toward the middle of the picture
+    const zoomStyle = item => item.zoom > 1 ? `style="transform: scale(${+item.zoom})"` : '';
+
+    // A slideshow for any list of screenshots, e.g. "polyreme.gallery" or "games.0.gallery"
+    function galleryHTML(path) {
+        const g = getPath(path) || [];
+        let i = pos[path] || 0;
+        if (i >= g.length) i = Math.max(0, g.length - 1);
+        pos[path] = i;
+        const shot = g[i];
+
+        const thumbs = g.map((s, k) => `
+            <div class="thumb-wrap">
+                <button class="thumb" type="button" data-gal="${path}" data-show="${k}" aria-label="${esc(s.caption || 'Screenshot ' + (k + 1))}" aria-current="${k === i}">
+                    ${isVideo(s.src) && !s.poster
+                        ? `<video src="${esc(s.src)}" muted playsinline preload="metadata" onloadedmetadata="this.currentTime = Math.min(0.5, this.duration / 2)" ${zoomStyle(s)}></video>`
+                        : `<img src="${esc(s.poster || s.src)}" alt="" loading="lazy" ${zoomStyle(s)}>`}
+                </button>
+                ${editing ? `<div class="ed-tools">
+                    <button class="ed-btn small" data-act="move" data-list="${path}" data-i="${k}" data-d="-1" title="Move left">&#9664;</button>
+                    <button class="ed-btn small" data-act="move" data-list="${path}" data-i="${k}" data-d="1" title="Move right">&#9654;</button>
+                    <button class="ed-btn small danger" data-act="remove" data-list="${path}" data-i="${k}" title="Remove">&#10005;</button>
+                </div>` : ''}
+            </div>`).join('') + (editing ? `<div class="ed-add" data-pick="${path}">+ Add</div>` : '');
+
+        return `
+            ${shot ? `
+            <div class="gallery-main">
+                <button class="zoom" data-zoom="${path}" type="button" aria-label="View full size">${media(shot.src, shot.caption, `${zoomStyle(shot)} ${shot.poster ? `poster="${esc(shot.poster)}"` : ''}`)}</button>
+                ${g.length > 1 ? `
+                <button class="nav-arrow prev" data-gal="${path}" data-step="-1" type="button" aria-label="Previous">&#8249;</button>
+                <button class="nav-arrow next" data-gal="${path}" data-step="1" type="button" aria-label="Next">&#8250;</button>` : ''}
+            </div>
+` : ''}
+            ${g.length > 1 || editing ? `<div class="thumbs" role="group" aria-label="Screenshots">${thumbs}</div>` : ''}`;
+    }
+
+    function galleryBlock(path) {
+        const g = getPath(path) || [];
+        if (!g.length && !editing) return '';
+        return `<div class="gallery" data-gallery="${path}" ${editing ? `data-drop="${path}"` : ''}>${galleryHTML(path)}</div>`;
+    }
+
+    // YouTube trailer, using the privacy-friendly no-cookie player
+    function youtubeBlock(id, name) {
+        if (!id) return '';
+        return `<div class="yt">
+            <iframe src="https://www.youtube-nocookie.com/embed/${esc(id)}" title="${esc(name)} trailer" loading="lazy"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>`;
+    }
+
+    function render() {
+        const p = content.polyreme;
+
+        const polyreme = `
+            <section class="col" aria-label="Polyreme">
+                <div>
+                    ${txt('h2', 'polyreme.title', p.title, 'feature-title')}
+                    ${playButton('polyreme', p.downloadUrl, 'downloadUrl')}
+                    ${txt('p', 'polyreme.blurb', p.blurb, 'pitch')}
+
+                    ${itchWidget(p.itchEmbedId, p.downloadUrl, 'Polyreme')}
+                    ${editing ? `<div class="ed-row">
+                        <button class="ed-btn" data-widget="polyreme.itchEmbedId">Change itch.io widget</button>
+                    </div>` : ''}
+
+                    ${galleryBlock('polyreme.gallery')}
+                </div>
+            </section>`;
+
+        // Each other game is its own white box:
+        // title, version, PLAY NOW, description, leaderboard, itch.io widget, screenshots, trailer
+        const cards = content.games.map((g, gi) => {
+            const base = `games.${gi}`;
+            return `<div class="col game-card">
+                ${txt('h3', `${base}.name`, g.name)}
+                ${versionLine(base, g)}
+                ${playButton(base, g.url, 'url')}
+                ${txt('p', `${base}.desc`, g.desc)}
+                ${g.leaderboard ? `<div class="lb" data-lb="${gi}"></div>` : ''}
+                ${itchWidget(g.itchEmbedId, g.url, g.name)}
+                ${galleryBlock(`${base}.gallery`)}
+                ${youtubeBlock(g.youtube, g.name)}
+                ${editing ? `<div class="ed-row">
+                    <button class="ed-btn small" data-act="move" data-list="games" data-i="${gi}" data-d="-1">&#9664; Left</button>
+                    <button class="ed-btn small" data-act="move" data-list="games" data-i="${gi}" data-d="1">Right &#9654;</button>
+                    <button class="ed-btn small" data-widget="${base}.itchEmbedId">${g.itchEmbedId ? 'Change' : 'Add'} itch.io widget</button>
+                    <button class="ed-btn small" data-youtube="${base}.youtube">${g.youtube ? 'Change' : 'Add'} YouTube trailer</button>
+                    <button class="ed-btn small danger" data-act="remove" data-list="games" data-i="${gi}">Delete game</button>
+                </div>` : ''}
+            </div>`;
+        }).join('');
+
+        $('#app').innerHTML = `
+            ${polyreme}
+            ${cards}
+            ${editing ? `<button class="ed-btn add-game" data-act="add-game">+ Add a game</button>` : ''}`;
+        // Polyreme gets the widest column, then one column per other game
+        $('#app').style.setProperty('--games', Math.max(1, content.games.length));
+
+
+        fitWidgets();
+        document.querySelectorAll('[data-lb]').forEach(el => fillLeaderboard(el, content.games[+el.dataset.lb]));
+    }
+
+    // Scale each 552x167 itch.io widget down to the width of its box
+    function fitWidgets() {
+        document.querySelectorAll('.itch-embed').forEach(box => {
+            const scale = Math.min(1, box.clientWidth / 552);
+            box.style.height = Math.round(167 * scale) + 'px';
+            box.querySelector('iframe').style.transform = `scale(${scale})`;
+        });
+    }
+    window.addEventListener('resize', fitWidgets);
+
+    // ── Leaderboards (read-only, straight from the game's Supabase table) ──
+    const lbCache = new Map();   // one fetch per board per page view
+
+    async function loadScores(cfg) {
+        const cols = [cfg.nameColumn, cfg.scoreColumn, cfg.filterColumn].filter(Boolean).join(',');
+        const url = `${cfg.supabaseUrl}/rest/v1/${encodeURIComponent(cfg.table)}`
+            + `?select=${encodeURIComponent(cols)}&order=${encodeURIComponent(cfg.scoreColumn)}.desc&limit=500`;
+        const res = await fetch(url, { headers: { apikey: cfg.publishableKey } });
+        if (!res.ok) throw new Error(res.status);
+        let rows = await res.json();
+
+        // Same rules as the game's own Hall of Fame
+        if (cfg.filterColumn && cfg.filterValues) {
+            const wanted = cfg.filterValues.map(v => String(v).toLowerCase());
+            rows = rows.filter(r => wanted.includes(String(r[cfg.filterColumn] ?? '').toLowerCase()));
+        }
+        if (cfg.minScore != null) rows = rows.filter(r => r[cfg.scoreColumn] > cfg.minScore);
+        if (cfg.maxPerName) {
+            const counts = {};
+            rows = rows.filter(r => (counts[r[cfg.nameColumn]] = (counts[r[cfg.nameColumn]] || 0) + 1) <= cfg.maxPerName);
+        }
+        return rows.slice(0, cfg.show || 5);
+    }
+
+    async function fillLeaderboard(el, game) {
+        const cfg = game.leaderboard;
+        const key = cfg.supabaseUrl + cfg.table + JSON.stringify(cfg.filterValues);
+        el.innerHTML = `<h4>${esc(cfg.title || 'Leaderboard')}</h4><p class="lb-note">Loading scores…</p>`;
+        try {
+            if (!lbCache.has(key)) lbCache.set(key, loadScores(cfg));
+            const rows = await lbCache.get(key);
+            el.innerHTML = `<h4>${esc(cfg.title || 'Leaderboard')}</h4>` + (rows.length
+                ? `<table>${rows.map((r, i) => `<tr>
+                        <td class="rank">${i + 1}.</td>
+                        <td>${esc(r[cfg.nameColumn])}</td>
+                        <td class="score">${esc(Number(r[cfg.scoreColumn]).toLocaleString())}</td>
+                    </tr>`).join('')}</table>`
+                : `<p class="lb-note">No scores yet. Be the first!</p>`);
+        } catch {
+            lbCache.delete(key);
+            el.innerHTML = `<h4>${esc(cfg.title || 'Leaderboard')}</h4><p class="lb-note">Scores couldn't load right now.</p>`;
+        }
+    }
+
+    // ── Slideshows and lightbox ──
+    const SLIDE_EVERY_MS = 10000;
+    const shownAt = {};          // gallery path -> when the current slide appeared
+    let lbPath = null;           // which gallery the lightbox is showing
+
+    function show(path, i) {
+        const n = (getPath(path) || []).length;
+        if (!n) return;
+        pos[path] = (i + n) % n;
+        shownAt[path] = Date.now();
+        const el = document.querySelector(`[data-gallery="${path}"]`);
+        if (el) el.innerHTML = galleryHTML(path);
+        if (lbPath === path) openLightbox(path);
+    }
+
+    function openLightbox(path) {
+        const s = getPath(path)[pos[path] || 0];
+        lbPath = path;
+        $('#lightbox').innerHTML = isVideo(s.src)
+            ? `<video src="${esc(s.src)}" controls autoplay loop playsinline></video>`
+            : `<img src="${esc(s.src)}" alt="${esc(s.caption)}">`;
+        $('#lightbox').classList.add('open');
+    }
+    function closeLightbox() {
+        lbPath = null;
+        $('#lightbox').classList.remove('open');
+        $('#lightbox').innerHTML = '';
+    }
+
+    // Slideshows move on by themselves: a screenshot after 10 seconds, a video as soon as it
+    // finishes. They wait while someone hovers over them or has them open full size, and
+    // stay put in edit mode.
+    const isPaused = (el, path) => editing || el.matches(':hover') || lbPath === path;
+
+    setInterval(() => {
+        if (document.hidden || !content) return;
+        document.querySelectorAll('[data-gallery]').forEach(el => {
+            const path = el.dataset.gallery;
+            const item = (getPath(path) || [])[pos[path] || 0];
+            if (!shownAt[path]) shownAt[path] = Date.now();
+            if (!item || isVideo(item.src) || isPaused(el, path)) return;
+            if (Date.now() - shownAt[path] >= SLIDE_EVERY_MS) show(path, (pos[path] || 0) + 1);
+        });
+    }, 1000);
+
+    // "ended" doesn't bubble, so listen in the capture phase
+    document.addEventListener('ended', e => {
+        const el = e.target.closest && e.target.closest('.gallery-main') && e.target.closest('[data-gallery]');
+        if (!el) return;
+        const path = el.dataset.gallery;
+        if (isPaused(el, path)) { e.target.currentTime = 0; e.target.play().catch(() => {}); return; }
+        show(path, (pos[path] || 0) + 1);
+    }, true);
+
+    document.addEventListener('click', e => {
+        const t = e.target.closest('[data-show],[data-step],[data-zoom],[data-act],[data-pick],[data-link],[data-widget],[data-youtube]');
+        if (!t) return;
+        if (t.dataset.show !== undefined) return show(t.dataset.gal, +t.dataset.show);
+        if (t.dataset.step !== undefined) return show(t.dataset.gal, (pos[t.dataset.gal] || 0) + +t.dataset.step);
+        if (t.dataset.zoom) return editing ? null : openLightbox(t.dataset.zoom);
+        if (!editing) return;
+        e.preventDefault();
+        if (t.dataset.pick) return pickFiles(t.dataset.pick);
+        if (t.dataset.link) return editLink(t.dataset.link);
+        if (t.dataset.widget) return editWidget(t.dataset.widget);
+        if (t.dataset.youtube) return editYoutube(t.dataset.youtube);
+        handleAction(t.dataset);
+    });
+    $('#lightbox').addEventListener('click', closeLightbox);
+    document.addEventListener('keydown', e => {
+        if (e.target.isContentEditable) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (lbPath) {
+            if (e.key === 'ArrowRight') show(lbPath, (pos[lbPath] || 0) + 1);
+            if (e.key === 'ArrowLeft')  show(lbPath, (pos[lbPath] || 0) - 1);
+        }
+    });
+
+    // Swipe a slideshow on phones
+    let touchX = null, touchPath = null;
+    document.addEventListener('touchstart', e => {
+        const gal = e.target.closest('.gallery-main') && e.target.closest('[data-gallery]');
+        touchPath = gal ? gal.dataset.gallery : null;
+        touchX = gal ? e.touches[0].clientX : null;
+    }, { passive: true });
+    document.addEventListener('touchend', e => {
+        if (touchX === null) return;
+        const dx = e.changedTouches[0].clientX - touchX;
+        if (Math.abs(dx) > 40) show(touchPath, (pos[touchPath] || 0) + (dx < 0 ? 1 : -1));
+        touchX = null;
+    });
+
+    // ── Edit mode ──
+    let saveTimer = null;
+
+    function status(msg, kind = '') {
+        const el = $('#edStatus');
+        if (el) { el.textContent = msg; el.className = 'ed-status ' + kind; }
+    }
+
+    async function api(path, body) {
+        const res = await fetch(path, { method: 'POST', body });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) throw new Error(data.error || `Server said ${res.status}`);
+        return data;
+    }
+
+    function save(now = false) {
+        clearTimeout(saveTimer);
+        status('Saving…');
+        saveTimer = setTimeout(async () => {
+            try {
+                await api('/api/content', JSON.stringify(content));
+                status('Saved');
+            } catch (err) {
+                status('Not saved: ' + err.message, 'err');
+            }
+        }, now ? 0 : 600);
+    }
+
+    async function addFiles(target, files) {
+        files = [...files];
+        if (!files.length) return;
+        try {
+            const srcs = [], heavy = [];
+            for (const [i, file] of files.entries()) {
+                status(`Uploading ${i + 1} of ${files.length}: ${file.name}…`);
+                const r = await api('/api/upload?name=' + encodeURIComponent(file.name), file);
+                srcs.push(r.src);
+                if (r.bytes > HEAVY_BYTES) heavy.push(`${file.name} (${Math.round(r.bytes / 1048576)} MB)`);
+            }
+            if (target.endsWith('.gallery')) {
+                if (!getPath(target)) setPath(target, []);
+                const list = getPath(target);
+                srcs.forEach(src => list.push({ src, caption: '' }));
+                pos[target] = list.length - srcs.length;
+            }
+            else setPath(target, srcs[0]);
+            render();
+            save(true);
+            if (heavy.length) setTimeout(() => status(`Added, but heavy for phones: ${heavy.join(', ')}`, 'warn'), 800);
+        } catch (err) {
+            status('Upload failed: ' + err.message, 'err');
+        }
+    }
+
+    function pickFiles(target) {
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = 'image/*,video/mp4,video/webm';
+        input.multiple = true;
+        input.onchange = () => addFiles(target, input.files);
+        input.click();
+    }
+
+    function editLink(path) {
+        const value = prompt('Link (URL):', getPath(path) || '');
+        if (value === null) return;
+        setPath(path, value.trim());
+        render();
+        save(true);
+    }
+
+    // Paste the embed code from itch.io (Distribute > Embed game); leave blank to remove
+    // Paste any YouTube link (watch, youtu.be, shorts or embed); leave blank to remove
+    function editYoutube(path) {
+        const value = prompt('Paste the YouTube link (or leave blank to remove the trailer):', getPath(path) ? `https://youtu.be/${getPath(path)}` : '');
+        if (value === null) return;
+        const id = (value.match(/(?:v=|youtu\.be\/|embed\/|shorts\/)([A-Za-z0-9_-]{11})/) || value.match(/^\s*([A-Za-z0-9_-]{11})\s*$/) || [])[1] || '';
+        if (value.trim() && !id) return alert("Couldn't find a video in that link.");
+        setPath(path, id);
+        render();
+        save(true);
+    }
+
+    function editWidget(path) {
+        const value = prompt('Paste the itch.io embed code (or leave blank to remove the widget):', getPath(path) || '');
+        if (value === null) return;
+        const id = (value.match(/embed\/(\d+)/) || value.match(/^\s*(\d+)\s*$/) || [])[1] || '';
+        if (value.trim() && !id) return alert("Couldn't find a game number in that. Copy the whole embed code from itch.io.");
+        setPath(path, id);
+        render();
+        save(true);
+    }
+
+    function handleAction(d) {
+        if (d.act === 'move') {
+            const list = getPath(d.list), i = +d.i, j = i + +d.d;
+            if (j < 0 || j >= list.length) return;
+            [list[i], list[j]] = [list[j], list[i]];
+            if (d.list.endsWith('.gallery')) pos[d.list] = j;
+        } else if (d.act === 'remove') {
+            const list = getPath(d.list);
+            const what = d.list === 'games' ? `the "${list[+d.i].name}" card` : 'this picture';
+            if (!confirm(`Remove ${what} from the page? (The file stays in games/media.)`)) return;
+            list.splice(+d.i, 1);
+        } else if (d.act === 'clear') {
+            setPath(d.path, '');
+        } else if (d.act === 'add-game') {
+            content.games.push({ name: 'New game', version: 'v1.0', updated: new Date().toISOString().slice(0, 10), desc: 'A sentence or two about it.', url: '', gallery: [] });
+        } else return;
+        render();
+        save(true);
+    }
+
+    document.addEventListener('input', e => {
+        const el = e.target.closest('[data-edit]');
+        if (!editing || !el) return;
+        setPath(el.dataset.edit, el.innerText.trim());
+        save();
+    });
+    document.addEventListener('paste', e => {
+        if (!editing || !e.target.closest('[data-edit]')) return;
+        e.preventDefault();
+        document.execCommand('insertText', false, e.clipboardData.getData('text/plain'));
+    });
+
+    const clearHover = () => document.querySelectorAll('.drop-hover').forEach(el => el.classList.remove('drop-hover'));
+    document.addEventListener('dragover', e => {
+        e.preventDefault();
+        if (!editing) return;
+        const zone = e.target.closest('[data-drop]');
+        clearHover();
+        if (zone) zone.classList.add('drop-hover');
+        e.dataTransfer.dropEffect = zone ? 'copy' : 'none';
+    });
+    document.addEventListener('dragleave', e => { if (!e.relatedTarget) clearHover(); });
+    document.addEventListener('drop', e => {
+        e.preventDefault();
+        clearHover();
+        if (!editing) return;
+        const zone = e.target.closest('[data-drop]');
+        if (zone && e.dataTransfer.files.length) addFiles(zone.dataset.drop, e.dataTransfer.files);
+    });
+
+    function showEditBar(serverUp) {
+        const bar = document.createElement('div');
+        bar.className = 'ed-bar';
+        bar.innerHTML = serverUp
+            ? `<strong>EDIT MODE</strong>
+               <span>Drag pictures or videos onto the dashed areas. Click any dashed text to change it.</span>
+               <a href="./">View page</a>
+               <span class="ed-status" id="edStatus">Changes save automatically</span>`
+            : `<strong>Editor not running.</strong>
+               <span>In the portfolio folder run <code>python games/editor.py</code>, then open
+               <a href="http://127.0.0.1:8765/games/?edit">127.0.0.1:8765/games/?edit</a></span>`;
+        document.body.appendChild(bar);
+        if (serverUp) document.body.classList.add('editing');
+    }
+
+    // ── Start ──
+    (async () => {
+        try {
+            content = await (await fetch('content.json', { cache: 'no-store' })).json();
+        } catch {
+            $('#app').innerHTML = `<p class="load-error">Couldn't load the games list. Try refreshing the page.</p>`;
+            return;
+        }
+        if (wantsEdit) {
+            try { editing = (await fetch('/api/ping', { method: 'POST' })).ok; } catch {}
+            showEditBar(editing);
+        }
+        render();
+    })();
+})();
+
+// Particle network background (same as the portfolio homepage)
+(() => {
+    const canvas = document.getElementById('networkCanvas');
+    const ctx = canvas.getContext('2d');
+    const particles = [];
+    const particleCount = 100;
+    const connectionDistance = 150;
+
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resize);
+    resize();
+
+    class Particle {
+        constructor() {
+            this.x  = Math.random() * canvas.width;
+            this.y  = Math.random() * canvas.height;
+            this.vx = (Math.random() - 0.5) * 0.5;
+            this.vy = (Math.random() - 0.5) * 0.5;
+            this.r  = Math.random() * 2 + 1;
+        }
+        update() {
+            this.x += this.vx; this.y += this.vy;
+            if (this.x < 0 || this.x > canvas.width)  this.vx *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(100,255,218,0.8)';
+            ctx.fill();
+        }
+    }
+
+    for (let i = 0; i < particleCount; i++) particles.push(new Particle());
+
+    function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        for (let i = 0; i < particles.length; i++) {
+            particles[i].update();
+            particles[i].draw();
+            for (let j = i + 1; j < particles.length; j++) {
+                const dx = particles[i].x - particles[j].x;
+                const dy = particles[i].y - particles[j].y;
+                const d  = Math.sqrt(dx * dx + dy * dy);
+                if (d < connectionDistance) {
+                    ctx.beginPath();
+                    ctx.strokeStyle = `rgba(100,255,218,${1 - d / connectionDistance})`;
+                    ctx.lineWidth = 0.5;
+                    ctx.moveTo(particles[i].x, particles[i].y);
+                    ctx.lineTo(particles[j].x, particles[j].y);
+                    ctx.stroke();
+                }
+            }
+        }
+        requestAnimationFrame(animate);
+    }
+    animate();
+})();
+</script>
+</body>
+</html>

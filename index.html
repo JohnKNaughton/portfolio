@@ -89,6 +89,24 @@
             border-bottom: 2px solid rgba(124, 58, 237, 0.15);
         }
 
+        /* ── PURPLE BUTTON (same as PLAY NOW on the games page) ── */
+        .play-btn {
+            display: inline-block;
+            padding: 8px 22px;
+            border-radius: 8px;
+            background: #7c3aed;
+            color: #fff;
+            font: 700 0.85rem 'Segoe UI', system-ui, sans-serif;
+            letter-spacing: 1.5px;
+            text-align: center;
+            text-decoration: none;
+            white-space: nowrap;
+            box-shadow: 0 4px 14px rgba(124, 58, 237, 0.35);
+            transition: transform 0.15s, background 0.15s, box-shadow 0.15s;
+        }
+        .play-btn:hover { background: #6d28d9; transform: translateY(-2px); box-shadow: 0 8px 20px rgba(124, 58, 237, 0.45); }
+        .play-btn:active { transform: translateY(0); }
+
         /* ── PROJECT CARDS ── */
         .proj-card {
             display: block;
@@ -296,13 +314,16 @@
 
         <!-- ══ COL 2: PERSONAL PROJECTS ══ -->
         <div class="col">
-            <div class="col-title">Personal Projects</div>
+            <div class="col-title" style="display:flex;justify-content:space-between;align-items:center;gap:10px;">
+                <span>Personal Projects</span>
+                <a class="play-btn" href="games/index.html">GAMES PAGE</a>
+            </div>
 
             <div class="proj-card headliner">
                 <div class="proj-tag">Playable Game</div>
                 <div class="proj-name">Polyreme</div>
                 <div class="proj-desc">Buy Low, Sell High. Sail, Recruit, Decide, Avenge. A fully playable ancient greek commerce ship game I built in Godot, download it right here below!!</div>
-                <iframe frameborder="0" src="https://itch.io/embed/4981931?bg_color=a0fcfa" width="552" height="167" style="max-width:100%; display:block; margin:12px 0;"><a href="https://jknaughton.itch.io/polyreme">Polyreme by JKNaughton</a></iframe>
+                <iframe frameborder="0" src="https://itch.io/embed/4981931?bg_color=a0fcfa" width="552" height="167" style="max-width:100%; display:block; margin:12px 0;"><a href="https://polyreme.itch.io/polyreme">Polyreme by POLYREME</a></iframe>
                 <div class="card-btns">
                     <a class="card-btn" href="https://johnknaughton.github.io/greekshipgame/" target="_blank">
                         <span>Play the HTML Demo</span>
